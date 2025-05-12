@@ -24,6 +24,6 @@
 	});
 </script>
 
-<main class="h-[300vh] bg-gradient-to-b from-[#000] to-[#fff]">
+<main>
 	{@render children()}
 </main>
