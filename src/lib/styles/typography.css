@@ -1,0 +1,50 @@
+@font-face {
+	font-family: 'Geist';
+	src: url('/fonts/geist.ttf') format('truetype');
+	font-weight: 100 900;
+	font-display: swap;
+}
+
+.h1 {
+	font-family: 'Geist', sans-serif;
+	font-size: 3rem;
+	line-height: normal;
+	font-weight: 900;
+}
+
+.h2 {
+	font-family: 'Geist', sans-serif;
+	font-size: 2rem;
+	line-height: normal;
+	font-weight: 900;
+}
+
+.h3 {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.5rem;
+	line-height: normal;
+	font-weight: 900;
+}
+
+.h4,
+.h5,
+.h6 {
+	font-family: 'Geist', sans-serif;
+	font-size: 1.25rem;
+	line-height: normal;
+	font-weight: 900;
+}
+
+.body-text {
+	font-family: 'Geist', sans-serif;
+	font-size: 1rem;
+	line-height: normal;
+	font-weight: 400;
+}
+
+.body-text-small {
+	font-family: 'Geist', sans-serif;
+	font-size: 0.875rem;
+	line-height: normal;
+	font-weight: 400;
+}

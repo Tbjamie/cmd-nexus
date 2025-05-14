@@ -4,6 +4,8 @@
 	import Lenis from 'lenis';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import { onMount } from 'svelte';
+
+	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 </script>
 
 <script lang="ts">
@@ -24,6 +26,35 @@
 	});
 </script>
 
+<header>
+	<!-- LOGO -->
+
+	<!-- INFOBUTTON -->
+</header>
+
 <main>
 	{@render children()}
 </main>
+
+<footer>
+	<p>copyright</p>
+	<NexusLogoFull class="logo" />
+</footer>
+
+<style>
+	footer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		padding-top: 3.5rem;
+		padding-bottom: 3.5rem;
+	}
+	:global(.logo) {
+		margin-top: 0.25rem;
+		height: 2rem;
+	}
+</style>

@@ -1,2 +1,96 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts" module>
+	import gsap from 'gsap';
+	import { onMount } from 'svelte';
+
+	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
+	import IconButton from '$lib/components/buttons/IconButton.svelte';
+</script>
+
+<script lang="ts">
+	onMount(() => {
+		const heading = document.querySelector('h1');
+		const paragraph = document.querySelector('p');
+		const aiStarIcon = document.querySelector('.ai-star-icon');
+
+		gsap.fromTo(
+			aiStarIcon,
+			{
+				opacity: 0
+			},
+			{
+				opacity: 1,
+				duration: 1,
+				ease: 'power2.out'
+			}
+		);
+
+		gsap.fromTo(
+			[paragraph, heading],
+			{
+				opacity: 0,
+				y: 10
+			},
+			{
+				opacity: 1,
+				y: 0,
+				duration: 1,
+				ease: 'power2.out',
+				stagger: 0.2
+			}
+		);
+	});
+</script>
+
+<svelte:head>
+	<title>CMD Nexus</title>
+	<meta
+		name="description"
+		content="CMD Nexus is hét platform voor alle CMD studenten van de Hogeschool van Amsterdam. Vind hier alle kennis, tools, tutorials en resources die je nodig hebt voor je Communication and Multimedia Design opleiding."
+	/>
+	<meta
+		name="keywords"
+		content="CMD, Nexus, platform, studenten, kennis, hulp, CMD Kennis, kennisbank, CMD Kennisbank, HvA, Hogeschool van Amsterdam, Communication and Multimedia Design, digital design, interactie ontwerp, UX, UI, web development, frontend"
+	/>
+	<meta property="og:title" content="CMD Nexus" />
+	<meta
+		property="og:description"
+		content="CMD Nexus is hét platform voor alle CMD studenten van de Hogeschool van Amsterdam. Vind hier alle kennis, tools, tutorials en resources die je nodig hebt voor je Communication and Multimedia Design opleiding."
+	/>
+	<meta property="og:type" content="website" />
+</svelte:head>
+
+<section>
+	<AiStarIcon class="ai-star-icon" />
+
+	<p>Welkom bij CMD Nexus</p>
+	<h1 class="h1">Hoe kan ik je helpen?</h1>
+
+	<IconButton>TEST</IconButton>
+</section>
+
+<style>
+	section {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100vh;
+		text-align: center;
+	}
+
+	:global(.ai-star-icon) {
+		width: 3.5rem;
+		height: 3.5rem;
+		margin-bottom: 1.5rem;
+
+		color: var(--purple-white);
+	}
+
+	p {
+		margin-bottom: 0.75rem;
+	}
+
+	h1 {
+		margin-bottom: 2rem;
+	}
+</style>

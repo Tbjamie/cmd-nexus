@@ -1,0 +1,31 @@
+/* @import url('/src/lib/styles/spacing.css'); */
+@import url('/src/lib/styles/typography.css');
+@import url('/src/lib/styles/a11y.css');
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+:root * {
+	--opacity: 100%;
+
+	--black: rgb(10 10 10 / var(--opacity));
+	--white: rgb(252 252 252 / var(--opacity));
+	--purple-light: rgb(200 191 255 / var(--opacity));
+	--purple-normal: rgb(148 130 255 / var(--opacity));
+	--purple-dark: rgb(53 31 183 / var(--opacity));
+	--yellow: rgb(255 240 33 / var(--opacity));
+}
+
+html {
+	background: var(--black);
+}
+
+body {
+	background: var(--black);
+	color: var(--white);
+	font-family: 'Geist', sans-serif;
+	min-height: 100vh;
+}
