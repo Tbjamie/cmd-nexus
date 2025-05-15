@@ -1,16 +1,27 @@
 <script lang="ts" module>
 	import gsap from 'gsap';
 	import { onMount } from 'svelte';
+	import type { PageProps } from './$types';
 
 	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
+	import { page } from '$app/state';
 </script>
 
 <script lang="ts">
+	let prompt = '';
+
 	onMount(() => {
 		const heading = document.querySelector('h1');
 		const paragraph = document.querySelector('p');
 		const aiStarIcon = document.querySelector('.ai-star-icon');
+
+		setInterval(() => {
+			console.log('PROMPT', prompt);
+		}, 100);
+
+		const items = page.data.items;
+		console.log('DATAAA', items);
 
 		gsap.fromTo(
 			aiStarIcon,
@@ -65,7 +76,7 @@
 	<p>Welkom bij CMD Nexus</p>
 	<h1 class="h1">Hoe kan ik je helpen?</h1>
 
-	<Searchbar />
+	<Searchbar bind:value={prompt} />
 </section>
 
 <style>

@@ -3,8 +3,13 @@
 	import ArrowIcon from '$lib/assets/icons/arrow-icon.svg?component';
 </script>
 
+<script lang="ts">
+	let { value = $bindable('') } = $props();
+</script>
+
 <div class="search-wrapper">
 	<input
+		bind:value
 		type="text"
 		autocomplete="off"
 		spellcheck="false"
