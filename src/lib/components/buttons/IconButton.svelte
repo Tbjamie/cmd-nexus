@@ -11,9 +11,7 @@
 	href={href ? href : null}
 	class="icon-button"
 >
-	<span>
-		<slot />
-	</span>
+	<slot />
 </svelte:element>
 
 <style>
@@ -53,7 +51,13 @@
 
 	.icon-button:active {
 		--opacity: 100%;
-		background: var(--purple-light);
+		background: var(--purple-dark);
 		transition: 100ms;
+	}
+
+	@media screen and (min-width: 1563px) {
+		.icon-button {
+			padding: 0.75rem;
+		}
 	}
 </style>

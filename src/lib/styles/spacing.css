@@ -1,0 +1,4 @@
+.main-page-spacing {
+	padding-left: clamp(1.5rem, 0.5714rem + 4.6429vw, 8rem);
+	padding-right: clamp(1.5rem, 0.5714rem + 4.6429vw, 8rem);
+}

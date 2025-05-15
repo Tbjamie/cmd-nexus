@@ -3,7 +3,7 @@
 	import { onMount } from 'svelte';
 
 	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
-	import IconButton from '$lib/components/buttons/IconButton.svelte';
+	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
 </script>
 
 <script lang="ts">
@@ -59,13 +59,13 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
-<section>
+<section class="main-page-spacing">
 	<AiStarIcon class="ai-star-icon" />
 
 	<p>Welkom bij CMD Nexus</p>
 	<h1 class="h1">Hoe kan ik je helpen?</h1>
 
-	<IconButton>TEST</IconButton>
+	<Searchbar />
 </section>
 
 <style>
@@ -76,6 +76,21 @@
 		justify-content: center;
 		height: 100vh;
 		text-align: center;
+		padding-bottom: 20vh;
+		position: relative;
+	}
+
+	section::after {
+		content: '';
+		position: absolute;
+		top: -50%;
+		width: 100%;
+		background: radial-gradient(ellipse at center, var(--purple-light), var(--purple-dark));
+		border-radius: 9999px;
+		aspect-ratio: 1 / 1;
+		opacity: 0.4;
+		filter: blur(100px);
+		z-index: -1;
 	}
 
 	:global(.ai-star-icon) {
@@ -92,5 +107,12 @@
 
 	h1 {
 		margin-bottom: 2rem;
+	}
+
+	@media screen and (min-width: 768px) {
+		section::after {
+			top: -100%;
+			width: 75%;
+		}
 	}
 </style>
