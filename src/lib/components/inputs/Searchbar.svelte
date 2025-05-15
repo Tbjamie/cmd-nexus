@@ -1,0 +1,65 @@
+<script lang="ts" module>
+	import IconButton from '$lib/components/buttons/IconButton.svelte';
+	import ArrowIcon from '$lib/assets/icons/arrow-icon.svg?component';
+</script>
+
+<div class="search-wrapper">
+	<input
+		type="text"
+		autocomplete="off"
+		spellcheck="false"
+		name="search-bar"
+		id="search-bar"
+		placeholder="Waar ben je naar op zoek"
+	/>
+	<IconButton type="submit">
+		<ArrowIcon class="arrow-icon" />
+	</IconButton>
+</div>
+
+<style>
+	.search-wrapper {
+		--opacity: 10%;
+
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		padding: 1rem 1.5rem;
+		background: red;
+		border: none;
+		width: 100%;
+
+		background: var(--white);
+		backdrop-filter: blur(20px);
+		border-radius: 15px;
+		-webkit-backdrop-filter: blur(20px);
+		outline: solid 1px rgba(255 255 255 / 0.5);
+	}
+
+	input {
+		font-family: 'Geist', sans-serif;
+		font-size: inherit;
+		border: none;
+		background: transparent;
+		width: 100%;
+		color: white;
+		padding-right: 1rem;
+	}
+
+	:global(.arrow-icon) {
+		width: 0.875rem;
+		height: 0.875rem;
+	}
+
+	@media screen and (min-width: 768px) {
+		.search-wrapper {
+			width: 50%;
+		}
+	}
+
+	@media screen and (min-width: 1563px) {
+		.search-wrapper {
+			width: 40%;
+		}
+	}
+</style>
