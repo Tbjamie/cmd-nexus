@@ -9,7 +9,7 @@
 				Zoek "{inputVal}"
 			</a>
 		</li>
-		{#each relatedItems.slice(0, 3) as item}
+		{#each relatedItems as item}
 			<li>
 				<a
 					href="/{item.naam
@@ -22,13 +22,6 @@
 			</li>
 		{/each}
 	</ul>
-	<!-- <ul>
-		max 4 results
-		<a class="body-text" href=""><li>Zoek "{inputVal}"</li></a>
-		<a class="body-text" href=""><li>Crazy 8</li></a>
-		<a class="body-text" href=""><li>VID</li></a>
-		<a class="body-text" href=""><li>HCD</li></a>
-	</ul> -->
 </div>
 
 <style>
@@ -46,8 +39,10 @@
 
 	a:hover,
 	a:focus-visible {
-		--opacity: 20%;
+		--opacity: 25%;
 		background: var(--white);
+
+		color: white;
 	}
 
 	li {

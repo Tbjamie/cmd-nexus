@@ -105,11 +105,6 @@
 	</div>
 </section>
 
-<!-- 
-	TODO:
-	- Make sure the searchbar doesnt shift when showing results
- -->
-
 <style>
 	section {
 		display: flex;
@@ -156,20 +151,6 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-	}
-
-	.autocomplete-list {
-		text-align: start;
-		width: 100%;
-	}
-
-	.autocomplete-list li {
-		list-style: none;
-		padding: 0.5rem 1rem;
-		background: var(--white);
-		color: var(--black);
-		border-radius: 10px;
-		margin-bottom: 0.5rem;
 	}
 
 	@media screen and (min-width: 768px) {
