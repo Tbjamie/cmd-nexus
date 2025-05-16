@@ -1,15 +1,34 @@
 <script>
-	export let inputVal = "";
+	let { inputVal = $bindable(''), relatedItems = [] } = $props();
 </script>
 
 <div class="result-wrapper">
-	<ul>
-		<!-- max 4 results -->
-		<a class=".body-text" href=""><li>Search for "{inputVal}"</li></a>
-		<a class=".body-text" href=""><li>Crazy 8</li></a>
-		<a class=".body-text" href=""><li>VID</li></a>
-		<a class=".body-text" href=""><li>HCD</li></a>
+	<ul class="autocomplete-list">
+		<li>
+			<a href="/">
+				Zoek "{inputVal}"
+			</a>
+		</li>
+		{#each relatedItems.slice(0, 3) as item}
+			<li>
+				<a
+					href="/{item.naam
+						.toLowerCase()
+						.replace(/[\s:]+/g, '-')
+						.replace(/[^\w-]+/g, '')}"
+				>
+					{item.naam}
+				</a>
+			</li>
+		{/each}
 	</ul>
+	<!-- <ul>
+		max 4 results
+		<a class="body-text" href=""><li>Zoek "{inputVal}"</li></a>
+		<a class="body-text" href=""><li>Crazy 8</li></a>
+		<a class="body-text" href=""><li>VID</li></a>
+		<a class="body-text" href=""><li>HCD</li></a>
+	</ul> -->
 </div>
 
 <style>
@@ -25,8 +44,16 @@
 		display: flex;
 	}
 
-	a:hover {
-		background: var(--hover-gradient);
+	a:hover,
+	a:focus-visible {
+		--opacity: 20%;
+		background: var(--white);
+	}
+
+	li {
+		list-style: none;
+		width: 100%;
+		overflow: hidden;
 
 		&:last-of-type {
 			border-bottom-left-radius: 15px;
@@ -34,12 +61,8 @@
 		}
 	}
 
-	li {
-		list-style: none;
-	}
-
 	.result-wrapper {
-		--opacity: 12%;
+		--opacity: 15%;
 
 		position: absolute;
 		top: calc(3rem + 15px);
@@ -67,7 +90,7 @@
 		align-items: baseline;
 	}
 
-		@media screen and (min-width: 1563px) {
+	@media screen and (min-width: 1563px) {
 		.result-wrapper {
 			top: calc(3rem + 24px);
 		}

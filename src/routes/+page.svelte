@@ -1,27 +1,51 @@
 <script lang="ts" module>
 	import gsap from 'gsap';
 	import { onMount } from 'svelte';
-	import type { PageProps } from './$types';
 
 	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
 	import { page } from '$app/state';
+	import type { Item } from '$lib/types/itemType';
+	import Fuse from 'fuse.js';
 </script>
 
 <script lang="ts">
-	let prompt = '';
+	let prompt = $state('');
+	let filteredItems: Item[] = $state([]);
+	let items: Item[];
 
 	onMount(() => {
 		const heading = document.querySelector('h1');
 		const paragraph = document.querySelector('p');
 		const aiStarIcon = document.querySelector('.ai-star-icon');
 
-		setInterval(() => {
-			console.log('PROMPT', prompt);
-		}, 100);
+		items = page.data?.items;
 
-		const items = page.data.items;
-		console.log('DATAAA', items);
+		$effect(() => {
+			const fuse = new Fuse(items, {
+				keys: [
+					'naam',
+					'alternatieve_naam',
+					'soort',
+					'ondertitel',
+					'korte_beschrijving',
+					'toepassing',
+					'meer_bij_personen',
+					'meer_bij_vak'
+				],
+				includeScore: true,
+				minMatchCharLength: 2,
+				threshold: 0.3
+			});
+
+			let searchItem = fuse.search(prompt, {
+				limit: 3
+			});
+
+			filteredItems = searchItem.map((item) => {
+				return item.item;
+			});
+		});
 
 		gsap.fromTo(
 			aiStarIcon,
@@ -76,8 +100,15 @@
 	<p>Welkom bij CMD Nexus</p>
 	<h1 class="h1">Hoe kan ik je helpen?</h1>
 
-	<Searchbar bind:value={prompt} />
+	<div class="search-autocomplete-wrapper">
+		<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+	</div>
 </section>
+
+<!-- 
+	TODO:
+	- Make sure the searchbar doesnt shift when showing results
+ -->
 
 <style>
 	section {
@@ -118,6 +149,27 @@
 
 	h1 {
 		margin-bottom: 2rem;
+	}
+
+	.search-autocomplete-wrapper {
+		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.autocomplete-list {
+		text-align: start;
+		width: 100%;
+	}
+
+	.autocomplete-list li {
+		list-style: none;
+		padding: 0.5rem 1rem;
+		background: var(--white);
+		color: var(--black);
+		border-radius: 10px;
+		margin-bottom: 0.5rem;
 	}
 
 	@media screen and (min-width: 768px) {
