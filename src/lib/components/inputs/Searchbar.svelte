@@ -1,13 +1,14 @@
 <script lang="ts" module>
 	import IconButton from '$lib/components/buttons/IconButton.svelte';
 	import ArrowIcon from '$lib/assets/icons/arrow-icon.svg?component';
+	import Dropdown from '$lib/components/inputs/Dropdown.svelte';
 </script>
 
 <script lang="ts">
 	let { value = $bindable('') } = $props();
 </script>
 
-<div class="search-wrapper">
+<div class="search-wrapper" class:active={value}>
 	<input
 		bind:value
 		type="text"
@@ -20,6 +21,10 @@
 	<IconButton type="submit">
 		<ArrowIcon class="arrow-icon" />
 	</IconButton>
+
+	{#if value}
+		<Dropdown inputVal={value} />
+	{/if}
 </div>
 
 <style>
@@ -39,6 +44,13 @@
 		border-radius: 15px;
 		-webkit-backdrop-filter: blur(20px);
 		outline: solid 1px rgba(255 255 255 / 0.5);
+
+		transition: all 200ms ease-in-out;
+
+		&.active {
+			border-bottom-left-radius: 0;
+			border-bottom-right-radius: 0;
+		}
 	}
 
 	input {

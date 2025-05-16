@@ -17,6 +17,8 @@
 	--purple-normal: rgb(148 130 255 / var(--opacity));
 	--purple-dark: rgb(53 31 183 / var(--opacity));
 	--yellow: rgb(255 240 33 / var(--opacity));
+
+	--hover-gradient: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, .12) 100%);
 }
 
 html {
