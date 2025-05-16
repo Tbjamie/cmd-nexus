@@ -45,7 +45,7 @@
 		-webkit-backdrop-filter: blur(20px);
 		outline: solid 1px rgba(255 255 255 / 0.5);
 
-		transition: all 200ms ease-in-out;
+		transition: all 100ms ease-in-out;
 
 		&.active {
 			border-bottom-left-radius: 0;

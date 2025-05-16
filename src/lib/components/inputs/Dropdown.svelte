@@ -56,8 +56,8 @@
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
 		-webkit-backdrop-filter: blur(20px);
-		border: solid 1px rgba(255 255 255 / 0.5);
-		border-top: none;
+		outline: solid 1px rgba(255 255 255 / 0.5);
+		/* border-top: none; */
 	}
 
 	ul {
@@ -65,5 +65,11 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: baseline;
+	}
+
+		@media screen and (min-width: 1563px) {
+		.result-wrapper {
+			top: calc(3rem + 24px);
+		}
 	}
 </style>
