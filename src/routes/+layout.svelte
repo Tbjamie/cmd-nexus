@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { gsap } from 'gsap';
 	import Lenis from 'lenis';
-	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	// import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import { onMount } from 'svelte';
 
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
