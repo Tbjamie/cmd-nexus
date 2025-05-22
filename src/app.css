@@ -19,6 +19,11 @@
 	--yellow: rgb(255 240 33 / var(--opacity));
 	--green: rgb(44 226 42 / var(--opacity));
 	--light-blue: rgb(42 226 223 / var(--opacity));
+	--border-radius-small: 4px;
+    --border-radius-medium: 8px;
+    --border-radius-large: 20px;
+    --border-radius-full: 100px;
+    --backdrop-filter: blur(10px);
 
 }
 
