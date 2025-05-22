@@ -17,6 +17,9 @@
 	--purple-normal: rgb(148 130 255 / var(--opacity));
 	--purple-dark: rgb(53 31 183 / var(--opacity));
 	--yellow: rgb(255 240 33 / var(--opacity));
+	--green: rgb(44 226 42 / var(--opacity));
+	--light-blue: rgb(42 226 223 / var(--opacity));
+
 }
 
 html {
