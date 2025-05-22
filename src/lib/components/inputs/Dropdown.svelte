@@ -1,5 +1,6 @@
 <script>
 	let { inputVal = $bindable(''), relatedItems = [] } = $props();
+	console.log('inputVal', relatedItems);
 </script>
 
 <div class="result-wrapper">

@@ -17,6 +17,13 @@
 	--purple-normal: rgb(148 130 255 / var(--opacity));
 	--purple-dark: rgb(53 31 183 / var(--opacity));
 	--yellow: rgb(255 240 33 / var(--opacity));
+
+	--border-radius-small: 4px;
+	--border-radius-medium: 8px;
+	--border-radius-large: 20px;
+	--border-radius-full: 100px;
+
+	--backdrop-filter: blur(10px);
 }
 
 html {
@@ -28,4 +35,8 @@ body {
 	color: var(--white);
 	font-family: 'Geist', sans-serif;
 	min-height: 100vh;
+}
+
+a {
+	text-decoration: none;
 }
