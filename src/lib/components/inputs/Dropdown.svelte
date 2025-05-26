@@ -69,7 +69,7 @@
 		width: 100%;
 
 		background: var(--white);
-		backdrop-filter: blur(20px);
+		backdrop-filter: blur(10px);
 		border-radius: 15px;
 		border-top-left-radius: 0;
 		border-top-right-radius: 0;
