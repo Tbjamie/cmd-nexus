@@ -6,10 +6,11 @@ import PrincipleIcon from '$lib/assets/icons/principle_icon.svg?component'
 export let hasHover = false;
 export let theme: "green" | "blue" | "yellow" = "blue";
 export let type = "";
+export let variant = "";
 </script>
 
 
-<section>
+<section class="{variant}">
     <div>
         <PrincipleIcon class="category-icon {hasHover ? 'active' : ''} {theme}" />
     </div>
@@ -19,7 +20,6 @@ export let type = "";
         </p>
     {/if}
 </section>
-
 
 
 <style>
@@ -41,6 +41,15 @@ export let type = "";
         padding: .5rem;
         }
     }
+
+    :global(.dropdown){
+        & div{
+
+         background: rgba(252, 252, 252, 0);
+        }
+    }
+
+    
 
 
     :global(.category-icon){

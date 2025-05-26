@@ -6,6 +6,7 @@
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/itemType';
 	import Fuse from 'fuse.js';
+	import CategoryLabel from '$lib/components/labels/CategoryLabel.svelte';
 </script>
 
 <script lang="ts">
