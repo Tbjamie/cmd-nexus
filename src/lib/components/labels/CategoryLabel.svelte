@@ -5,8 +5,8 @@ import PrincipleIcon from '$lib/assets/icons/principle_icon.svg?component'
 <script lang="ts">
 export let hasHover = false;
 export let theme: "green" | "blue" | "yellow" = "blue";
-export let type = "";
-export let variant = "";
+export let text = "";
+export let variant: 'dropdown' | 'default' = "default";
 </script>
 
 
@@ -14,9 +14,9 @@ export let variant = "";
     <div>
         <PrincipleIcon class="category-icon {hasHover ? 'active' : ''} {theme}" />
     </div>
-    {#if type}
+    {#if text}
         <p>
-            {type}
+            {text}
         </p>
     {/if}
 </section>

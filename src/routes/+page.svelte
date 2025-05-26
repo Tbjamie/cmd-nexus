@@ -105,6 +105,8 @@
 	<div class="search-autocomplete-wrapper">
 		<Searchbar bind:value={prompt} relatedItems={filteredItems} />
 	</div>
+
+	<CategoryLabel variant='default' text='lisa is al 26'/>
 </section>
 
 <style>
