@@ -28,7 +28,7 @@ export let type = "";
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        padding: .5rem;
+        padding: 0rem;
         text-transform: capitalize;
 
         & div{
