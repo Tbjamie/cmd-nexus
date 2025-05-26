@@ -1,7 +1,3 @@
-<script lang="ts" module>
-</script>
-
-
 <span class="tag-wrapper">
     <slot />
 </span>
