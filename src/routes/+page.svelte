@@ -104,6 +104,7 @@
 	<div class="search-autocomplete-wrapper">
 		<Searchbar bind:value={prompt} relatedItems={filteredItems} />
 	</div>
+
 </section>
 
 <style>

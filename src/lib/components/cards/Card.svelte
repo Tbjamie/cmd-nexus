@@ -11,7 +11,7 @@
     let className = $state('')
 </script>
 
-<a href={href} class="card-wrapper normal {className} {variant}" onmouseover={() => hasHover = true} 
+<a href={href} class="card-wrapper {className} {variant}" onmouseover={() => hasHover = true} 
     onfocus={() => hasHover = true} onblur={() => hasHover = false} onmouseleave={() => hasHover = false}>
    <div class="card-container">
        <div class="card-header">
