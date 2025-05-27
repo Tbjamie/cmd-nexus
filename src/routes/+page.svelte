@@ -1,7 +1,6 @@
 <script lang="ts" module>
 	import gsap from 'gsap';
 	import { onMount } from 'svelte';
-
 	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
 	import { page } from '$app/state';
@@ -13,6 +12,7 @@
 </script>
 
 <script lang="ts">
+
 	let prompt = $state('');
 	let filteredItems: Item[] = $state([]);
 	let items: Item[];
@@ -102,6 +102,7 @@
 </svelte:head>
 
 <section class="main-page-spacing">
+	
 	<AiStarIcon class="ai-star-icon" />
 
 	<p>Welkom bij CMD Nexus</p>

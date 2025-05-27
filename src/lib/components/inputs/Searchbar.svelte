@@ -47,12 +47,9 @@
 		background: red;
 		border: none;
 		width: 100%;
-		z-index: 10;
 
 		background: var(--white);
-		backdrop-filter: blur(20px);
 		border-radius: 15px;
-		-webkit-backdrop-filter: blur(20px);
 		outline: solid 1px rgba(255 255 255 / 0.5);
 
 		/* transition: all 200ms ease-in-out; */
