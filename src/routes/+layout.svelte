@@ -6,6 +6,7 @@
 	import { onMount } from 'svelte';
 
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
+	import ToggleButton from '$lib/components/buttons/ToggleButton.svelte';
 </script>
 
 <script lang="ts">
@@ -27,9 +28,7 @@
 </script>
 
 <header>
-	<!-- LOGO -->
-
-	<!-- INFOBUTTON -->
+	<ToggleButton />
 </header>
 
 <main>
@@ -42,6 +41,13 @@
 </footer>
 
 <style>
+	header {
+		position: fixed;
+		padding: 4rem 4rem;
+		width: 100vw;
+		z-index: 3;
+	}
+
 	footer {
 		display: flex;
 		flex-direction: column;
