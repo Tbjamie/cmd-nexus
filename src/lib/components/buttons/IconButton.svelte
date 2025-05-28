@@ -11,7 +11,8 @@
 	href={href ? href : null}
 	class="icon-button"
 >
-	<slot />
+
+<slot />
 </svelte:element>
 
 <style>

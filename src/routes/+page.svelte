@@ -111,21 +111,13 @@
 	<div class="search-autocomplete-wrapper">
 		<Searchbar bind:value={prompt} relatedItems={filteredItems} />
 	</div>
+
 </section>
 <!-- straks verwijderen -->
 <section class="main-page-spacing">
 	{#if testItem}
-		<!-- svelte-ignore slot_element_deprecated -->
-		<Card href="/tools" tag="Design" variant="normal">
-			<slot>
-				<h3 class="h3">{ testItem.alternatieve_naam}</h3>
-				<p class="description">
-					{ testItem.korte_beschrijving }
-				</p>
-			</slot>
-			<div slot="moeilijkheidsgraad">
-				<span class="body-text-small">Medium</span>
-			</div>
+		<!-- svelte-ignore attribute_quoted -->
+		<Card href="/tools" className="normal" tag="{testItem.rel_vakgebied}" variant="normal">
 		</Card>
 	{/if}
 </section>

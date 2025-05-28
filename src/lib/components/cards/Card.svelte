@@ -1,24 +1,30 @@
 <script lang="ts" module>
 	import CategoryLabel from "../labels/CategoryLabel.svelte";
-
-    // import TagComponent from '../TagComponent.svelte';
+    import TagComponent from '../tag/Tag.svelte';
+    import IconButton from "../buttons/IconButton.svelte";
 </script>
 
 <script lang="ts">
-    let { tag = $bindable(''), href = $bindable(''), variant = $bindable(''), title = $bindable(''), description = $bindable('')} = $props();
+    let { tag = $bindable(''), href = $bindable(''), variant = $bindable(''), title = $bindable(''), description = $bindable(''), rating = $bindable('')} = $props();
     export { className as class }
     let hasHover = $state(false);
     let className = $state('')
+
+
 </script>
 
-<a href={href} class="card-wrapper normal {className} {variant}" onmouseover={() => hasHover = true} 
+<a href={href} class="card-wrapper {variant}" onmouseover={() => hasHover = true} 
     onfocus={() => hasHover = true} onblur={() => hasHover = false} onmouseleave={() => hasHover = false}>
    <div class="card-container">
        <div class="card-header">
            <CategoryLabel type='test_methode' {hasHover} theme='blue' />
            <!-- bookmark component -->
+            <IconButton type="button" target="_self" href="/">
+                <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5.63037 0.273438C5.9709 0.273438 6.24658 0.549122 6.24658 0.889648V4.36328H9.74072C10.0812 4.36328 10.3569 4.63897 10.3569 4.97949C10.3569 5.32002 10.0812 5.5957 9.74072 5.5957H6.24658V9.11035L6.23486 9.23535C6.17725 9.51616 5.92822 9.72754 5.63037 9.72754C5.33252 9.72754 5.08349 9.51616 5.02588 9.23535L5.01416 9.11035V5.5957H1.52002L1.39502 5.58398C1.11421 5.52637 0.902832 5.27734 0.902832 4.97949C0.902832 4.68164 1.11421 4.43261 1.39502 4.375L1.52002 4.36328H5.01416V0.889648C5.01416 0.549122 5.28984 0.273437 5.63037 0.273438Z" fill="white" fill-opacity="0.8"/>
+                </svg>
+            </IconButton>
        </div>
-       <!-- svelte-ignore slot_element_deprecated -->
          <div class="card-content">
             {#if title}
             <h3>
@@ -35,10 +41,11 @@
        <!-- svelte-ignore slot_element_deprecated -->
        <div class="card-footer">
             {#if tag}
-                <!-- <TagComponent>{tag}</TagComponent> -->
+                <TagComponent>{tag}</TagComponent>
            {/if}
-            <slot name="moeilijkheidsgraad" />
-            
+           {#if rating}
+               <span class="rating">{rating}</span>
+           {/if}
        </div>
    </div>
 </a>
