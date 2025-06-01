@@ -4,7 +4,15 @@ import PrincipleIcon from '$lib/assets/icons/principle_icon.svg?component'
 
 <script lang="ts">
 export let hasHover = false;
-export let theme: "green" | "blue" | "yellow" = "blue";
+export let theme: string;
+
+$: theme = (() => {
+  if (type === 'Beroepstaak') return 'green';
+  if (type === 'Principe') return 'blue';
+  if (type === 'Methode') return 'yellow';
+  return 'blue';
+})();
+
 export let type = "";
 </script>
 
@@ -49,21 +57,19 @@ export let type = "";
         color: white; 
         transition: 300ms all;
 
+         &.active.blue {
+            --current-card-color: var(--light-blue);
+            color: var(--current-card-color);
+        }
 
-
-         &.active.blue{
-            color: var(--light-blue);
+         &.active.green {
+            --current-card-color: var(--green);
+            color: var(--current-card-color);
             }
 
-         &.active.green{
-            color: var(--green);
+         &.active.yellow {
+            --current-card-color: var(--yellow);
+            color: var(--current-card-color);
             }
-
-         &.active.yellow{
-            color: var(--yellow);
-            }
-        
-
-        
     }
 </style>

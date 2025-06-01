@@ -18,8 +18,22 @@
 	let items: Item[];
 
 	// test item
-	const testItem = page.data?.items?.[2]
+	const testItemsArray = (page.data?.items || []).slice(0, 6);
+	const testItem = page.data?.items?.[1]
 	console.log('item', testItem);
+
+	function getRating(moeilijkheid: string) {
+	switch (moeilijkheid) {
+		case '*':
+			return 'Easy';
+		case '**':
+			return 'Medium';
+		case '***':
+			return 'Moeilijk';
+		default:
+			return moeilijkheid;
+	}
+}
 
 	onMount(() => {
 		const heading = document.querySelector('h1');
@@ -115,14 +129,30 @@
 </section>
 <!-- straks verwijderen -->
 <section class="main-page-spacing">
-	{#if testItem}
-		<!-- svelte-ignore attribute_quoted -->
-		<Card href="/tools" className="normal" tag="{testItem.rel_vakgebied}" variant="normal">
-		</Card>
-	{/if}
+	<div class="grid-page">
+	{#each testItemsArray as item}
+		<Card
+			id="{item.id}"
+			href={`/tools/${item.id}`}
+			variant="normal"
+			tag="{item.rel_vakgebied}"
+			title="{item.naam}"
+			labelType="{item.soort}"
+			description="{item.korte_beschrijving}"
+			rating="{getRating(item.moeilijkheid)}"
+		/>
+	{/each}
+	</div>
 </section>
 
 <style>
+	.grid-page {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+		padding: 0 1rem;
+	}
+
 	section {
 		display: flex;
 		flex-direction: column;
@@ -139,7 +169,7 @@
 		position: absolute;
 		top: -50%;
 		width: 100%;
-		background: radial-gradient(ellipse at center, var(--purple-light), var(--purple-dark));
+		/* background: radial-gradient(ellipse at center, var(--purple-light), var(--purple-dark)); */
 		border-radius: 9999px;
 		aspect-ratio: 1 / 1;
 		opacity: 0.4;
