@@ -44,7 +44,7 @@
 	header {
 		position: fixed;
 		padding: 4rem 4rem;
-		width: 100vw;
+		/* width: 100vw; */
 		z-index: 3;
 	}
 

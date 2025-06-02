@@ -4,6 +4,10 @@
 	export let type: 'button' | 'submit' | 'reset' = 'button';
 	export let theme: 'primary' | 'secondary' = 'primary';
 	export let variant: 'icon' | 'text' = 'icon';
+	export let disabled = false;
+	export { className as class };
+
+	let className = '';
 </script>
 
 <svelte:element
@@ -11,16 +15,18 @@
 	target={href ? target : null}
 	type={href ? null : type}
 	href={href ? href : null}
-	class="icon-button {theme} {variant}"
+	{disabled}
+	class="icon-button {theme} {variant} {className} {disabled ? 'disabled' : ''}"
 >
 	<slot />
 </svelte:element>
 
 <style>
 	.icon-button {
+		width: fit-content;
 		background: var(--white);
 		border-radius: 9999px;
-		padding: 0.5rem;
+		padding: 0.5rem 1rem;
 		border: none;
 		position: relative;
 		text-decoration: none;
@@ -28,15 +34,21 @@
 		cursor: pointer;
 		transition: 200ms;
 		display: flex;
+		gap: 0.5rem;
 		justify-content: center;
 		align-items: center;
 		color: initial;
 		position: relative;
 	}
 
+	.disabled {
+		cursor: default;
+	}
+
 	.primary {
 		background-color: var(--white);
 		border: unset;
+		color: var(--black);
 	}
 
 	.secondary {
@@ -68,6 +80,10 @@
 	.icon-button:hover,
 	.icon-button:focus-visible {
 		--opacity: 80%;
+
+		&.disabled {
+			--opacity: 100%;
+		}
 	}
 
 	.icon-button:active {
