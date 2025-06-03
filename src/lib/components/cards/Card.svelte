@@ -135,7 +135,6 @@
 </a>
 
 
-
 <style>
     .dot-element {
         --opacity: 50%;
@@ -152,6 +151,8 @@
             transform: translate(-50%, -50%);
             transition: opacity 500ms ease-in-out;
             animation: pulse 5s infinite ease-in-out;
+            background-color: var(--current-color-card);
+
 
          &.visible.blue {
                 background-color: var(--light-blue);
