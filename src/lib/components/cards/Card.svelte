@@ -2,7 +2,6 @@
 	import CategoryLabel from "../labels/CategoryLabel.svelte";
     import TagComponent from '../tag/Tag.svelte';
     import IconButton from "../buttons/IconButton.svelte";
-	import { onDestroy, onMount } from "svelte";
 </script>
 
 <script lang="ts">
@@ -16,10 +15,12 @@
         description = $bindable(''),
         rating = $bindable(''),
         labelType = $bindable(''),
-        labelColor = $bindable('')
+        labelColor = $bindable(''),
+        mostRelevant = $bindable(false)
     } = $props();
 
     let hasHover = $state(false);
+
 
     // Check labeltype for different styles
     // theme afhankelijk van de labeltype
@@ -103,8 +104,8 @@
     <div class="card-container">
         <div class="card-header">
             <CategoryLabel type={labelType} {hasHover} theme={labelColor} />
-            <IconButton type="button" target="_self" href="">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-plus">
+            <IconButton theme="secondary" type="button" target="_self" href="" variant="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-plus">
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
@@ -124,9 +125,14 @@
             {/if}
         </div>
         <div class="card-footer">
+            <div class="card-footer-tags-wrapper">
+                {#if mostRelevant == true}
+                    <TagComponent theme="secondary" >Gevonden kaart</TagComponent>
+                {/if}
                 {#if tag}
                     <TagComponent>{tag}</TagComponent>
-            {/if}
+                {/if}
+            </div>
             {#if rating}
                 <span class="rating">{rating}</span>
             {/if}
@@ -206,6 +212,11 @@
             }
         }
 
+        .card-footer-tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
 
         & > * {
             color: var(--white);

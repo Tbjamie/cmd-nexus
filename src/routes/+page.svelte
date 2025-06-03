@@ -18,10 +18,11 @@
 	let items: Item[];
 
 	// test item
-	const testItemsArray = (page.data?.items || []).slice(0, 6);
+	const testItemsArray = (page.data?.items || []).slice(0, 5);
 	const testItem = page.data?.items?.[1]
 	console.log('item', testItem);
 
+	// Transform the difficulty rating to a more readable format
 	function getRating(moeilijkheid: string) {
 	switch (moeilijkheid) {
 		case '*':
@@ -33,7 +34,10 @@
 		default:
 			return moeilijkheid;
 	}
-}
+	}
+
+	// Function for the chosen card
+	// mostRelevant
 
 	onMount(() => {
 		const heading = document.querySelector('h1');
@@ -132,14 +136,15 @@
 	<div class="grid-page">
 	{#each testItemsArray as item}
 		<Card
-			id="{item.id}"
+			id={item.id}
 			href={`/tools/${item.id}`}
 			variant="normal"
-			tag="{item.rel_vakgebied}"
-			title="{item.naam}"
-			labelType="{item.soort}"
-			description="{item.korte_beschrijving}"
-			rating="{getRating(item.moeilijkheid)}"
+			tag={item.rel_vakgebied}
+			title={item.naam}
+			labelType={item.soort}
+			description={item.korte_beschrijving}
+			rating={getRating(item.moeilijkheid)}
+			mostRelevant={item.soort === 'Beroepstaak'}
 		/>
 	{/each}
 	</div>

@@ -41,6 +41,7 @@
 	}
 
 	.secondary {
+		padding: .25rem;
 		--opacity: 100%;
 		background-color: transparent;
 		color: var(--white);
