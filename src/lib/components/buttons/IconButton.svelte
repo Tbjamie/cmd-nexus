@@ -2,6 +2,8 @@
 	export let href = '';
 	export let target: '_self' | '_blank' = '_self';
 	export let type: 'button' | 'submit' | 'reset' = 'button';
+	export let theme: 'primary' | 'secondary' = 'primary';
+	export let variant: 'icon' | 'text' = 'icon';
 </script>
 
 <svelte:element
@@ -9,7 +11,7 @@
 	target={href ? target : null}
 	type={href ? null : type}
 	href={href ? href : null}
-	class="icon-button"
+	class="icon-button {theme} {variant}"
 >
 
 <slot />
@@ -24,7 +26,6 @@
 		position: relative;
 		text-decoration: none;
 		mix-blend-mode: color-dodge;
-		aspect-ratio: 1 / 1;
 		cursor: pointer;
 		transition: 200ms;
 		display: flex;
@@ -34,6 +35,26 @@
 		position: relative;
 	}
 
+	.primary {
+		background-color: var(--white);
+		border: unset;
+	}
+
+	.secondary {
+		--opacity: 100%;
+		background-color: transparent;
+		color: var(--white);
+		outline: 1px solid var(--white);
+	}
+
+	.icon {
+		aspect-ratio: 1/1;
+	}
+
+	.text {
+		aspect-ratio: unset;
+	}
+
 	.icon-button::after {
 		content: '';
 		width: 100%;
@@ -41,7 +62,7 @@
 		position: absolute;
 		left: 0;
 		top: 0;
-		box-shadow: 0 0 16px var(--black);
+		/* box-shadow: 0 0 16px var(--black); */
 		border-radius: 9999px;
 	}
 

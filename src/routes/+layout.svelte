@@ -1,35 +1,34 @@
 <script lang="ts" module>
 	import '../app.css';
-	import { gsap } from 'gsap';
+	// import { gsap } from 'gsap';
 	import Lenis from 'lenis';
 	// import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import { onMount } from 'svelte';
 
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
+	import ToggleButton from '$lib/components/buttons/ToggleButton.svelte';
 </script>
 
 <script lang="ts">
 	let { children } = $props();
 
 	onMount(() => {
-		gsap.registerPlugin(ScrollTrigger);
+		// gsap.registerPlugin(ScrollTrigger);
 
 		const lenis = new Lenis();
 
-		lenis.on('scroll', ScrollTrigger.update);
+		// lenis.on('scroll', ScrollTrigger.update);
 
-		gsap.ticker.add((time) => {
-			lenis.raf(time * 1000);
-		});
+		// gsap.ticker.add((time) => {
+		// 	lenis.raf(time * 1000);
+		// });
 
-		gsap.ticker.lagSmoothing(0);
+		// gsap.ticker.lagSmoothing(0);
 	});
 </script>
 
 <header>
-	<!-- LOGO -->
-
-	<!-- INFOBUTTON -->
+	<ToggleButton />
 </header>
 
 <main>
@@ -42,6 +41,13 @@
 </footer>
 
 <style>
+	header {
+		position: fixed;
+		padding: 4rem 4rem;
+		width: 100vw;
+		z-index: 3;
+	}
+
 	footer {
 		display: flex;
 		flex-direction: column;
