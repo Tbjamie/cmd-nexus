@@ -7,6 +7,7 @@
 	import type { Item } from '$lib/types/itemType';
 	import Fuse from 'fuse.js';
 	import { pageView } from '$lib/stores/pageView.svelte';
+	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 </script>
 
 <script lang="ts">
@@ -120,44 +121,51 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
-{#if pageView.view === 'nexus'}
-	<section class="main-page-spacing nexus-section">
-		<AiStarIcon class="ai-star-icon" />
+<div>
+	{#if pageView.view === 'nexus'}
+		<section class="main-page-spacing nexus-section">
+			<AiStarIcon class="ai-star-icon" />
 
-		<p>Welkom bij CMD Nexus</p>
-		<h1 class="h1">Hoe kan ik je helpen?</h1>
+			<p>Welkom bij CMD Nexus</p>
+			<h1 class="h1">Hoe kan ik je helpen?</h1>
 
-		<div class="search-autocomplete-wrapper">
-			<Searchbar bind:value={prompt} relatedItems={filteredItems} />
-		</div>
-	</section>
-{/if}
+			<div class="search-autocomplete-wrapper">
+				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+			</div>
+		</section>
 
-{#if pageView.view === 'overview'}
-	<!-- Make sure that all items are shown when the button is clicked. If a search result redirect is done then only show those items -->
-	<section class="main-page-spacing">
-		{#if !resultsFound}
-			<h1>Show all cards here</h1>
-		{/if}
-		{#if searchResults}
-			<h1 class="h1">Zoekresultaten voor {prompt}</h1>
-			<p>Hier zijn de resultaten voor je zoekopdracht.</p>
-			{#each searchResults as result}
-				<article class="search-result-item">
-					<a
-						href="/{result.naam
-							.toLowerCase()
-							.replace(/[\s:]+/g, '-')
-							.replace(/[^\w-]+/g, '')}"
-					>
-						<h2>{result.naam}</h2>
-						<p>{result.korte_beschrijving}</p>
-					</a>
-				</article>
-			{/each}
-		{/if}
-	</section>
-{/if}
+		<footer>
+			<p>copyright</p>
+			<NexusLogoFull class="logo" />
+		</footer>
+	{/if}
+
+	{#if pageView.view === 'overview'}
+		<!-- Make sure that all items are shown when the button is clicked. If a search result redirect is done then only show those items -->
+		<section class="main-page-spacing">
+			{#if !resultsFound}
+				<h1>Show all cards here</h1>
+			{/if}
+			{#if searchResults}
+				<h1 class="h1">Zoekresultaten voor {prompt}</h1>
+				<p>Hier zijn de resultaten voor je zoekopdracht.</p>
+				{#each searchResults as result}
+					<article class="search-result-item">
+						<a
+							href="/{result.naam
+								.toLowerCase()
+								.replace(/[\s:]+/g, '-')
+								.replace(/[^\w-]+/g, '')}"
+						>
+							<h2>{result.naam}</h2>
+							<p>{result.korte_beschrijving}</p>
+						</a>
+					</article>
+				{/each}
+			{/if}
+		</section>
+	{/if}
+</div>
 
 <style>
 	.nexus-section {
@@ -165,10 +173,25 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		height: 100vh;
 		text-align: center;
 		padding-bottom: 20vh;
 		position: relative;
+		height: 100dvh;
+		width: 100vw;
+	}
+
+	:global(.logo-header) {
+		width: 2em;
+		/* margin: auto; */
+	}
+
+	footer {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		position: absolute;
+		bottom: 4rem;
+		width: 100%;
 	}
 
 	/* section::after {
