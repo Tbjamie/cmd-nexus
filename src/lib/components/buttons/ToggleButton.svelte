@@ -5,11 +5,17 @@
 	import { pageView } from '$lib/stores/pageView.svelte';
 </script>
 
-<ul class="nexusSelection">
+<script lang="ts">
+	export { className as class };
+
+	let className = '';
+</script>
+
+<ul class="nexusSelection {className}">
 	<li transition:slide>
 		<button
 			class:active={pageView.view == 'nexus'}
-			on:click={() => {
+			onclick={() => {
 				pageView.view = 'nexus';
 			}}
 		>
@@ -19,7 +25,7 @@
 	<li transition:slide>
 		<button
 			class:active={pageView.view == 'overview'}
-			on:click={() => {
+			onclick={() => {
 				pageView.view = 'overview';
 			}}
 		>
