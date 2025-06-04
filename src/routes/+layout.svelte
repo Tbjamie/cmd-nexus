@@ -1,48 +1,53 @@
 <script lang="ts" module>
 	import '../app.css';
 
-	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 	import ToggleButton from '$lib/components/buttons/ToggleButton.svelte';
 	import LogoIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import { page } from '$app/state';
+	import { pageView } from '$lib/stores/pageView.svelte';
 </script>
 
 <script lang="ts">
 	let { children } = $props();
-	let pathname = '';
+	let pathname = $state('');
 
 	$effect(() => {
 		pathname = page.url.pathname;
 	});
+
 	setInterval(() => {
 		console.log(pathname);
 	}, 1000);
 </script>
 
-<header class="main-page-spacing">
-	<a href="/"><LogoIcon class="logo-header" /></a>
-	<ToggleButton />
-</header>
+{#if pathname === '/'}
+	<header class="main-page-spacing">
+		{#if pageView.view === 'overview'}
+			<a aria-label="Nexus logo, linking to the homepage" href="/"
+				><LogoIcon class="logo-header" /></a
+			>
+		{/if}
+		<ToggleButton class="toggle-button" />
+	</header>
+{:else}
+	<header class="main-page-spacing">
+		<a aria-label="Nexus logo, linking to the homepage" href="/"><LogoIcon class="logo-header" /></a
+		>
+	</header>
+{/if}
 
 <main>
 	{@render children()}
 </main>
 
-<footer>
-	<p>copyright</p>
-	<NexusLogoFull class="logo" />
-</footer>
-
 <style>
 	header {
-		padding-top: 2em;
 		display: flex;
-		justify-content: space-between;
+		justify-content: start;
 
-		/* position: fixed; */
-		/* padding: 4rem 4rem; */
-		/* width: 100vw; */
-		max-width: 1600px;
+		position: absolute;
+		padding: 4rem;
+		width: 100vw;
 		z-index: 3;
 	}
 
@@ -57,25 +62,12 @@
 		color: var(--purple-light);
 	}
 
-	:global(.logo-header) {
-		width: 2em;
-		/* margin: auto; */
-	}
-
-	footer {
-		position: relative;
-		/* display: flex; */
-		/* flex-direction: column; */
-		/* align-items: center; */
-		text-align: center;
-		/* position: absolute; */
-		/* bottom: 0; */
-		/* width: 100%; */
-		/* padding-top: 3.5rem; */
-		padding-bottom: 1rem;
-	}
 	:global(.logo) {
 		margin-top: 0.25rem;
 		height: 2rem;
+	}
+
+	:global(.toggle-button) {
+		margin-left: auto;
 	}
 </style>
