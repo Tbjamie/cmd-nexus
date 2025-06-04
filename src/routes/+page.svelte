@@ -6,13 +6,37 @@
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/itemType';
 	import Fuse from 'fuse.js';
+	import { pageView } from '$lib/stores/pageView.svelte';
 </script>
 
 <script lang="ts">
-
 	let prompt = $state('');
 	let filteredItems: Item[] = $state([]);
 	let items: Item[];
+	let formResult: any;
+	let searchResults: any = $state(null);
+	let resultsFound = $state(false);
+
+	$effect(() => {
+		formResult = page.form;
+
+		searchResults = formResult?.results;
+	});
+
+	$effect(() => {
+		resultsFound = searchResults && searchResults.length > 0;
+
+		if (resultsFound) {
+			pageView.view = 'overview';
+		} else {
+			pageView.view = 'nexus';
+		}
+	});
+
+	// $effect(() => {
+	// 	console.log('SEARCHPARAMS', page.url.searchParams.get('search'));
+	// 	console.log('SEARCHRESULTS', searchResults);
+	// });
 
 	onMount(() => {
 		const heading = document.querySelector('h1');
@@ -47,32 +71,34 @@
 			});
 		});
 
-		gsap.fromTo(
-			aiStarIcon,
-			{
-				opacity: 0
-			},
-			{
-				opacity: 1,
-				duration: 1,
-				ease: 'power2.out'
-			}
-		);
+		if (pageView.view === 'nexus') {
+			gsap.fromTo(
+				aiStarIcon,
+				{
+					opacity: 0
+				},
+				{
+					opacity: 1,
+					duration: 1,
+					ease: 'power2.out'
+				}
+			);
 
-		gsap.fromTo(
-			[paragraph, heading],
-			{
-				opacity: 0,
-				y: 10
-			},
-			{
-				opacity: 1,
-				y: 0,
-				duration: 1,
-				ease: 'power2.out',
-				stagger: 0.2
-			}
-		);
+			gsap.fromTo(
+				[paragraph, heading],
+				{
+					opacity: 0,
+					y: 10
+				},
+				{
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power2.out',
+					stagger: 0.2
+				}
+			);
+		}
 	});
 </script>
 
@@ -94,20 +120,47 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
-<section class="main-page-spacing">
-	
-	<AiStarIcon class="ai-star-icon" />
+{#if pageView.view === 'nexus'}
+	<section class="main-page-spacing nexus-section">
+		<AiStarIcon class="ai-star-icon" />
 
-	<p>Welkom bij CMD Nexus</p>
-	<h1 class="h1">Hoe kan ik je helpen?</h1>
+		<p>Welkom bij CMD Nexus</p>
+		<h1 class="h1">Hoe kan ik je helpen?</h1>
 
-	<div class="search-autocomplete-wrapper">
-		<Searchbar bind:value={prompt} relatedItems={filteredItems} />
-	</div>
-</section>
+		<div class="search-autocomplete-wrapper">
+			<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+		</div>
+	</section>
+{/if}
+
+{#if pageView.view === 'overview'}
+	<!-- Make sure that all items are shown when the button is clicked. If a search result redirect is done then only show those items -->
+	<section class="main-page-spacing">
+		{#if !resultsFound}
+			<h1>Show all cards here</h1>
+		{/if}
+		{#if searchResults}
+			<h1 class="h1">Zoekresultaten voor {prompt}</h1>
+			<p>Hier zijn de resultaten voor je zoekopdracht.</p>
+			{#each searchResults as result}
+				<article class="search-result-item">
+					<a
+						href="/{result.naam
+							.toLowerCase()
+							.replace(/[\s:]+/g, '-')
+							.replace(/[^\w-]+/g, '')}"
+					>
+						<h2>{result.naam}</h2>
+						<p>{result.korte_beschrijving}</p>
+					</a>
+				</article>
+			{/each}
+		{/if}
+	</section>
+{/if}
 
 <style>
-	section {
+	.nexus-section {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -118,7 +171,7 @@
 		position: relative;
 	}
 
-	section::after {
+	/* section::after {
 		content: '';
 		position: absolute;
 		top: -50%;
@@ -129,7 +182,7 @@
 		opacity: 0.4;
 		filter: blur(100px);
 		z-index: -1;
-	}
+	} */
 
 	:global(.ai-star-icon) {
 		width: 3.5rem;
