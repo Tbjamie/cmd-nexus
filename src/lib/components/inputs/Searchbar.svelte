@@ -13,12 +13,12 @@
 </script>
 
 <form
-	action="/"
-	method="POST"
+	action="/overview"
+	method="GET"
 	class="search-wrapper"
 	class:active={value}
 	onsubmit={(e) => {
-		e.preventDefault();
+		// e.preventDefault();
 		console.log('Form submitted with value:', value);
 	}}
 >

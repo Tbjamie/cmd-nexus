@@ -13,8 +13,7 @@
 	href={href ? href : null}
 	class="icon-button {theme} {variant}"
 >
-
-<slot />
+	<slot />
 </svelte:element>
 
 <style>

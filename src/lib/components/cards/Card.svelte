@@ -183,7 +183,7 @@
         width: 100%;
         text-decoration: none;
         overflow: hidden;
-        max-width: 35rem;
+        /* max-width: 35rem; */
         border-radius: var(--border-radius-large);
         z-index: 1;
 
@@ -194,9 +194,9 @@
             transition: all 300ms ease-in-out;            
             display: flex;
             flex-direction: column;
-            gap: 1.8rem;
+            gap: 1.4rem;
 
-            padding: 1.6rem 2.2rem;
+            padding: 1.4rem 1.6rem;
 
             .card-header, .card-footer {
                 display: flex;
@@ -223,7 +223,7 @@
         }
 
         &:hover {
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
 
 

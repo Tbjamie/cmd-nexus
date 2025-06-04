@@ -14,10 +14,11 @@
 	let filteredItems: Item[] = $state([]);
 	let items: Item[];
 
+	let searchQuery = page.url.searchParams.get('search-bar') || '';
+	console.log('searchQuery', searchQuery);
+
 	// test item
-	const testItemsArray = (page.data?.items || []).slice(0, 5);
-	const testItem = page.data?.items?.[1]
-	console.log('item', testItem);
+	const testItemsArray = (page.data?.items || []).slice(0, 4);
 
 	// Transform the difficulty rating to a more readable format
 	function getRating(moeilijkheid: string) {
@@ -33,36 +34,6 @@
 		}
 	}
 
-	onMount(() => {
-		items = page.data?.items;
-		console.log('items', items);
-
-		$effect(() => {
-			const fuse = new Fuse(items, {
-				keys: [
-					'naam',
-					'alternatieve_naam',
-					'soort',
-					'ondertitel',
-					'korte_beschrijving',
-					'toepassing',
-					'meer_bij_personen',
-					'meer_bij_vak'
-				],
-				includeScore: true,
-				minMatchCharLength: 2,
-				threshold: 0.3
-			});
-
-			let searchItem = fuse.search(prompt, {
-				limit: 3
-			});
-
-			filteredItems = searchItem.map((item) => {
-				return item.item;
-			});
-		});
-	});
 </script>
 
 <svelte:head>
@@ -89,25 +60,27 @@
 		<div class="prompt-header-information-wrapper">
 			<section class="prompt-header-search-wrapper">
 				<p class="">gezocht op:</p>
-				<h2>{prompt}</h2>
+				<h2>{searchQuery}</h2>
 			</section>
 			<span>resultaten gevonden</span>
 		</div>
 		<!-- filter comp -->
-		<div class="grid-page">
-			{#each testItemsArray as item}
-				<Card
-					id={item.id}
-					href={`/tools/${item.id}`}
-					variant="normal"
-					tag={item.rel_vakgebied}
-					title={item.naam}
-					labelType={item.soort}
-					description={item.korte_beschrijving}
-					rating={getRating(item.moeilijkheid)}
-					mostRelevant={item.soort === 'Beroepstaak'}
-				/>
-			{/each}
+		<div class="grid-page-container">
+			<div class="grid-page">
+				{#each testItemsArray as item}
+					<Card
+						id={item.id}
+						href={`/tools/${item.id}`}
+						variant="normal"
+						tag={item.rel_vakgebied}
+						title={item.naam}
+						labelType={item.soort}
+						description={item.korte_beschrijving}
+						rating={getRating(item.moeilijkheid)}
+						mostRelevant={item.soort === 'Principe'}
+					/>
+				{/each}
+			</div>
 		</div>
 	</div>
 </section>
@@ -120,46 +93,129 @@
 		justify-content: center;
 		height: 100vh;
 		text-align: center;
-		padding-bottom: 20vh;
+		padding-top: 6rem;
 		position: relative;
 	}
 
 	.overview-page-wrapper {
 		width: 100%;
+		height: 100%;
+		padding-top: 2rem;
 		/* max-width: 1200px; */
 		display: grid;
 		grid-template-columns: minmax(300px, 360px) 1fr;
-		grid-template-rows: 1fr 1fr;
-		column-gap: 3rem;
-		row-gap: 3.5rem;
+		grid-template-rows: minmax(60px, 64px) minmax(400px, 700px);
+		column-gap: 2rem;
+		row-gap: 2.6rem;
 	}
 
 	.prompt-header-information-wrapper {
+		grid-row: 1 / 2;
+		grid-column: 2 / 3;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		gap: 0.5rem;
+		gap: 1.5rem;
+		padding-left: 1.4rem;
 
 		span {
 			display: flex;
 			align-self: baseline;
+			text-align: right;
 		}
 	}
-	
+
+	:global(.search-wrapper) {
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+	}
+
 	.prompt-header-search-wrapper {
 		display: flex;
 		gap: 0.2rem;
 		flex-direction: column;
 		align-items: flex-start;
 		align-self: baseline;
+
+		> h2 {
+			text-align: left;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			width: 100%;
+		}
+	}
+
+	.grid-page-container {
+		container-type: inline-size;
+		container-name: grid-page;
+		grid-column: 2 / 3;
+		grid-row: 2 / 3;
+  height: 100vh;
+  overflow-y: auto;
+		width: 100%;
+		position: relative;
 	}
 
 	.grid-page {
-		grid-column: 2 / 3;
-		grid-row: 2 / 3;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 2rem;
-		padding: 0 1rem;
 	}
+
+	:global(footer) {
+		display: none;
+		opacity: 0;
+	}
+
+	:global(header.s-7IPF32Wcq3s8) {
+		padding: 2rem 4rem;
+	}
+
+	@container grid-page (max-width: 800px) {
+		.grid-page {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+
+			&::after {
+				content: '<- Nog 2 resultaten';
+				color: var(--white);
+				position: absolute;
+				bottom: 2rem;
+				right: -6rem;
+				transform: rotate(-90deg);
+			}
+		}
+	}
+
+	@container grid-page (min-width: 801px) {
+		.grid-page {
+			grid-template-columns: repeat(2, minmax(200px, 1fr));
+			gap: 1.5rem;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+	}
+
+	@media screen and (max-width: 1000px) {
+		.overview-page-wrapper {
+			grid-template-rows: 60px 0fr 460px;
+		}
+
+		:global(.search-wrapper) {
+			grid-column: 1 / 3;
+			grid-row: 1 / 2;
+		}
+
+		.prompt-header-information-wrapper {
+			grid-row: 2 / 3;
+			grid-column: 1 / 3;
+			padding: 0 1.4rem;
+		}
+
+		.grid-page-container {
+			grid-column: 1 / 3;
+			grid-row: 3 / 4;
+		}
+	}
+
 </style>
