@@ -1,33 +1,26 @@
 <script lang="ts" module>
 	import '../app.css';
-	// import { gsap } from 'gsap';
-	import Lenis from 'lenis';
-	// import { ScrollTrigger } from 'gsap/ScrollTrigger';
-	import { onMount } from 'svelte';
 
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 	import ToggleButton from '$lib/components/buttons/ToggleButton.svelte';
+	import LogoIcon from '$lib/assets/icons/ai-star-icon.svg?component';
+	import { page } from '$app/state';
 </script>
 
 <script lang="ts">
 	let { children } = $props();
+	let pathname = '';
 
-	onMount(() => {
-		// gsap.registerPlugin(ScrollTrigger);
-
-		const lenis = new Lenis();
-
-		// lenis.on('scroll', ScrollTrigger.update);
-
-		// gsap.ticker.add((time) => {
-		// 	lenis.raf(time * 1000);
-		// });
-
-		// gsap.ticker.lagSmoothing(0);
+	$effect(() => {
+		pathname = page.url.pathname;
 	});
+	setInterval(() => {
+		console.log(pathname);
+	}, 1000);
 </script>
 
-<header>
+<header class="main-page-spacing">
+	<a href="/"><LogoIcon class="logo-header" /></a>
 	<ToggleButton />
 </header>
 
@@ -42,22 +35,44 @@
 
 <style>
 	header {
-		position: fixed;
-		padding: 4rem 4rem;
+		padding-top: 2em;
+		display: flex;
+		justify-content: space-between;
+
+		/* position: fixed; */
+		/* padding: 4rem 4rem; */
 		/* width: 100vw; */
+		max-width: 1600px;
 		z-index: 3;
 	}
 
-	footer {
-		display: flex;
-		flex-direction: column;
+	a {
+		display: inline-flex;
+		color: var(--white);
+		text-decoration: none;
 		align-items: center;
+	}
+
+	a:hover {
+		color: var(--purple-light);
+	}
+
+	:global(.logo-header) {
+		width: 2em;
+		/* margin: auto; */
+	}
+
+	footer {
+		position: relative;
+		/* display: flex; */
+		/* flex-direction: column; */
+		/* align-items: center; */
 		text-align: center;
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		padding-top: 3.5rem;
-		padding-bottom: 3.5rem;
+		/* position: absolute; */
+		/* bottom: 0; */
+		/* width: 100%; */
+		/* padding-top: 3.5rem; */
+		padding-bottom: 1rem;
 	}
 	:global(.logo) {
 		margin-top: 0.25rem;

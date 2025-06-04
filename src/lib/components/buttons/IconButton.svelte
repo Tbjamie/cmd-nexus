@@ -2,7 +2,7 @@
 	export let href = '';
 	export let target: '_self' | '_blank' = '_self';
 	export let type: 'button' | 'submit' | 'reset' = 'button';
-	export let theme: 'primary' | 'secondary' = 'primary';
+	export let theme: 'primary' | 'secondary' | 'tertiary' = 'primary';
 	export let variant: 'icon' | 'text' = 'icon';
 	export let disabled = false;
 	export { className as class };
@@ -39,6 +39,8 @@
 		align-items: center;
 		color: initial;
 		position: relative;
+
+		font-family: 'Geist', sans-serif;
 	}
 
 	.disabled {
@@ -49,6 +51,10 @@
 		background-color: var(--white);
 		border: unset;
 		color: var(--black);
+
+		@media screen and (min-width: 1563px) {
+			padding: 0.75rem;
+		}
 	}
 
 	.secondary {
@@ -56,6 +62,16 @@
 		background-color: transparent;
 		color: var(--white);
 		outline: 1px solid var(--white);
+
+		@media screen and (min-width: 1563px) {
+			padding: 0.75rem;
+		}
+	}
+
+	.tertiary {
+		background-color: transparent;
+		padding: 0;
+		color: var(--white);
 	}
 
 	.icon {
@@ -90,11 +106,5 @@
 		--opacity: 100%;
 		background: var(--purple-dark);
 		transition: 100ms;
-	}
-
-	@media screen and (min-width: 1563px) {
-		.icon-button {
-			padding: 0.75rem;
-		}
 	}
 </style>

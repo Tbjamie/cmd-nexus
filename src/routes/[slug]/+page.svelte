@@ -5,6 +5,7 @@
 	import type { Item } from '$lib/types/itemType';
 	import CloseIcon from '$lib/assets/icons/close-icon.svg?component';
 	import LinkIcon from '$lib/assets/icons/open-link.svg?component';
+	import ArrowIcon from '$lib/assets/icons/arrow-icon.svg?component';
 </script>
 
 <script lang="ts">
@@ -27,98 +28,134 @@
 	// console.log(item);
 </script>
 
-<div class="page-wrapper">
+<div class="main-page-spacing">
 	{#if item}
-		<div class="flex">
-			<IconButton class="button-size" variant="text" theme="secondary">
-				Kaart sluiten
-				<CloseIcon class="icon-size" />
-			</IconButton>
-
+		<!-- <div class="flex">
 			<IconButton class="button-size" theme="secondary">
 				<CloseIcon class="icon-size bookmark-icon" />
 			</IconButton>
+		</div> -->
+
+		<a href="/">
+			<IconButton class="button-size spacing-button" variant="text" theme="tertiary">
+				<ArrowIcon class="arrow-icon" />
+
+				Terug naar overzicht
+			</IconButton>
+		</a>
+
+		<div class="detail-wrapper">
+			<section>
+				<article>
+					<h1>{item.naam}</h1>
+					<p>{item.korte_beschrijving}</p>
+					<CategoryLabel text="principe" theme="green" hasHover={true} />
+				</article>
+
+				<article>
+					{#if kernText}
+						<h3>De kern</h3>
+						<p>{kernText}</p>
+					{/if}
+				</article>
+
+				<article>
+					{#if toepassingText}
+						<h3>Toepassing</h3>
+						<p>{toepassingText}</p>
+					{/if}
+				</article>
+			</section>
+
+			<section>
+				<article>
+					{#if webLinks}
+						<h3>Meer informatie</h3>
+						<div>
+							{#each webLinks as webItem}
+								<IconButton href={webItem} target="_blank" variant="text" theme="primary">
+									<LinkIcon class="icon-size" />
+									{webItem.match(/^https?:\/\/(?:www\.)?([^\.]+)/)?.[1]}
+								</IconButton>
+							{/each}
+						</div>
+					{/if}
+				</article>
+
+				<article>
+					{#if relativePerson}
+						<h3>Ondersteuning binnen CMD</h3>
+						<div>
+							{#each relativePerson as person}
+								<IconButton disabled variant="text" theme="secondary">{person}</IconButton>
+							{/each}
+						</div>
+					{/if}
+				</article>
+			</section>
 		</div>
-
-		<section class="detail-wrapper">
-			<article class="grid-col1">
-				<CategoryLabel text="principe" theme="green" hasHover={true} />
-				<h1>{item.naam}</h1>
-				<p>{item.korte_beschrijving}</p>
-			</article>
-
-			<article class="grid-col2">
-				{#if kernText}
-					<h3>De kern</h3>
-					<p>{kernText}</p>
-				{/if}
-			</article>
-
-			<article class="grid-col1">
-				{#if webLinks}
-					<h3>Meer informatie</h3>
-					{#each webLinks as webItem}
-						<IconButton href={webItem} target="_blank" variant="text" theme="primary">
-							<LinkIcon class="icon-size" />
-							{webItem.match(/^https?:\/\/(?:www\.)?([^\.]+)/)?.[1]}
-						</IconButton>
-					{/each}
-				{/if}
-			</article>
-
-			<article class="grid-col2">
-				{#if toepassingText}
-					<h3>Toepassing</h3>
-					<p>{toepassingText}</p>
-				{/if}
-			</article>
-
-			<article class="grid-col1">
-				{#if relativePerson}
-					<h3>Ondersteuning binnen CMD</h3>
-					{#each relativePerson as person}
-						<IconButton disabled variant="text" theme="secondary">{person}</IconButton>
-					{/each}
-				{/if}
-			</article>
-		</section>
 	{:else}
 		<h1>No items found</h1>
 	{/if}
 </div>
 
 <style>
-	article {
-		flex-direction: row;
-		grid-auto-flow: column;
-		gap: 1em;
+	h1 {
+		font-size: 38px;
+		/* margin-top: 2em; */
 	}
 
-	.grid-col1 {
-		grid-column: 1;
-		margin-bottom: 1em;
-	}
-
-	.grid-col2 {
-		grid-column: 2;
-		margin-bottom: 1em;
+	h3 {
+		font-size: 20px;
+		font-weight: 600;
 	}
 
 	.detail-wrapper {
-		margin: auto;
-		width: 80vw;
+		margin: 4em auto;
+		/* width: 80vw; */
 		max-width: 1600px;
-		border: 1px solid rgba(255, 255, 255, 0.3);
-		border-radius: 4rem;
-		padding: 2em;
+		/* border-radius: 4rem; */
 
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-between;
+
+		column-gap: 1em;
+		height: max-content;
+		box-sizing: border-box;
+	}
+
+	.detail-wrapper > section:nth-of-type(2) {
+		padding-top: 4em;
+	}
+
+	.detail-wrapper section {
+		display: flex;
+		flex-direction: column;
+
+		flex-basis: 47%;
+		justify-content: start;
+		gap: 1em;
+	}
+
+	section > article {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+		margin-bottom: 4em;
+	}
+
+	article > div {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		gap: 1em;
+	}
+	/* 
+	.detail-wrapper > section:nth-of-type(2) > article {
 		display: grid;
-		grid-template-columns: 1fr 1fr;
-	}
-
-	.page-wrapper {
-		padding: 2em;
-	}
+		grid-template-columns: 1fr 4fr;
+	} */
 
 	.flex {
 		margin-bottom: 2em;
@@ -128,9 +165,19 @@
 		gap: 1em;
 	}
 
+	:global(.spacing-button) {
+		margin-top: 6em;
+	}
+
 	:global(.icon-size) {
 		width: 1rem;
 		height: 1rem;
+	}
+
+	:global(.arrow-icon) {
+		width: 1rem;
+		height: 1rem;
+		transform: rotate(-90deg);
 	}
 
 	:global(.bookmark-icon) {
@@ -140,5 +187,30 @@
 
 	:global(.button-size) {
 		width: fit-content;
+	}
+
+	@media screen and (max-width: 1000px) {
+		.detail-wrapper > section:nth-of-type(2) > article {
+			display: flex;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		.detail-wrapper {
+			flex-direction: column;
+			margin-top: 2em;
+		}
+
+		:global(.spacing-button) {
+			margin-top: 3em;
+		}
+
+		section > article {
+			margin-bottom: 1em;
+		}
+
+		.detail-wrapper > section:nth-of-type(2) {
+			padding-top: 1em;
+		}
 	}
 </style>
