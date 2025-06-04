@@ -4,13 +4,18 @@
 
 <div class="result-wrapper">
 	<ul class="autocomplete-list">
-		<li>
-			<a href="/">
+		<li class="autocomplete-item">
+			<a
+				href="?search={inputVal
+					.toLowerCase()
+					.replace(/[\s:]+/g, '-')
+					.replace(/[^\w-]+/g, '')}"
+			>
 				Zoek "{inputVal}"
 			</a>
 		</li>
 		{#each relatedItems as item}
-			<li>
+			<li class="autocomplete-item">
 				<a
 					href="/{item.naam
 						.toLowerCase()
@@ -32,23 +37,41 @@
 		font-size: inherit;
 
 		width: 100%;
-		padding: 1rem 1.5rem;
+
 		transition: all 200ms ease-in-out;
 		display: flex;
+		text-align: start;
+
+		overflow: hidden;
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		line-clamp: 1;
+		-webkit-line-clamp: 1;
 	}
 
-	a:hover,
-	a:focus-visible {
+	a::before {
+		content: '';
+		top: 0;
+		left: 0;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+	}
+
+	.autocomplete-item:hover,
+	.autocomplete-item:has(a:focus-visible) {
 		--opacity: 25%;
 		background: var(--white);
 
 		color: white;
 	}
 
-	li {
+	.autocomplete-item {
 		list-style: none;
 		width: 100%;
 		overflow: hidden;
+		padding: 1rem 1.5rem;
+		position: relative;
 
 		&:last-of-type {
 			border-bottom-left-radius: 15px;
