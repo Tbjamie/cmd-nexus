@@ -46,6 +46,9 @@
 		padding: 4rem 4rem;
 		width: 100vw;
 		z-index: 3;
+		
+		display: flex;
+		justify-content: flex-end;
 	}
 
 	footer {

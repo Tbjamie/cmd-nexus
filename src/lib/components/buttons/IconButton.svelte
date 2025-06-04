@@ -25,7 +25,7 @@
 		border: none;
 		position: relative;
 		text-decoration: none;
-		mix-blend-mode: color-dodge;
+		/* mix-blend-mode: color-dodge; */
 		cursor: pointer;
 		transition: 200ms;
 		display: flex;
@@ -36,7 +36,7 @@
 	}
 
 	.primary {
-		background-color: var(--white);
+		background-color: var(--purple-light);
 		border: unset;
 	}
 

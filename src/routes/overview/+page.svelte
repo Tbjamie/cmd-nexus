@@ -1,7 +1,5 @@
 <script lang="ts" module>
-	import gsap from 'gsap';
 	import { onMount } from 'svelte';
-	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/itemType';
@@ -12,7 +10,6 @@
 </script>
 
 <script lang="ts">
-
 	let prompt = $state('');
 	let filteredItems: Item[] = $state([]);
 	let items: Item[];
@@ -24,27 +21,21 @@
 
 	// Transform the difficulty rating to a more readable format
 	function getRating(moeilijkheid: string) {
-	switch (moeilijkheid) {
-		case '*':
-			return 'Easy';
-		case '**':
-			return 'Medium';
-		case '***':
-			return 'Moeilijk';
-		default:
-			return moeilijkheid;
+		switch (moeilijkheid) {
+			case '*':
+				return 'Easy';
+			case '**':
+				return 'Medium';
+			case '***':
+				return 'Moeilijk';
+			default:
+				return moeilijkheid;
+		}
 	}
-	}
-
-	// Function for the chosen card
-	// mostRelevant
 
 	onMount(() => {
-		const heading = document.querySelector('h1');
-		const paragraph = document.querySelector('p');
-		const aiStarIcon = document.querySelector('.ai-star-icon');
-
 		items = page.data?.items;
+		console.log('items', items);
 
 		$effect(() => {
 			const fuse = new Fuse(items, {
@@ -71,33 +62,6 @@
 				return item.item;
 			});
 		});
-
-		gsap.fromTo(
-			aiStarIcon,
-			{
-				opacity: 0
-			},
-			{
-				opacity: 1,
-				duration: 1,
-				ease: 'power2.out'
-			}
-		);
-
-		gsap.fromTo(
-			[paragraph, heading],
-			{
-				opacity: 0,
-				y: 10
-			},
-			{
-				opacity: 1,
-				y: 0,
-				duration: 1,
-				ease: 'power2.out',
-				stagger: 0.2
-			}
-		);
 	});
 </script>
 
@@ -120,21 +84,36 @@
 </svelte:head>
 
 <section class="main-page-spacing">
-	
-	<AiStarIcon class="ai-star-icon" />
-
-	<p>Welkom bij CMD Nexus</p>
-	<h1 class="h1">Hoe kan ik je helpen?</h1>
-
-	<div class="search-autocomplete-wrapper">
-		<Searchbar bind:value={prompt} relatedItems={filteredItems} promptPlaceholder="Wat zoek je naar" />
+	<div class="overview-page-wrapper">
+		<Searchbar bind:value={prompt} relatedItems={filteredItems} promptPlaceholder="Zoek naar kennis, tools, tutorials en meer..." />
+		<div class="prompt-header-information-wrapper">
+			<section class="prompt-header-search-wrapper">
+				<p class="">gezocht op:</p>
+				<h2>{prompt}</h2>
+			</section>
+			<span>resultaten gevonden</span>
+		</div>
+		<!-- filter comp -->
+		<div class="grid-page">
+			{#each testItemsArray as item}
+				<Card
+					id={item.id}
+					href={`/tools/${item.id}`}
+					variant="normal"
+					tag={item.rel_vakgebied}
+					title={item.naam}
+					labelType={item.soort}
+					description={item.korte_beschrijving}
+					rating={getRating(item.moeilijkheid)}
+					mostRelevant={item.soort === 'Beroepstaak'}
+				/>
+			{/each}
+		</div>
 	</div>
-
 </section>
 
-
 <style>
-	section {
+	.main-page-spacing {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -145,46 +124,42 @@
 		position: relative;
 	}
 
-	section::after {
-		content: '';
-		position: absolute;
-		top: -50%;
+	.overview-page-wrapper {
 		width: 100%;
-		/* background: radial-gradient(ellipse at center, var(--purple-light), var(--purple-dark)); */
-		border-radius: 9999px;
-		aspect-ratio: 1 / 1;
-		opacity: 0.4;
-		filter: blur(100px);
-		z-index: -1;
+		/* max-width: 1200px; */
+		display: grid;
+		grid-template-columns: minmax(300px, 360px) 1fr;
+		grid-template-rows: 1fr 1fr;
+		column-gap: 3rem;
+		row-gap: 3.5rem;
 	}
 
-	:global(.ai-star-icon) {
-		width: 3.5rem;
-		height: 3.5rem;
-		margin-bottom: 1.5rem;
-
-		color: var(--purple-white);
-	}
-
-	p {
-		margin-bottom: 0.75rem;
-	}
-
-	h1 {
-		margin-bottom: 2rem;
-	}
-
-	.search-autocomplete-wrapper {
-		width: 100%;
+	.prompt-header-information-wrapper {
 		display: flex;
-		flex-direction: column;
+		justify-content: space-between;
 		align-items: center;
+		gap: 0.5rem;
+
+		span {
+			display: flex;
+			align-self: baseline;
+		}
+	}
+	
+	.prompt-header-search-wrapper {
+		display: flex;
+		gap: 0.2rem;
+		flex-direction: column;
+		align-items: flex-start;
+		align-self: baseline;
 	}
 
-	@media screen and (min-width: 768px) {
-		section::after {
-			top: -100%;
-			width: 75%;
-		}
+	.grid-page {
+		grid-column: 2 / 3;
+		grid-row: 2 / 3;
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 2rem;
+		padding: 0 1rem;
 	}
 </style>

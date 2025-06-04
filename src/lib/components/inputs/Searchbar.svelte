@@ -5,7 +5,11 @@
 </script>
 
 <script lang="ts">
-	let { value = $bindable(''), relatedItems = [] } = $props();
+	let { 
+		value = $bindable(''), 
+		relatedItems = [],
+		promptPlaceholder = $bindable('')
+	} = $props();
 </script>
 
 <form
@@ -25,7 +29,7 @@
 		spellcheck="false"
 		name="search-bar"
 		id="search-bar"
-		placeholder="Waar ben je naar op zoek"
+		placeholder="{promptPlaceholder}"
 	/>
 	<IconButton type="submit">
 		<ArrowIcon class="arrow-icon" />
@@ -44,9 +48,9 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 1rem 1.5rem;
-		background: red;
 		border: none;
 		width: 100%;
+		max-width: 750px;
 
 		background: var(--white);
 		border-radius: 15px;
@@ -75,7 +79,7 @@
 		height: 0.875rem;
 	}
 
-	@media screen and (min-width: 768px) {
+	/* @media screen and (min-width: 768px) {
 		.search-wrapper {
 			width: 50%;
 		}
@@ -85,5 +89,5 @@
 		.search-wrapper {
 			width: 40%;
 		}
-	}
+	} */
 </style>
