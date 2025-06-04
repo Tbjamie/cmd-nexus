@@ -2,28 +2,15 @@
 	import LayoutIcon from '$lib/assets/icons/layout-icon.svg?component';
 	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import { slide } from 'svelte/transition';
-	import { onMount } from 'svelte';
-</script>
-
-<script lang="ts">
-	let nexusButton: HTMLButtonElement;
-	let currentPage: 'overview' | 'nexus';
-
-	onMount(() => {
-		currentPage = localStorage.getItem('currentPage')
-			? (localStorage.getItem('currentPage') as 'overview' | 'nexus')
-			: 'nexus';
-	});
+	import { pageView } from '$lib/stores/pageView.svelte';
 </script>
 
 <ul class="nexusSelection">
 	<li transition:slide>
 		<button
-			class:active={currentPage == 'nexus'}
-			bind:this={nexusButton}
+			class:active={pageView.view == 'nexus'}
 			on:click={() => {
-				currentPage = 'nexus';
-				localStorage.setItem('currentPage', 'nexus');
+				pageView.view = 'nexus';
 			}}
 		>
 			<AiStarIcon class="layout-icon" />
@@ -31,11 +18,9 @@
 	</li>
 	<li transition:slide>
 		<button
-			class:active={currentPage == 'overview'}
-			bind:this={nexusButton}
+			class:active={pageView.view == 'overview'}
 			on:click={() => {
-				currentPage = 'overview';
-				localStorage.setItem('currentPage', 'overview');
+				pageView.view = 'overview';
 			}}
 		>
 			<LayoutIcon class="layout-icon" />
