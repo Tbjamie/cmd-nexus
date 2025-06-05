@@ -318,7 +318,7 @@
 		width: 100%;
 	}
 
-	/* section::after {
+	section::after {
 		content: '';
 		position: absolute;
 		top: -50%;
@@ -329,7 +329,7 @@
 		opacity: 0.4;
 		filter: blur(100px);
 		z-index: -1;
-	} */
+	}
 
 	:global(.ai-star-icon) {
 		width: 3.5rem;
