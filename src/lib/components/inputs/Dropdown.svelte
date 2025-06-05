@@ -1,19 +1,32 @@
-<script>
+<script lang="ts" module>
+	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
+</script>
+
+<script lang="ts">
 	let { inputVal = $bindable(''), relatedItems = [] } = $props();
 </script>
 
 <div class="result-wrapper">
 	<ul class="autocomplete-list">
-		<li class="autocomplete-item">
-			<a
-				href="?search={inputVal
-					.toLowerCase()
-					.replace(/[\s:]+/g, '-')
-					.replace(/[^\w-]+/g, '')}"
-			>
+		<form
+			action="/"
+			method="POST"
+			class="autocomplete-item"
+			use:enhance={() => {
+				goto(
+					`?search=${inputVal
+						.toLowerCase()
+						.replace(/[\s:]+/g, '-')
+						.replace(/[^\w-]+/g, '')}`
+				);
+				return;
+			}}
+		>
+			<button type="submit">
 				Zoek "{inputVal}"
-			</a>
-		</li>
+			</button>
+		</form>
 		{#each relatedItems as item}
 			<li class="autocomplete-item">
 				<a
@@ -30,11 +43,15 @@
 </div>
 
 <style>
-	a {
+	a,
+	button[type='submit'] {
 		text-decoration: none;
 		color: var(--white);
 		font-family: inherit;
 		font-size: inherit;
+		cursor: pointer;
+		background: transparent;
+		border: none;
 
 		width: 100%;
 
@@ -49,7 +66,8 @@
 		-webkit-line-clamp: 1;
 	}
 
-	a::before {
+	a::before,
+	button::before {
 		content: '';
 		top: 0;
 		left: 0;
@@ -59,7 +77,8 @@
 	}
 
 	.autocomplete-item:hover,
-	.autocomplete-item:has(a:focus-visible) {
+	.autocomplete-item:has(a:focus-visible),
+	.autocomplete-item:has(button:focus-visible) {
 		--opacity: 25%;
 		background: var(--white);
 
@@ -73,7 +92,7 @@
 		padding: 1rem 1.5rem;
 		position: relative;
 
-		&:last-of-type {
+		&:last-child {
 			border-bottom-left-radius: 15px;
 			border-bottom-right-radius: 15px;
 		}

@@ -10,12 +10,13 @@
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
 	import Card from '$lib/components/cards/Card.svelte';
+	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
 </script>
 
 <script lang="ts">
 	let prompt = $state('');
 	let filteredItems: Item[] = $state([]);
-	let items: Item[];
+	let items: Item[] = $state([]);
 	let formResult: any;
 	let searchResults: any = $state(null);
 	let resultsFound = $state(false);
@@ -262,6 +263,7 @@
 		<section class="main-page-spacing relative">
 			{#if resultsFound}
 				<div class="overview-page-wrapper">
+					<FilterBar />
 					<div class="prompt-header-information-wrapper">
 						<section class="prompt-header-search-wrapper">
 							<p class="">gezocht op:</p>
@@ -274,7 +276,6 @@
 						<div class="grid-page">
 							{#each searchResults as item}
 								<Card
-									id={item.id}
 									href="/{item.naam
 										.toLowerCase()
 										.replace(/[\s:]+/g, '-')
@@ -293,8 +294,29 @@
 				</div>
 			{:else}
 				<div class="overview-page-wrapper">
-					<h1 class="h1">Geen resultaten gevonden</h1>
-					<p>Probeer een andere zoekopdracht of bekijk de <a href="/tools">tools</a>.</p>
+					<FilterBar />
+					<!-- filter comp -->
+					<div class="grid-page-container">
+						<div class="grid-page">
+							{#each items as item}
+								<Card
+									href="/{item.naam
+										? item.naam
+												.toLowerCase()
+												.replace(/[\s:]+/g, '-')
+												.replace(/[^\w-]+/g, '')
+										: ''}"
+									variant="normal"
+									tag={item.rel_vakgebied as string | undefined}
+									title={item.naam}
+									labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+									description={item.korte_beschrijving}
+									rating={getRating(item.moeilijkheid)}
+									mostRelevant={item.soort === 'methode'}
+								/>
+							{/each}
+						</div>
+					</div>
 				</div>
 			{/if}
 		</section>
@@ -302,6 +324,9 @@
 </div>
 
 <style>
+	:global(.filterbar-spacing) {
+		grid-row: 2;
+	}
 	.logo-star {
 		view-transition-name: logo-star;
 	}
@@ -444,10 +469,6 @@
 
 	p {
 		margin-bottom: 0.75rem;
-	}
-
-	h1 {
-		margin-bottom: 2rem;
 	}
 
 	@media screen and (min-width: 768px) {

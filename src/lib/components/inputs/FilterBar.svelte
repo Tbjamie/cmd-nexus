@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-
-	import Filter from '$lib/components/inputs/Filter.svelte';
+	import { goto, invalidateAll } from '$app/navigation';
+	import { enhance, applyAction } from '$app/forms';
 
 	// 1. Import Filter component
 	// 2. Maak een mock array
@@ -40,22 +38,38 @@
 	let selected: Record<string, string> = {};
 
 	// Form submission handler
-	function applyFilters(e: SubmitEvent) {
-		e.preventDefault();
+	// function applyFilters(e: SubmitEvent) {
+	// 	e.preventDefault();
 
-		const params = new URLSearchParams();
+	// 	const params = new URLSearchParams();
 
-		for (const key in selected) {
-			if (selected[key]) {
-				params.set(key, selected[key]);
-			}
-		}
+	// 	for (const key in selected) {
+	// 		if (selected[key]) {
+	// 			params.set(key, selected[key]);
+	// 		}
+	// 	}
 
-		goto(`?${params.toString()}`, { replaceState: true });
-	}
+	// 	goto(`?${params.toString()}`, { replaceState: true });
+	// }
 </script>
 
-<form class="filter-form" on:submit|preventDefault={applyFilters}>
+<form
+	method="POST"
+	action="?/filter"
+	class="filter-form"
+	use:enhance={() => {
+		// goto(
+		// 	`?search=${inputVal
+		// 		.toLowerCase()
+		// 		.replace(/[\s:]+/g, '-')
+		// 		.replace(/[^\w-]+/g, '')}`
+		// );
+		return async ({ result }) => {
+			invalidateAll();
+			await applyAction(result);
+		};
+	}}
+>
 	{#each mockData as filterGroup}
 		<fieldset class="filter-fieldset">
 			<legend>{filterGroup.title}</legend>
@@ -72,27 +86,22 @@
 			{/each}
 		</fieldset>
 	{/each}
-
-	<button type="submit">Filter</button>
 </form>
 
-<!-- 
-<label>
-	<slot />
-</label> -->
-
 <style>
-	:global(.filter-form) {
+	.filter-form {
 		display: inline-flex;
 		flex-direction: column;
 		gap: 1em;
 		padding: 1em;
 		border-radius: 2em;
+		grid-area: span 2;
 
 		background-color: #111111;
+		height: max-content;
 	}
 
-	:global(.filter-fieldset) {
+	.filter-fieldset {
 		display: flex;
 		flex-direction: column;
 		border: none;
