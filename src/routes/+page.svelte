@@ -9,6 +9,7 @@
 	import { pageView } from '$lib/stores/pageView.svelte';
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
+	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
 </script>
 
 <script lang="ts">
@@ -236,6 +237,8 @@
 				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
 			</QuestionComponent>
 		</section>
+
+		<FilterBar />
 
 		<footer>
 			<p>copyright</p>
