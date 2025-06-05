@@ -1,7 +1,6 @@
 <script lang="ts" module>
 	import gsap from 'gsap';
 	import { onMount } from 'svelte';
-	// import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/itemType';
@@ -47,9 +46,15 @@
 	// });
 
 	onMount(() => {
+
+		document.startViewTransition(() => {
+			console.log('test');
+ 		 });
+
+		
+
 		const heading = document.querySelector('h1');
 		const paragraph = document.querySelector('p');
-		// const aiStarIcon = document.querySelector('.ai-star-icon');
 
 		items = page.data?.items;
 
@@ -192,9 +197,7 @@
 <div>
 	{#if pageView.view === 'nexus'}
 		<section class="main-page-spacing nexus-section">
-			<!-- <AiStarIcon class="ai-star-icon" /> -->
-
-			<div class="block">
+			<div class="block logo-star">
 				<svg class="star1" viewBox="0 0 46 45" xmlns="http://www.w3.org/2000/svg">
 					<defs>
 						<linearGradient id="grad1" x1="0%" x2="100%" y1="0%" y2="0%">
@@ -221,13 +224,6 @@
 					/>
 				</svg>
 			</div>
-
-			<!-- <p>Welkom bij CMD Nexus</p>
-			<h1 class="h1">Hoe kan ik je helpen?</h1>
-
-			<div class="search-autocomplete-wrapper">
-				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
-			</div> -->
 
 			<QuestionComponent
 				feedback={followUpMessage ? followUpMessage : 'Welkom bij CMD Nexus'}
@@ -271,6 +267,14 @@
 </div>
 
 <style>
+.logo-star {
+	view-transition-name: logo-star;
+}
+
+@view-transition {
+	navigation: auto;
+}
+
 	.block {
 		height: 4rem;
 		width: 4rem;
@@ -317,19 +321,6 @@
 		bottom: 4rem;
 		width: 100%;
 	}
-
-	/* section::after {
-		content: '';
-		position: absolute;
-		top: -50%;
-		width: 100%;
-		background: radial-gradient(ellipse at center, var(--purple-light), var(--purple-dark));
-		border-radius: 9999px;
-		aspect-ratio: 1 / 1;
-		opacity: 0.4;
-		filter: blur(100px);
-		z-index: -1;
-	} */
 
 	:global(.ai-star-icon) {
 		width: 3.5rem;

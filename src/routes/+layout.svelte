@@ -5,6 +5,7 @@
 	import LogoIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import { page } from '$app/state';
 	import { pageView } from '$lib/stores/pageView.svelte';
+	import { onNavigate } from '$app/navigation';
 </script>
 
 <script lang="ts">
@@ -13,6 +14,17 @@
 
 	$effect(() => {
 		pathname = page.url.pathname;
+	});
+
+	onNavigate((navigation) => {
+		if (!document.startViewTransition) return;
+
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
 	});
 </script>
 
@@ -62,6 +74,7 @@
 
 	:global(.logo-header) {
 		height: 2rem;
+		view-transition-name: logo-star;
 	}
 
 	:global(.toggle-button) {
