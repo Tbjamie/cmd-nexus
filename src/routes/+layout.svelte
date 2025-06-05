@@ -14,25 +14,22 @@
 	$effect(() => {
 		pathname = page.url.pathname;
 	});
-
-	setInterval(() => {
-		console.log(pathname);
-	}, 1000);
 </script>
 
 {#if pathname === '/'}
-	<header class="main-page-spacing">
+	<header class="main-page-spacing {pageView.view === 'overview' ? 'relative' : ''}">
 		{#if pageView.view === 'overview'}
-			<a aria-label="Nexus logo, linking to the homepage" href="/"
-				><LogoIcon class="logo-header" /></a
-			>
+			<a aria-label="Nexus logo, linking to the homepage" href="/">
+				<LogoIcon class="logo-header" />
+			</a>
 		{/if}
 		<ToggleButton class="toggle-button" />
 	</header>
 {:else}
-	<header class="main-page-spacing">
-		<a aria-label="Nexus logo, linking to the homepage" href="/"><LogoIcon class="logo-header" /></a
-		>
+	<header class="main-page-spacing relative">
+		<a aria-label="Nexus logo, linking to the homepage" href="/">
+			<LogoIcon class="logo-header" />
+		</a>
 	</header>
 {/if}
 
@@ -51,19 +48,19 @@
 		z-index: 3;
 	}
 
+	.relative {
+		position: relative;
+	}
+
 	a {
-		display: inline-flex;
 		color: var(--white);
-		text-decoration: none;
-		align-items: center;
 	}
 
 	a:hover {
 		color: var(--purple-light);
 	}
 
-	:global(.logo) {
-		margin-top: 0.25rem;
+	:global(.logo-header) {
 		height: 2rem;
 	}
 
