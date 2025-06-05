@@ -103,10 +103,9 @@
 		/* border-radius: 4rem; */
 
 		display: flex;
-		flex-wrap: wrap;
 		justify-content: space-between;
 
-		column-gap: 1em;
+		gap: 5rem;
 		height: max-content;
 		box-sizing: border-box;
 	}
@@ -119,7 +118,7 @@
 		display: flex;
 		flex-direction: column;
 
-		flex-basis: 47%;
+		width: 100%;
 		justify-content: start;
 		gap: 1em;
 	}

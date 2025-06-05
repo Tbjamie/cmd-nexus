@@ -9,7 +9,7 @@
 	import { pageView } from '$lib/stores/pageView.svelte';
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
-	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
+	import Card from '$lib/components/cards/Card.svelte';
 </script>
 
 <script lang="ts">
@@ -22,6 +22,19 @@
 	let followUpQuestionData: any;
 	let followUpQuestion: string = $state('');
 	let followUpMessage: string = $state('');
+
+	function getRating(moeilijkheid: string) {
+		switch (moeilijkheid) {
+			case '*':
+				return 'Makkelijk';
+			case '**':
+				return 'Medium';
+			case '***':
+				return 'Moeilijk';
+			default:
+				return moeilijkheid;
+		}
+	}
 
 	$effect(() => {
 		formResult = page.form;
@@ -195,7 +208,7 @@
 		<section class="main-page-spacing nexus-section">
 			<!-- <AiStarIcon class="ai-star-icon" /> -->
 
-			<div class="block">
+			<div class="logo-star block">
 				<svg class="star1" viewBox="0 0 46 45" xmlns="http://www.w3.org/2000/svg">
 					<defs>
 						<linearGradient id="grad1" x1="0%" x2="100%" y1="0%" y2="0%">
@@ -238,8 +251,6 @@
 			</QuestionComponent>
 		</section>
 
-		<FilterBar />
-
 		<footer>
 			<p>copyright</p>
 			<NexusLogoFull class="logo" />
@@ -248,32 +259,121 @@
 
 	{#if pageView.view === 'overview'}
 		<!-- Make sure that all items are shown when the button is clicked. If a search result redirect is done then only show those items -->
-		<section class="main-page-spacing">
-			{#if !resultsFound}
-				<h1>Show all cards here</h1>
-			{/if}
-			{#if searchResults}
-				<h1 class="h1">Zoekresultaten voor {prompt}</h1>
-				<p>Hier zijn de resultaten voor je zoekopdracht.</p>
-				{#each searchResults as result}
-					<article class="search-result-item">
-						<a
-							href="/{result.naam
-								.toLowerCase()
-								.replace(/[\s:]+/g, '-')
-								.replace(/[^\w-]+/g, '')}"
-						>
-							<h2>{result.naam}</h2>
-							<p>{result.korte_beschrijving}</p>
-						</a>
-					</article>
-				{/each}
+		<section class="main-page-spacing relative">
+			{#if resultsFound}
+				<div class="overview-page-wrapper">
+					<div class="prompt-header-information-wrapper">
+						<section class="prompt-header-search-wrapper">
+							<p class="">gezocht op:</p>
+							<h2>{page.url.searchParams.get('search')}</h2>
+						</section>
+						<span>{searchResults.length} resultaten gevonden</span>
+					</div>
+					<!-- filter comp -->
+					<div class="grid-page-container">
+						<div class="grid-page">
+							{#each searchResults as item}
+								<Card
+									id={item.id}
+									href="/{item.naam
+										.toLowerCase()
+										.replace(/[\s:]+/g, '-')
+										.replace(/[^\w-]+/g, '')}"
+									variant="normal"
+									tag={item.rel_vakgebied}
+									title={item.naam}
+									labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+									description={item.korte_beschrijving}
+									rating={getRating(item.moeilijkheid)}
+									mostRelevant={item.soort === 'methode'}
+								/>
+							{/each}
+						</div>
+					</div>
+				</div>
+			{:else}
+				<div class="overview-page-wrapper">
+					<h1 class="h1">Geen resultaten gevonden</h1>
+					<p>Probeer een andere zoekopdracht of bekijk de <a href="/tools">tools</a>.</p>
+				</div>
 			{/if}
 		</section>
 	{/if}
 </div>
 
 <style>
+	.logo-star {
+		view-transition-name: logo-star;
+	}
+
+	@view-transition {
+		navigation: auto;
+	}
+
+	.overview-page-wrapper {
+		width: 100%;
+		height: 100%;
+		padding-top: 2rem;
+		/* max-width: 1200px; */
+		display: grid;
+		grid-template-columns: minmax(300px, 360px) 1fr;
+		grid-template-rows: minmax(60px, 64px) minmax(400px, 1fr);
+		column-gap: 1rem;
+		row-gap: 1.6rem;
+	}
+
+	.prompt-header-information-wrapper {
+		grid-row: 1 / 2;
+		grid-column: 2 / 3;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1.5rem;
+		padding-left: 2.4rem;
+
+		span {
+			display: flex;
+			align-self: baseline;
+			text-align: right;
+		}
+	}
+
+	:global(.search-wrapper) {
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+	}
+
+	.prompt-header-search-wrapper {
+		display: flex;
+		gap: 0.2rem;
+		flex-direction: column;
+		align-items: flex-start;
+		align-self: baseline;
+
+		> h2 {
+			text-align: left;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			width: 100%;
+		}
+	}
+
+	.grid-page-container {
+		container-type: inline-size;
+		container-name: grid-page;
+		grid-column: 2 / 3;
+		grid-row: 2 / 3;
+		width: 100%;
+		position: relative;
+
+		/* padding: 1rem; */
+	}
+
+	.grid-page {
+		display: grid;
+	}
+
 	.block {
 		height: 4rem;
 		width: 4rem;
