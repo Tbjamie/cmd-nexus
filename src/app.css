@@ -20,12 +20,18 @@
 	--green: rgb(44 226 42 / var(--opacity));
 	--light-blue: rgb(42 226 223 / var(--opacity));
 	--border-radius-small: 4px;
-    --border-radius-medium: 8px;
-    --border-radius-large: 20px;
-    --border-radius-full: 100px;
-    --backdrop-filter: blur(10px);
+	--border-radius-medium: 8px;
+	--border-radius-large: 20px;
+	--border-radius-full: 100px;
+	--backdrop-filter: blur(10px);
 
-	--tag-background: linear-gradient(270deg, rgba(194, 194, 194, 0.10) 0%, rgba(255, 255, 255, 0.10) 98.63%);
+	--current-color-card: ;
+
+	--tag-background: linear-gradient(
+		270deg,
+		rgba(194, 194, 194, 0.1) 0%,
+		rgba(255, 255, 255, 0.1) 98.63%
+	);
 }
 
 html {
