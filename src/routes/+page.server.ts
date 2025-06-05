@@ -81,7 +81,12 @@ export const actions = {
 			console.log('Total Items:', resultsLength);
 			return { resultFound: true, results: filteredItems };
 		} else {
-			console.log(getFollowUpQuestion());
+			const feedbackMessage = getFollowUpQuestion();
+			console.log(feedbackMessage);
+			return {
+				resultFound: false,
+				feedbackMessage
+			};
 		}
 	}
 } satisfies Actions;

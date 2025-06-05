@@ -51,6 +51,7 @@
 		background-color: var(--white);
 		border: unset;
 		color: var(--black);
+		padding: 0.5rem;
 
 		@media screen and (min-width: 1563px) {
 			padding: 0.75rem;
