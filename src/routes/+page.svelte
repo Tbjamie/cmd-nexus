@@ -8,6 +8,7 @@
 	import Fuse from 'fuse.js';
 	import { pageView } from '$lib/stores/pageView.svelte';
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
+	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
 </script>
 
 <script lang="ts">
@@ -17,11 +18,18 @@
 	let formResult: any;
 	let searchResults: any = $state(null);
 	let resultsFound = $state(false);
+	let followUpQuestionData: any;
+	let followUpQuestion: string = $state('');
+	let followUpMessage: string = $state('');
 
 	$effect(() => {
 		formResult = page.form;
 
 		searchResults = formResult?.results;
+		followUpQuestionData = formResult?.feedbackMessage;
+
+		followUpQuestion = followUpQuestionData ? followUpQuestionData.split('.')[1] : '';
+		followUpMessage = followUpQuestionData ? followUpQuestionData.split('.')[0] : '';
 	});
 
 	$effect(() => {
@@ -36,7 +44,6 @@
 
 	// $effect(() => {
 	// 	console.log('SEARCHPARAMS', page.url.searchParams.get('search'));
-	// 	console.log('SEARCHRESULTS', searchResults);
 	// });
 
 	onMount(() => {
@@ -215,12 +222,19 @@
 				</svg>
 			</div>
 
-			<p>Welkom bij CMD Nexus</p>
+			<!-- <p>Welkom bij CMD Nexus</p>
 			<h1 class="h1">Hoe kan ik je helpen?</h1>
 
 			<div class="search-autocomplete-wrapper">
 				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
-			</div>
+			</div> -->
+
+			<QuestionComponent
+				feedback={followUpMessage ? followUpMessage : 'Welkom bij CMD Nexus'}
+				message={followUpQuestion ? followUpQuestion : 'Hoe kan ik je helpen?'}
+			>
+				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+			</QuestionComponent>
 		</section>
 
 		<footer>
@@ -262,6 +276,7 @@
 		width: 4rem;
 		position: relative;
 		scale: 1;
+		margin-bottom: 1rem;
 
 		& .star1 {
 			width: 45px;
@@ -289,9 +304,9 @@
 		width: 100vw;
 	}
 
-	:global(.logo-header) {
-		width: 2em;
-		/* margin: auto; */
+	:global(.logo) {
+		margin-top: 0.25rem;
+		height: 2rem;
 	}
 
 	footer {
@@ -330,13 +345,6 @@
 
 	h1 {
 		margin-bottom: 2rem;
-	}
-
-	.search-autocomplete-wrapper {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
 	}
 
 	@media screen and (min-width: 768px) {

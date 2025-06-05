@@ -3,46 +3,32 @@
 	import IconButton from '$lib/components/buttons/IconButton.svelte';
 	import CategoryLabel from '$lib/components/labels/CategoryLabel.svelte';
 	import type { Item } from '$lib/types/itemType';
-	import CloseIcon from '$lib/assets/icons/close-icon.svg?component';
 	import LinkIcon from '$lib/assets/icons/open-link.svg?component';
 	import ArrowIcon from '$lib/assets/icons/arrow-icon.svg?component';
+	import { onMount } from 'svelte';
 </script>
 
 <script lang="ts">
 	const item: Item = page.data?.item;
-
 	const webLinks = item.meer_op_web?.split(/\s+/);
-
-	// console.log('WEB LINKS', webLinks);
-
 	const relativePerson = item.meer_bij_personen?.split(/\n+/);
 
-	const subText = item.korte_beschrijving;
+	onMount(() => {
+		const iconButton = document.querySelector('.icon-button');
 
-	const kernText = item.strekking;
-
-	const toepassingText = item.toepassing;
-
-	console.log(relativePerson);
-
-	// console.log(item);
+		iconButton?.addEventListener('click', () => {
+			window.history.back();
+		});
+	});
 </script>
 
 <div class="main-page-spacing">
 	{#if item}
-		<!-- <div class="flex">
-			<IconButton class="button-size" theme="secondary">
-				<CloseIcon class="icon-size bookmark-icon" />
-			</IconButton>
-		</div> -->
+		<IconButton class="icon-button button-size spacing-button" variant="text" theme="tertiary">
+			<ArrowIcon class="arrow-icon" />
 
-		<a href="/">
-			<IconButton class="button-size spacing-button" variant="text" theme="tertiary">
-				<ArrowIcon class="arrow-icon" />
-
-				Terug naar overzicht
-			</IconButton>
-		</a>
+			Terug naar overzicht
+		</IconButton>
 
 		<div class="detail-wrapper">
 			<section>
@@ -53,16 +39,16 @@
 				</article>
 
 				<article>
-					{#if kernText}
+					{#if item.strekking}
 						<h3>De kern</h3>
-						<p>{kernText}</p>
+						<p>{item.strekking}</p>
 					{/if}
 				</article>
 
 				<article>
-					{#if toepassingText}
+					{#if item.toepassing}
 						<h3>Toepassing</h3>
-						<p>{toepassingText}</p>
+						<p>{item.toepassing}</p>
 					{/if}
 				</article>
 			</section>
@@ -156,18 +142,6 @@
 		display: grid;
 		grid-template-columns: 1fr 4fr;
 	} */
-
-	.flex {
-		margin-bottom: 2em;
-		display: flex;
-		flex-direction: row;
-		justify-content: center;
-		gap: 1em;
-	}
-
-	:global(.spacing-button) {
-		margin-top: 6em;
-	}
 
 	:global(.icon-size) {
 		width: 1rem;
