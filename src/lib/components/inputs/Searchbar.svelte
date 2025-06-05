@@ -2,6 +2,8 @@
 	import IconButton from '$lib/components/buttons/IconButton.svelte';
 	import ArrowIcon from '$lib/assets/icons/arrow-icon.svg?component';
 	import Dropdown from '$lib/components/inputs/Dropdown.svelte';
+	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
 </script>
 
 <script lang="ts">
@@ -17,9 +19,14 @@
 	method="GET"
 	class="search-wrapper"
 	class:active={value}
-	onsubmit={(e) => {
-		// e.preventDefault();
-		console.log('Form submitted with value:', value);
+	use:enhance={() => {
+		goto(
+			`?search=${value
+				.toLowerCase()
+				.replace(/[\s:]+/g, '-')
+				.replace(/[^\w-]+/g, '')}`
+		);
+		return;
 	}}
 >
 	<input
@@ -54,7 +61,7 @@
 
 		background: var(--white);
 		border-radius: 15px;
-		outline: solid 1px rgba(255 255 255 / 0.5);
+		outline: solid 1px rgba(255 255 255 / 0.2);
 
 		/* transition: all 200ms ease-in-out; */
 

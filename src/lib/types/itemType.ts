@@ -5,7 +5,7 @@ export interface Item {
 	strekking?: string;
 	toepassing?: string;
 	meer_op_web?: string;
-	meer_bij_personen?: string[];
+	meer_bij_personen?: string;
 	ondertitel?: string;
 	alternatieve_naam?: string;
 	naam?: string;

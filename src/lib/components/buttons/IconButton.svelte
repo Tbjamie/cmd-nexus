@@ -2,8 +2,12 @@
 	export let href = '';
 	export let target: '_self' | '_blank' = '_self';
 	export let type: 'button' | 'submit' | 'reset' = 'button';
-	export let theme: 'primary' | 'secondary' = 'primary';
+	export let theme: 'primary' | 'secondary' | 'tertiary' = 'primary';
 	export let variant: 'icon' | 'text' = 'icon';
+	export let disabled = false;
+	export { className as class };
+
+	let className = '';
 </script>
 
 <svelte:element
@@ -11,16 +15,18 @@
 	target={href ? target : null}
 	type={href ? null : type}
 	href={href ? href : null}
-	class="icon-button {theme} {variant}"
+	{disabled}
+	class="icon-button {theme} {variant} {className} {disabled ? 'disabled' : ''}"
 >
 	<slot />
 </svelte:element>
 
 <style>
 	.icon-button {
+		width: fit-content;
 		background: var(--white);
 		border-radius: 9999px;
-		padding: 0.5rem;
+		padding: 0.5rem 1rem;
 		border: none;
 		position: relative;
 		text-decoration: none;
@@ -28,15 +34,28 @@
 		cursor: pointer;
 		transition: 200ms;
 		display: flex;
+		gap: 0.5rem;
 		justify-content: center;
 		align-items: center;
 		color: initial;
 		position: relative;
+
+		font-family: 'Geist', sans-serif;
+	}
+
+	.disabled {
+		cursor: default;
 	}
 
 	.primary {
 		background-color: var(--purple-light);
 		border: unset;
+		color: var(--black);
+		padding: 0.5rem;
+
+		@media screen and (min-width: 1563px) {
+			padding: 0.75rem;
+		}
 	}
 
 	.secondary {
@@ -45,6 +64,16 @@
 		background-color: transparent;
 		color: var(--white);
 		outline: 1px solid var(--white);
+
+		@media screen and (min-width: 1563px) {
+			padding: 0.75rem;
+		}
+	}
+
+	.tertiary {
+		background-color: transparent;
+		padding: 0;
+		color: var(--white);
 	}
 
 	.icon {
@@ -69,17 +98,15 @@
 	.icon-button:hover,
 	.icon-button:focus-visible {
 		--opacity: 80%;
+
+		&.disabled {
+			--opacity: 100%;
+		}
 	}
 
 	.icon-button:active {
 		--opacity: 100%;
 		background: var(--purple-dark);
 		transition: 100ms;
-	}
-
-	@media screen and (min-width: 1563px) {
-		.icon-button {
-			padding: 0.75rem;
-		}
 	}
 </style>

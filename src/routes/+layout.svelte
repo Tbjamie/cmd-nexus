@@ -1,49 +1,49 @@
 <script lang="ts" module>
 	import '../app.css';
-	// import { gsap } from 'gsap';
-	import Lenis from 'lenis';
-	// import { ScrollTrigger } from 'gsap/ScrollTrigger';
-	import { onMount } from 'svelte';
 
-	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 	import ToggleButton from '$lib/components/buttons/ToggleButton.svelte';
+	import LogoIcon from '$lib/assets/icons/ai-star-icon.svg?component';
+	import { page } from '$app/state';
+	import { pageView } from '$lib/stores/pageView.svelte';
 </script>
 
 <script lang="ts">
 	let { children } = $props();
+	let pathname = $state('');
 
-	onMount(() => {
-		// gsap.registerPlugin(ScrollTrigger);
-
-		const lenis = new Lenis();
-
-		// lenis.on('scroll', ScrollTrigger.update);
-
-		// gsap.ticker.add((time) => {
-		// 	lenis.raf(time * 1000);
-		// });
-
-		// gsap.ticker.lagSmoothing(0);
+	$effect(() => {
+		pathname = page.url.pathname;
 	});
 </script>
 
-<header>
-	<ToggleButton />
-</header>
+{#if pathname === '/'}
+	<header class="main-page-spacing {pageView.view === 'overview' ? 'relative' : ''}">
+		{#if pageView.view === 'overview'}
+			<a aria-label="Nexus logo, linking to the homepage" href="/">
+				<LogoIcon class="logo-header" />
+			</a>
+		{/if}
+		<ToggleButton class="toggle-button" />
+	</header>
+{:else}
+	<header class="main-page-spacing relative">
+		<a aria-label="Nexus logo, linking to the homepage" href="/">
+			<LogoIcon class="logo-header" />
+		</a>
+	</header>
+{/if}
 
 <main>
 	{@render children()}
 </main>
 
-<footer>
-	<p>copyright</p>
-	<NexusLogoFull class="logo" />
-</footer>
-
 <style>
 	header {
-		position: fixed;
-		padding: 4rem 4rem;
+		display: flex;
+		justify-content: start;
+
+		position: absolute;
+		padding: 4rem;
 		width: 100vw;
 		z-index: 3;
 		
@@ -51,19 +51,23 @@
 		justify-content: flex-end;
 	}
 
-	footer {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		text-align: center;
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		padding-top: 3.5rem;
-		padding-bottom: 3.5rem;
+	.relative {
+		position: relative;
 	}
-	:global(.logo) {
-		margin-top: 0.25rem;
+
+	a {
+		color: var(--white);
+	}
+
+	a:hover {
+		color: var(--purple-light);
+	}
+
+	:global(.logo-header) {
 		height: 2rem;
+	}
+
+	:global(.toggle-button) {
+		margin-left: auto;
 	}
 </style>

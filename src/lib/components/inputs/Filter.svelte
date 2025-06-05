@@ -12,4 +12,5 @@
 	{/if}
 </label>
 
-<style></style>
+<style>
+</style>
