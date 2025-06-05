@@ -180,6 +180,7 @@
 
     .card-wrapper.normal {
         --opacity: 8%;
+        pointer-events: auto;
         width: 100%;
         text-decoration: none;
         overflow: hidden;
@@ -198,6 +199,7 @@
             display: flex;
             flex-direction: column;
             gap: 1.4rem;
+            overflow: auto;
 
             padding: 1.4rem 1.6rem;
 

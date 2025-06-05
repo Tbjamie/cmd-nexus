@@ -91,7 +91,7 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		height: 100vh;
+		min-height: 100vh;
 		text-align: center;
 		padding-top: 6rem;
 		position: relative;
@@ -180,13 +180,15 @@
 			height: 350px;
 			position: relative;
 			padding: 1rem;
+			touch-action: pan-y;
+
 
 			&::after {
 				content: '<- Nog 2 resultaten';
 				color: var(--white);
 				position: absolute;
-				bottom: 2rem;
-				right: -6rem;
+				bottom: 0;
+				right: 0;
 				transform: rotate(-90deg);
 			}
 		}
