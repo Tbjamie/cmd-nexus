@@ -18,7 +18,7 @@
 	console.log('searchQuery', searchQuery);
 
 	// test item
-	const testItemsArray = (page.data?.items || []).slice(0, 4);
+	const testItemsArray = (page.data?.items || []).slice(0, 8);
 
 	// Transform the difficulty rating to a more readable format
 	function getRating(moeilijkheid: string) {
@@ -86,15 +86,7 @@
 </section>
 
 <style>
-	.main-page-spacing {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		min-height: 100vh;
-		text-align: center;
-		padding-top: 6rem;
-		position: relative;
+	section {
 	}
 
 	.overview-page-wrapper {
