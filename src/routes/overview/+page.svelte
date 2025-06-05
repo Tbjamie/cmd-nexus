@@ -54,7 +54,7 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
-<section class="main-page-spacing">
+<section class="main-page-spacing relative">
 	<div class="overview-page-wrapper">
 		<Searchbar bind:value={prompt} relatedItems={filteredItems} promptPlaceholder="Zoek naar kennis, tools, tutorials en meer..." />
 		<div class="prompt-header-information-wrapper">
@@ -87,6 +87,7 @@
 
 <style>
 	section {
+		overflow-y: auto;
 	}
 
 	.overview-page-wrapper {
@@ -96,7 +97,7 @@
 		/* max-width: 1200px; */
 		display: grid;
 		grid-template-columns: minmax(300px, 360px) 1fr;
-		grid-template-rows: minmax(60px, 64px) minmax(400px, 700px);
+		grid-template-rows: minmax(60px, 64px) minmax(400px, 1fr);
 		column-gap: 1rem;
 		row-gap: 1.6rem;
 	}
@@ -162,7 +163,7 @@
 		padding: 2rem 4rem;
 	}
 
-	@container grid-page (max-width: 800px) {
+	/* @container grid-page (max-width: 800px) {
 		.grid-page {
 			display: flex;
 			flex-direction: column;
@@ -191,14 +192,14 @@
 			grid-template-columns: repeat(2, minmax(200px, 1fr));
 			gap: 1.5rem;
 		}
-	}
+	} */
 
-	@media screen and (max-width: 768px) {
+	/* @media screen and (max-width: 768px) {
 	}
 
 	@media screen and (max-width: 1000px) {
 		.overview-page-wrapper {
-			grid-template-rows: 60px 0fr 460px;
+			grid-template-rows: 60px 80px 1fr;
 		}
 
 		:global(.search-wrapper) {
@@ -216,6 +217,6 @@
 			grid-column: 1 / 3;
 			grid-row: 3 / 4;
 		}
-	}
+	} */
 
 </style>
