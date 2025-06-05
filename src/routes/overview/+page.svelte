@@ -105,8 +105,8 @@
 		display: grid;
 		grid-template-columns: minmax(300px, 360px) 1fr;
 		grid-template-rows: minmax(60px, 64px) minmax(400px, 700px);
-		column-gap: 2rem;
-		row-gap: 2.6rem;
+		column-gap: 1rem;
+		row-gap: 1.6rem;
 	}
 
 	.prompt-header-information-wrapper {
@@ -116,7 +116,7 @@
 		justify-content: space-between;
 		align-items: center;
 		gap: 1.5rem;
-		padding-left: 1.4rem;
+		padding-left: 2.4rem;
 
 		span {
 			display: flex;
@@ -151,10 +151,10 @@
 		container-name: grid-page;
 		grid-column: 2 / 3;
 		grid-row: 2 / 3;
-  height: 100vh;
-  overflow-y: auto;
 		width: 100%;
 		position: relative;
+
+		/* padding: 1rem; */
 	}
 
 	.grid-page {
@@ -172,8 +172,14 @@
 
 	@container grid-page (max-width: 800px) {
 		.grid-page {
-			grid-template-columns: 1fr;
+			display: flex;
+			flex-direction: column;
+			align-items: baseline;
 			gap: 1.5rem;
+			overflow-y: auto;
+			height: 350px;
+			position: relative;
+			padding: 1rem;
 
 			&::after {
 				content: '<- Nog 2 resultaten';

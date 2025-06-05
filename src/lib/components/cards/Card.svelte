@@ -186,6 +186,9 @@
         /* max-width: 35rem; */
         border-radius: var(--border-radius-large);
         z-index: 1;
+        height: 100%;
+        position: relative;
+        min-height: 250px;
 
         transition: all 300ms ease-in-out;
 
