@@ -22,17 +22,17 @@
 
 	// Check labeltype for different styles
 	// theme afhankelijk van de labeltype
-	$effect(() => {
-		if (labelType === 'beroepstaak') {
-			labelColor = 'green';
-		} else if (labelType === 'principe') {
-			labelColor = 'blue';
-		} else if (labelType === 'methode') {
-			labelColor = 'yellow';
-		} else {
-			labelColor = 'blue'; // default
-		}
-	});
+    $effect(() => {
+        if (labelType === 'Beroepstaak') {
+            labelColor = 'green';
+        } else if (labelType === 'Principe') {
+            labelColor = 'blue';
+        } else if (labelType === 'Methode') {
+            labelColor = 'yellow';
+        } else {
+            labelColor = 'purple'; // default
+        }
+    });
 
 	// 1. get de client mouse position
 	function handleMouseMove(id: string, event: MouseEvent) {
@@ -159,130 +159,143 @@
 	</div>
 </a>
 
+
 <style>
-	.dot-element {
-		--opacity: 50%;
-		position: absolute;
-		width: 15rem;
-		height: 15rem;
-		border-radius: 50%;
-		pointer-events: none;
-		z-index: -1;
-		opacity: 0;
+    .dot-element {
+        --opacity: 50%;
+        position: absolute;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: -1;
+        opacity: 0;
 
-		&.visible {
-			opacity: 1;
-			transform: translate(-50%, -50%);
-			transition: opacity 500ms ease-in-out;
-			animation: pulse 5s infinite ease-in-out alternate;
-			background-color: var(--current-color-card);
+        &.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%);
+            transition: opacity 500ms ease-in-out;
+            animation: pulse 5s infinite ease-in-out;
+            background-color: var(--current-color-card);
 
-			&.visible.blue {
-				background-color: var(--light-blue);
+
+         &.visible.blue {
+                background-color: var(--light-blue);
+            }
+
+         &.visible.green {
+                background-color: var(--green);
+            }
+
+         &.visible.yellow {
+                background-color: var(--yellow);
+            }
+
+		 &.visible.purple {
+				background-color: var(--purple-light);
 			}
+        }
+    }
 
-			&.visible.green {
-				background-color: var(--green);
-			}
+    /* Variants van Cards */
+    /* default hover staate */
+    /* 1. normal */
 
-			&.visible.yellow {
-				background-color: var(--yellow);
-			}
-		}
-	}
+    .card-wrapper.normal {
+        --opacity: 8%;
+        pointer-events: auto;
+        width: 100%;
+        text-decoration: none;
+        overflow: hidden;
+        /* max-width: 35rem; */
+        border-radius: var(--border-radius-large);
+        z-index: 1;
+        height: 100%;
+        position: relative;
+        /* min-height: 250px; */
 
-	/* Variants van Cards */
-	/* default hover staate */
-	/* 1. normal */
+        transition: all 300ms ease-in-out;
 
-	.card-wrapper.normal {
-		--opacity: 8%;
-		pointer-events: auto;
-		width: 100%;
-		text-decoration: none;
-		overflow: hidden;
-		/* max-width: 35rem; */
-		border-radius: var(--border-radius-large);
-		z-index: 1;
-		height: 100%;
-		position: relative;
-		min-height: 250px;
+        .card-container {
+            backdrop-filter: blur(60px);
+            transition: all 300ms ease-in-out;            
+            display: flex;
+            flex-direction: column;
+            gap: 1.4rem;
+            overflow: auto;
 
-		transition: all 300ms ease-in-out;
+            padding: 1.4rem 1.6rem;
 
-		.card-container {
-			backdrop-filter: blur(60px);
-			transition: all 300ms ease-in-out;
-			display: flex;
-			height: 100%;
-			flex-direction: column;
-			gap: 1.4rem;
-			overflow: auto;
+            .card-header, .card-footer {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-			padding: 1.4rem 1.6rem;
+            .card-content {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: .75rem;
+            }
+        }
 
-			.card-header,
-			.card-footer {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-			}
+        .card-footer-tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
 
-			.card-content {
-				display: flex;
-				flex-direction: column;
-				align-items: flex-start;
-				gap: 0.75rem;
-			}
-		}
+        & > * {
+            color: var(--white);
+        }
 
-		.card-footer-tags-wrapper {
-			display: flex;
-			flex-wrap: wrap;
-			gap: 0.5rem;
-		}
+        &:hover {
+            transform: scale(1.02);
+        }
 
-		& > * {
-			color: var(--white);
-		}
 
-		&.visible {
-			opacity: 1;
-			transition: opacity 500ms ease-in-out;
-			animation: pulse 2s infinite ease-in-out;
-		}
-	}
+        &.visible {
+            opacity: 1;
+            transition: opacity 500ms ease-in-out;
+            animation: pulse 2s infinite ease-in-out;
+        }
+    }
 
-	.card-wrapper.normal .card-content :global(p) {
-		color: #e2e2e2;
-		text-align: left;
-		font-weight: 300;
-		margin: 0;
-		text-overflow: ellipsis;
+    .card-wrapper.normal .card-content :global(p) {
+        color: #E2E2E2;
+        text-align: left;
+        font-weight: 300;
+        margin: 0;
+        text-overflow: ellipsis;
+        
+        /* http://css-tricks.com/almanac/properties/l/line-clamp/ */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-clamp: 2;
+        -webkit-line-clamp: 2;
 
-		/* http://css-tricks.com/almanac/properties/l/line-clamp/ */
-		display: -webkit-box;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		line-clamp: 2;
-		-webkit-line-clamp: 2;
-	}
+    }
 
-	.card-wrapper.normal .card-content :global(h3) {
-		font-weight: 500;
-	}
+    .card-wrapper.normal .card-content :global(h3) {
+        font-weight: 500;
+    }
 
-	.card-wrapper.normal .card-content :global(span) {
-		font-weight: 300;
-	}
+    .card-wrapper.normal .card-content :global(span) {
+        font-weight: 300;
+    }
 
-	@keyframes pulse {
-		0% {
-			transform: translate(-50%, -50%) scale(1);
-		}
-		100% {
-			transform: translate(-50%, -50%) scale(1.5);
-		}
-	}
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5);
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
 </style>

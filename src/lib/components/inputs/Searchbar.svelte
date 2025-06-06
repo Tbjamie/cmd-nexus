@@ -54,11 +54,11 @@
 		background: red;
 		border: none;
 		width: 100%;
+		max-width: 700px;
 
 		background: var(--white);
 		border-radius: 15px;
 		outline: solid 1px rgba(255 255 255 / 0.2);
-
 		/* transition: all 200ms ease-in-out; */
 
 		&.active {
@@ -84,7 +84,7 @@
 
 	@media screen and (min-width: 768px) {
 		.search-wrapper {
-			width: 50%;
+			/* max-width: 50%; */
 		}
 	}
 

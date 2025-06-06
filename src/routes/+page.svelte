@@ -294,27 +294,39 @@
 				</div>
 			{:else}
 				<div class="overview-page-wrapper">
-					<FilterBar />
-					<!-- filter comp -->
-					<div class="grid-page-container">
-						<div class="grid-page">
-							{#each items as item}
-								<Card
-									href="/{item.naam
-										? item.naam
-												.toLowerCase()
-												.replace(/[\s:]+/g, '-')
-												.replace(/[^\w-]+/g, '')
-										: ''}"
-									variant="normal"
-									tag={item.rel_vakgebied as string | undefined}
-									title={item.naam}
-									labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
-									description={item.korte_beschrijving}
-									rating={getRating(item.moeilijkheid)}
-									mostRelevant={item.soort === 'methode'}
-								/>
-							{/each}
+					<div class="overview-page-header">
+						<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+						<div class="prompt-header-information-wrapper">
+							<section class="prompt-header-search-wrapper">
+								<p>gezocht op:</p>
+								<h2>Alle resultaten</h2>
+							</section>
+							<span>{items.length} resultaten gevonden</span>
+						</div>
+					</div>
+					<div class="overview-page-content">
+						<FilterBar />
+						<div class="grid-page-container">
+							<div class="grid-page">
+								{#each items as item}
+									<Card
+										id={item.id as string | undefined}
+										href="/{item.naam
+											? item.naam
+													.toLowerCase()
+													.replace(/[\s:]+/g, '-')
+													.replace(/[^\w-]+/g, '')
+											: ''}"
+										variant="normal"
+										tag={item.rel_vakgebied as string | undefined}
+										title={item.naam}
+										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+										description={item.korte_beschrijving}
+										rating={getRating(item.moeilijkheid)}
+										mostRelevant={item.soort === 'methode'}
+									/>
+								{/each}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -335,16 +347,10 @@
 		navigation: auto;
 	}
 
+	/* OVERVIEW */
 	.overview-page-wrapper {
 		width: 100%;
 		height: 100%;
-		padding-top: 2rem;
-		/* max-width: 1200px; */
-		display: grid;
-		grid-template-columns: minmax(300px, 360px) 1fr;
-		grid-template-rows: minmax(60px, 64px) minmax(400px, 1fr);
-		column-gap: 1rem;
-		row-gap: 1.6rem;
 	}
 
 	.prompt-header-information-wrapper {
@@ -360,12 +366,36 @@
 			display: flex;
 			align-self: baseline;
 			text-align: right;
+			font-weight: 300;
 		}
 	}
 
 	:global(.search-wrapper) {
 		grid-column: 1 / 2;
 		grid-row: 1 / 2;
+	}
+
+	.overview-page-header {
+		width: 100%;
+		height: 100%;
+		padding: 2rem 0;
+
+		display: grid;
+		grid-template-columns: minmax(300px, 360px) 1fr;
+		column-gap: 1rem;
+
+		position: sticky;
+		background-color: var(--black);
+		top: 0;
+		left: 0;
+		z-index: 10;
+	}
+
+	.overview-page-content {
+		display: grid;
+		grid-template-columns: minmax(300px, 360px) 1fr;
+		grid-template-rows: 1fr;
+		column-gap: 1rem;
 	}
 
 	.prompt-header-search-wrapper {
@@ -381,6 +411,12 @@
 			white-space: nowrap;
 			overflow: hidden;
 			width: 100%;
+			font-weight: 500;
+		}
+
+		p {
+			margin: 0;
+			font-weight: 300;
 		}
 	}
 
@@ -397,6 +433,46 @@
 
 	.grid-page {
 		display: grid;
+	}
+	
+	@container grid-page (max-width: 800px) {
+		.grid-page {
+			display: flex;
+			flex-direction: column;
+			align-items: baseline;
+			gap: 1.5rem;
+			position: relative;
+			padding: 1rem;
+		}
+	}
+
+	@container grid-page (min-width: 801px) {
+		.grid-page {
+			grid-template-columns: repeat(2, minmax(200px, 1fr));
+			gap: 1.5rem;
+		}
+	}
+
+	@media screen and (max-width: 1000px) {
+		.overview-page-wrapper {
+			grid-template-rows: 60px 80px 1fr;
+		}
+
+		:global(.search-wrapper) {
+			grid-column: 1 / 3;
+			grid-row: 1 / 2;
+		}
+
+		.prompt-header-information-wrapper {
+			grid-row: 2 / 3;
+			grid-column: 1 / 3;
+			padding: 0 1.4rem;
+		}
+
+		.grid-page-container {
+			grid-column: 1 / 3;
+			grid-row: 3 / 4;
+		}
 	}
 
 	.block {

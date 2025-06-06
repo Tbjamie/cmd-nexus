@@ -55,7 +55,7 @@
 		justify-content: start;
 
 		position: absolute;
-		padding: 4rem;
+		padding: 3rem 4rem;
 		width: 100vw;
 		z-index: 3;
 	}
