@@ -163,7 +163,7 @@
 		padding: 2rem 4rem;
 	}
 
-	/* @container grid-page (max-width: 800px) {
+	@container grid-page (max-width: 800px) {
 		.grid-page {
 			display: flex;
 			flex-direction: column;
@@ -192,9 +192,54 @@
 			grid-template-columns: repeat(2, minmax(200px, 1fr));
 			gap: 1.5rem;
 		}
-	} */
+	}
 
-	/* @media screen and (max-width: 768px) {
+	@media screen and (max-width: 768px) {
+	}
+
+	@media screen and (max-width: 1000px) {
+		.overview-page-wrapper {
+			grid-template-rows: 60px 80px 1fr;
+		}
+
+		:global(.search-wrapper) {
+			grid-column: 1 / 3;
+			grid-row: 1 / 2;
+		}
+	}
+	
+	@container grid-page (max-width: 800px) {
+		.grid-page {
+			display: flex;
+			flex-direction: column;
+			align-items: baseline;
+			gap: 1.5rem;
+			overflow-y: auto;
+			height: 350px;
+			position: relative;
+			padding: 1rem;
+			touch-action: pan-y;
+
+
+			&::after {
+				content: '<- Nog 2 resultaten';
+				color: var(--white);
+				position: absolute;
+				bottom: 0;
+				right: 0;
+				transform: rotate(-90deg);
+			}
+		}
+	}
+
+	@container grid-page (min-width: 801px) {
+		.grid-page {
+			grid-template-columns: repeat(2, minmax(200px, 1fr));
+			gap: 1.5rem;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
 	}
 
 	@media screen and (max-width: 1000px) {
@@ -217,6 +262,6 @@
 			grid-column: 1 / 3;
 			grid-row: 3 / 4;
 		}
-	} */
+	}
 
 </style>
