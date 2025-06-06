@@ -84,16 +84,4 @@
 		width: 0.875rem;
 		height: 0.875rem;
 	}
-
-	/* @media screen and (min-width: 768px) {
-		.search-wrapper {
-			/* max-width: 50%; */
-		}
-	}
-
-	@media screen and (min-width: 1563px) {
-		.search-wrapper {
-			width: 40%;
-		}
-	} */
 </style>
