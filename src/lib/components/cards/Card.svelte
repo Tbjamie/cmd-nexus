@@ -223,6 +223,7 @@
             flex-direction: column;
             gap: 1.4rem;
             overflow: auto;
+			min-height: 100%;
 
             padding: 1.4rem 1.6rem;
 
@@ -237,6 +238,10 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: .75rem;
+
+				p {
+					min-height: 2.5rem;
+				}
             }
         }
 
