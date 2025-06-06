@@ -8,6 +8,7 @@ export interface Item {
 	meer_bij_personen?: string;
 	ondertitel?: string;
 	alternatieve_naam?: string;
+	moeilijkheid: string;
 	naam?: string;
 	soort?: string;
 	rel_cmd_expertise?: [];

@@ -9,18 +9,33 @@
 	import { pageView } from '$lib/stores/pageView.svelte';
 	import NexusLogoFull from '$lib/assets/icons/logo-full-name-icon.svg?component';
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
+	import Card from '$lib/components/cards/Card.svelte';
+	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
 </script>
 
 <script lang="ts">
 	let prompt = $state('');
 	let filteredItems: Item[] = $state([]);
-	let items: Item[];
+	let items: Item[] = $state([]);
 	let formResult: any;
 	let searchResults: any = $state(null);
 	let resultsFound = $state(false);
 	let followUpQuestionData: any;
 	let followUpQuestion: string = $state('');
 	let followUpMessage: string = $state('');
+
+	function getRating(moeilijkheid: string) {
+		switch (moeilijkheid) {
+			case '*':
+				return 'Makkelijk';
+			case '**':
+				return 'Medium';
+			case '***':
+				return 'Moeilijk';
+			default:
+				return moeilijkheid;
+		}
+	}
 
 	$effect(() => {
 		formResult = page.form;
@@ -194,7 +209,7 @@
 		<section class="main-page-spacing nexus-section">
 			<!-- <AiStarIcon class="ai-star-icon" /> -->
 
-			<div class="block">
+			<div class="logo-star block">
 				<svg class="star1" viewBox="0 0 46 45" xmlns="http://www.w3.org/2000/svg">
 					<defs>
 						<linearGradient id="grad1" x1="0%" x2="100%" y1="0%" y2="0%">
@@ -245,32 +260,221 @@
 
 	{#if pageView.view === 'overview'}
 		<!-- Make sure that all items are shown when the button is clicked. If a search result redirect is done then only show those items -->
-		<section class="main-page-spacing">
-			{#if !resultsFound}
-				<h1>Show all cards here</h1>
-			{/if}
-			{#if searchResults}
-				<h1 class="h1">Zoekresultaten voor {prompt}</h1>
-				<p>Hier zijn de resultaten voor je zoekopdracht.</p>
-				{#each searchResults as result}
-					<article class="search-result-item">
-						<a
-							href="/{result.naam
-								.toLowerCase()
-								.replace(/[\s:]+/g, '-')
-								.replace(/[^\w-]+/g, '')}"
-						>
-							<h2>{result.naam}</h2>
-							<p>{result.korte_beschrijving}</p>
-						</a>
-					</article>
-				{/each}
+		<section class="main-page-spacing relative">
+			{#if resultsFound}
+				<div class="overview-page-wrapper">
+					<FilterBar />
+					<div class="prompt-header-information-wrapper">
+						<section class="prompt-header-search-wrapper">
+							<p class="">gezocht op:</p>
+							<h2>{page.url.searchParams.get('search')}</h2>
+						</section>
+						<span>{searchResults.length} resultaten gevonden</span>
+					</div>
+					<!-- filter comp -->
+					<div class="grid-page-container">
+						<div class="grid-page">
+							{#each searchResults as item}
+								<Card
+									href="/{item.naam
+										.toLowerCase()
+										.replace(/[\s:]+/g, '-')
+										.replace(/[^\w-]+/g, '')}"
+									variant="normal"
+									tag={item.rel_vakgebied}
+									title={item.naam}
+									labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+									description={item.korte_beschrijving}
+									rating={getRating(item.moeilijkheid)}
+									mostRelevant={item.soort === 'methode'}
+								/>
+							{/each}
+						</div>
+					</div>
+				</div>
+			{:else}
+				<div class="overview-page-wrapper">
+					<div class="overview-page-header">
+						<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+						<div class="prompt-header-information-wrapper">
+							<section class="prompt-header-search-wrapper">
+								<p>gezocht op:</p>
+								<h2>Alle resultaten</h2>
+							</section>
+							<span>{items.length} resultaten gevonden</span>
+						</div>
+					</div>
+					<div class="overview-page-content">
+						<FilterBar />
+						<div class="grid-page-container">
+							<div class="grid-page">
+								{#each items as item}
+									<Card
+										id={item.id as string | undefined}
+										href="/{item.naam
+											? item.naam
+													.toLowerCase()
+													.replace(/[\s:]+/g, '-')
+													.replace(/[^\w-]+/g, '')
+											: ''}"
+										variant="normal"
+										tag={item.rel_vakgebied as string | undefined}
+										title={item.naam}
+										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+										description={item.korte_beschrijving}
+										rating={getRating(item.moeilijkheid)}
+										mostRelevant={item.soort === 'methode'}
+									/>
+								{/each}
+							</div>
+						</div>
+					</div>
+				</div>
 			{/if}
 		</section>
 	{/if}
 </div>
 
 <style>
+	:global(.filterbar-spacing) {
+		grid-row: 2;
+	}
+	.logo-star {
+		view-transition-name: logo-star;
+	}
+
+	@view-transition {
+		navigation: auto;
+	}
+
+	/* OVERVIEW */
+	.overview-page-wrapper {
+		width: 100%;
+		height: 100%;
+	}
+
+	.prompt-header-information-wrapper {
+		grid-row: 1 / 2;
+		grid-column: 2 / 3;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 1.5rem;
+		padding-left: 2.4rem;
+
+		span {
+			display: flex;
+			align-self: baseline;
+			text-align: right;
+			font-weight: 300;
+		}
+	}
+
+	:global(.search-wrapper) {
+		grid-column: 1 / 2;
+		grid-row: 1 / 2;
+	}
+
+	.overview-page-header {
+		width: 100%;
+		height: 100%;
+		padding: 2rem 0;
+
+		display: grid;
+		grid-template-columns: minmax(300px, 360px) 1fr;
+		column-gap: 1rem;
+
+		position: sticky;
+		background-color: var(--black);
+		top: 0;
+		left: 0;
+		z-index: 10;
+	}
+
+	.overview-page-content {
+		display: grid;
+		grid-template-columns: minmax(300px, 360px) 1fr;
+		grid-template-rows: 1fr;
+		column-gap: 1rem;
+	}
+
+	.prompt-header-search-wrapper {
+		display: flex;
+		gap: 0.2rem;
+		flex-direction: column;
+		align-items: flex-start;
+		align-self: baseline;
+
+		> h2 {
+			text-align: left;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			width: 100%;
+			font-weight: 500;
+		}
+
+		p {
+			margin: 0;
+			font-weight: 300;
+		}
+	}
+
+	.grid-page-container {
+		container-type: inline-size;
+		container-name: grid-page;
+		grid-column: 2 / 3;
+		grid-row: 2 / 3;
+		width: 100%;
+		position: relative;
+
+		/* padding: 1rem; */
+	}
+
+	.grid-page {
+		display: grid;
+	}
+	
+	@container grid-page (max-width: 800px) {
+		.grid-page {
+			display: flex;
+			flex-direction: column;
+			align-items: baseline;
+			gap: 1.5rem;
+			position: relative;
+			padding: 1rem;
+		}
+	}
+
+	@container grid-page (min-width: 801px) {
+		.grid-page {
+			grid-template-columns: repeat(2, minmax(200px, 1fr));
+			gap: 1.5rem;
+		}
+	}
+
+	@media screen and (max-width: 1000px) {
+		.overview-page-wrapper {
+			grid-template-rows: 60px 80px 1fr;
+		}
+
+		:global(.search-wrapper) {
+			grid-column: 1 / 3;
+			grid-row: 1 / 2;
+		}
+
+		.prompt-header-information-wrapper {
+			grid-row: 2 / 3;
+			grid-column: 1 / 3;
+			padding: 0 1.4rem;
+		}
+
+		.grid-page-container {
+			grid-column: 1 / 3;
+			grid-row: 3 / 4;
+		}
+	}
+
 	.block {
 		height: 4rem;
 		width: 4rem;
@@ -341,10 +545,6 @@
 
 	p {
 		margin-bottom: 0.75rem;
-	}
-
-	h1 {
-		margin-bottom: 2rem;
 	}
 
 	@media screen and (min-width: 768px) {

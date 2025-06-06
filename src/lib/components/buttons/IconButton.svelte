@@ -26,7 +26,7 @@
 		width: fit-content;
 		background: var(--white);
 		border-radius: 9999px;
-		padding: 0.5rem 1rem;
+		padding: 0.3rem;
 		border: none;
 		position: relative;
 		text-decoration: none;

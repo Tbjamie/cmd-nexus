@@ -1,29 +1,27 @@
 <script lang="ts" module>
-	import CategoryLabel from "../labels/CategoryLabel.svelte";
-    import TagComponent from '../tag/Tag.svelte';
-    import IconButton from "../buttons/IconButton.svelte";
+	import CategoryLabel from '../labels/CategoryLabel.svelte';
+	import TagComponent from '../tag/Tag.svelte';
+	import IconButton from '../buttons/IconButton.svelte';
 </script>
 
 <script lang="ts">
+	let {
+		id = $bindable(''),
+		tag = $bindable(''),
+		href = $bindable(''),
+		variant = $bindable(''),
+		title = $bindable(''),
+		description = $bindable(''),
+		rating = $bindable(''),
+		labelType = $bindable(''),
+		labelColor = $bindable(''),
+		mostRelevant = $bindable(false)
+	} = $props();
 
-    let { 
-        id = $bindable(''),
-        tag = $bindable(''), 
-        href = $bindable(''),
-        variant = $bindable(''), 
-        title = $bindable(''),
-        description = $bindable(''),
-        rating = $bindable(''),
-        labelType = $bindable(''),
-        labelColor = $bindable(''),
-        mostRelevant = $bindable(false)
-    } = $props();
+	let hasHover = $state(false);
 
-    let hasHover = $state(false);
-
-
-    // Check labeltype for different styles
-    // theme afhankelijk van de labeltype
+	// Check labeltype for different styles
+	// theme afhankelijk van de labeltype
     $effect(() => {
         if (labelType === 'Beroepstaak') {
             labelColor = 'green';
@@ -32,112 +30,133 @@
         } else if (labelType === 'Methode') {
             labelColor = 'yellow';
         } else {
-            labelColor = 'blue'; // default
+            labelColor = 'purple'; // default
         }
     });
 
-    // 1. get de client mouse position
-    function handleMouseMove(id: string, event: MouseEvent) {
-        let CurrentCardWrapper = document.querySelector(`.card-wrapper-${id}`) as HTMLElement;
-        const dotElement = CurrentCardWrapper.querySelector('.dot-element') as HTMLElement
-        
-        // Update mouse position
-        let mousePosition = {
-            x: event.clientX,
-            y: event.clientY
-        }
-    
-        // function to get the bounded rectangle of the card container
-        const boundedRect = getRelativePosition(CurrentCardWrapper, mousePosition, event)
-    
-        let relativeX = boundedRect?.relativeX
-        let relativeY = boundedRect?.relativeY
+	// 1. get de client mouse position
+	function handleMouseMove(id: string, event: MouseEvent) {
+		let CurrentCardWrapper = document.querySelector(`.card-wrapper-${id}`) as HTMLElement;
+		const dotElement = CurrentCardWrapper.querySelector('.dot-element') as HTMLElement;
 
-        if (dotElement) {
-            // Update the position of the dot element
-            dotElement.style.left = `${relativeX}px`
-            dotElement.style.top = `${relativeY}px`
-    
-            // Add a class to make it visible
-            dotElement.classList.add('visible')
-        }
-    }
-    
-    // 3. Get the bounded rectangle of the card container
-    function getRelativePosition(CurrentCardWrapper: HTMLElement, mousePosition: { x: number; y: number }, event: MouseEvent) {
-        const cardContainer = CurrentCardWrapper
+		// Update mouse position
+		let mousePosition = {
+			x: event.clientX,
+			y: event.clientY
+		};
 
-        // Check if the cardContainer exists
-        if (cardContainer) {
-            // get the current card container position
-            const rect = (event.currentTarget as HTMLElement).getBoundingClientRect()
-    
-            // Calculate relative position
-            const relativeX = mousePosition.x - rect.left
-            const relativeY = mousePosition.y - rect.top
-    
-            return { relativeX, relativeY }
-        }
-    }
+		// function to get the bounded rectangle of the card container
+		const boundedRect = getRelativePosition(CurrentCardWrapper, mousePosition, event);
 
-    // 4. Cleanup on component destroy
-    function removeDotElement() {
-        const CurrentCardWrapper = document.querySelector(`.card-wrapper-${id}`) as HTMLElement;
-        const dotElement = CurrentCardWrapper.querySelector('.dot-element') as HTMLElement
-        if (dotElement) {
-            dotElement.classList.remove('visible')
-        }
-    };
+		let relativeX = boundedRect?.relativeX;
+		let relativeY = boundedRect?.relativeY;
 
+		if (dotElement) {
+			// Update the position of the dot element
+			dotElement.style.left = `${relativeX}px`;
+			dotElement.style.top = `${relativeY}px`;
+
+			// Add a class to make it visible
+			dotElement.classList.add('visible');
+		}
+	}
+
+	// 3. Get the bounded rectangle of the card container
+	function getRelativePosition(
+		CurrentCardWrapper: HTMLElement,
+		mousePosition: { x: number; y: number },
+		event: MouseEvent
+	) {
+		const cardContainer = CurrentCardWrapper;
+
+		// Check if the cardContainer exists
+		if (cardContainer) {
+			// get the current card container position
+			const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+
+			// Calculate relative position
+			const relativeX = mousePosition.x - rect.left;
+			const relativeY = mousePosition.y - rect.top;
+
+			return { relativeX, relativeY };
+		}
+	}
+
+	// 4. Cleanup on component destroy
+	function removeDotElement() {
+		const CurrentCardWrapper = document.querySelector(`.card-wrapper-${id}`) as HTMLElement;
+		const dotElement = CurrentCardWrapper.querySelector('.dot-element') as HTMLElement;
+		if (dotElement) {
+			dotElement.classList.remove('visible');
+		}
+	}
 </script>
 
-<a 
-    href={href} 
-    class="card-wrapper-{id} card-wrapper {variant}"
-    onmouseover={() => hasHover = true}
-    onfocus={() => hasHover = true}
-    onmouseleave={() => { hasHover = false; removeDotElement(); }}
-    onblur={() => hasHover = false}
-    onmousemove={(event) => handleMouseMove(id, event)}
+<a
+	{href}
+	class="card-wrapper-{id} card-wrapper {variant}"
+	onmouseover={() => (hasHover = true)}
+	onfocus={() => (hasHover = true)}
+	onmouseleave={() => {
+		hasHover = false;
+		removeDotElement();
+	}}
+	onblur={() => (hasHover = false)}
+	onmousemove={(event) => handleMouseMove(id, event)}
 >
-    <div class="dot-element {labelColor}"></div>
-    <div class="card-container">
-        <div class="card-header">
-            <CategoryLabel type={labelType} {hasHover} theme={labelColor} />
-            <IconButton theme="secondary" type="button" target="_self" href="" variant="icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-plus">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-            </IconButton>
-        </div>
-        <div class="card-content">
-            {#if title}
-                <h3 class="h3">
-                    {title}
-                </h3>
-            {/if}
+	<div class="dot-element {labelColor}"></div>
+	<div class="card-container">
+		<div class="card-header">
+			<CategoryLabel
+				text={labelType}
+				{hasHover}
+				theme={labelColor as 'green' | 'blue' | 'yellow'}
+			/>
+			<IconButton theme="secondary" type="button" target="_self" href="" variant="icon">
+				<svg
+					xmlns="http://www.w3.org/2000/svg"
+					width="18"
+					height="18"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="white"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="icon icon-plus"
+				>
+					<line x1="12" y1="5" x2="12" y2="19"></line>
+					<line x1="5" y1="12" x2="19" y2="12"></line>
+				</svg>
+			</IconButton>
+		</div>
+		<div class="card-content">
+			{#if title}
+				<h3 class="h3">
+					{title}
+				</h3>
+			{/if}
 
-            {#if description}
-                <p>
-                    {description}
-                </p>
-            {/if}
-        </div>
-        <div class="card-footer">
-            <div class="card-footer-tags-wrapper">
-                {#if mostRelevant == true}
-                    <TagComponent theme="secondary" >Gevonden kaart</TagComponent>
-                {/if}
-                {#if tag}
-                    <TagComponent>{tag}</TagComponent>
-                {/if}
-            </div>
-            {#if rating}
-                <span class="rating">{rating}</span>
-            {/if}
-        </div>
-    </div>
+			{#if description}
+				<p>
+					{description}
+				</p>
+			{/if}
+		</div>
+		<div class="card-footer">
+			<div class="card-footer-tags-wrapper">
+				{#if mostRelevant == true}
+					<TagComponent theme="secondary">Gevonden kaart</TagComponent>
+				{/if}
+				{#if tag}
+					<TagComponent>{tag}</TagComponent>
+				{/if}
+			</div>
+			{#if rating}
+				<span class="rating">{rating}</span>
+			{/if}
+		</div>
+	</div>
 </a>
 
 
@@ -171,6 +190,10 @@
          &.visible.yellow {
                 background-color: var(--yellow);
             }
+
+		 &.visible.purple {
+				background-color: var(--purple-light);
+			}
         }
     }
 
@@ -189,7 +212,7 @@
         z-index: 1;
         height: 100%;
         position: relative;
-        min-height: 250px;
+        /* min-height: 250px; */
 
         transition: all 300ms ease-in-out;
 
@@ -200,6 +223,7 @@
             flex-direction: column;
             gap: 1.4rem;
             overflow: auto;
+			min-height: 100%;
 
             padding: 1.4rem 1.6rem;
 
@@ -214,6 +238,10 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: .75rem;
+
+				p {
+					min-height: 2.5rem;
+				}
             }
         }
 

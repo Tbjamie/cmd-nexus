@@ -1,31 +1,47 @@
 <script lang="ts" module>
 	import LayoutIcon from '$lib/assets/icons/layout-icon.svg?component';
 	import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
-	import { slide } from 'svelte/transition';
 	import { pageView } from '$lib/stores/pageView.svelte';
 </script>
 
 <script lang="ts">
 	export { className as class };
-
 	let className = '';
+	let activity: HTMLDivElement;
+
+	function viewTransition() {
+		document.startViewTransition(() => {
+			if (pageView.view === 'nexus') {
+				activity.style.transform = 'translateX(0%)';
+			} else {
+				activity.style.transform = 'translateX(100%)';
+			}
+		});
+	}
 </script>
 
 <ul class="nexusSelection {className}">
-	<li transition:slide>
+	<div class="activity" bind:this={activity}></div>
+	<li>
 		<button
-			class:active={pageView.view == 'nexus'}
+			aria-label="magic search button"
+			class:active={pageView.view === 'nexus'}
+			disabled={pageView.view === 'nexus'}
 			onclick={() => {
+				viewTransition();
 				pageView.view = 'nexus';
 			}}
 		>
-			<AiStarIcon class="layout-icon" />
+			<AiStarIcon class="layout-icon star" />
 		</button>
 	</li>
-	<li transition:slide>
+	<li>
 		<button
-			class:active={pageView.view == 'overview'}
+			aria-label="overview page button"
+			class:active={pageView.view === 'overview'}
+			disabled={pageView.view === 'overview'}
 			onclick={() => {
+				viewTransition();
 				pageView.view = 'overview';
 			}}
 		>
@@ -48,27 +64,27 @@
 		align-items: center;
 		padding: 0.5rem 1.2rem 0.5rem 1.2rem;
 
-		color: #ededed80;
+		--opacity: 60%;
+		color: var(--white);
 		gap: 0.5em;
 	}
 
-	button:active {
-		scale: 0.95;
-		transition: ease all 100ms;
+	button.active {
+		--opacity: 100%;
+		color: var(--black);
 	}
 
-	.active {
-		background-color: #dad4ff;
-		/* view-transition-name: selectionActive; */
-		border-radius: 99px;
-		color: #000000;
+	button:disabled {
+		cursor: default;
 	}
 
 	ul {
 		display: flex;
 		width: 100%;
 		max-width: fit-content;
+		position: relative;
 		/* height: 2rem; */
+		overflow: hidden;
 
 		/* gap: 1rem; */
 		outline: 1px solid #ffffff30;
@@ -80,12 +96,23 @@
 		list-style: none;
 
 		top: 5%;
-		left: 5%;
 
 		& li {
 			width: 100%;
 			height: fit-content;
 			border-radius: 1em;
+			z-index: 1;
+		}
+
+		& div {
+			position: absolute;
+			background-color: #c8bfff;
+			border-radius: 9999px;
+			width: 50%;
+			height: 100%;
+			left: 0;
+			view-transition-name: activity;
+			/* transition: all 400ms cubic-bezier(0.165, 0.84, 0.44, 1); */
 		}
 	}
 
