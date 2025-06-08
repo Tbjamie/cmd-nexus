@@ -16,7 +16,7 @@
 	type={href ? null : type}
 	href={href ? href : null}
 	{disabled}
-	class="icon-button {theme} {variant} {className} {disabled ? 'disabled' : ''}"
+	class="icon-button {theme} {variant} {className}"
 >
 	<slot />
 </svelte:element>
@@ -43,7 +43,11 @@
 		font-family: 'Geist', sans-serif;
 	}
 
-	.disabled {
+	.icon-button:active {
+		transition: 100ms;
+	}
+
+	.icon-button:disabled {
 		cursor: default;
 	}
 
@@ -52,6 +56,27 @@
 		border: unset;
 		color: var(--black);
 		padding: 0.5rem;
+
+		&:hover,
+		&:focus-visible {
+			--opacity: 60%;
+		}
+
+		&:active {
+			--opacity: 100%;
+			background: var(--purple-dark);
+			color: var(--white);
+		}
+
+		&:disabled {
+			--opacity: 40%;
+			background: var(--white);
+
+			&:active {
+				--opacity: 40%;
+				color: var(--black);
+			}
+		}
 
 		@media screen and (min-width: 1563px) {
 			padding: 0.75rem;
@@ -64,6 +89,33 @@
 		color: var(--white);
 		outline: 1px solid var(--white);
 
+		&:hover,
+		&:focus-visible {
+			--opacity: 100%;
+			background-color: var(--white);
+			color: var(--black);
+		}
+
+		&:active {
+			--opacity: 60%;
+		}
+
+		&:disabled {
+			--opacity: 100%;
+
+			&:hover,
+			&:focus-visible {
+				background-color: transparent;
+				color: var(--white);
+				outline: 1px solid var(--white);
+			}
+			&:active {
+				background-color: transparent;
+				color: var(--white);
+				outline: 1px solid var(--white);
+			}
+		}
+
 		@media screen and (min-width: 1563px) {
 			padding: 0.75rem;
 		}
@@ -73,6 +125,11 @@
 		background-color: transparent;
 		padding: 0;
 		color: var(--white);
+
+		&:hover,
+		&:focus-visible {
+			--opacity: 80%;
+		}
 	}
 
 	.icon {
@@ -92,20 +149,5 @@
 		top: 0;
 		/* box-shadow: 0 0 16px var(--black); */
 		border-radius: 9999px;
-	}
-
-	.icon-button:hover,
-	.icon-button:focus-visible {
-		--opacity: 80%;
-
-		&.disabled {
-			--opacity: 100%;
-		}
-	}
-
-	.icon-button:active {
-		--opacity: 100%;
-		background: var(--purple-dark);
-		transition: 100ms;
 	}
 </style>

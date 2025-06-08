@@ -1,3 +1,7 @@
+<script lang="ts" module>
+	import { blur } from 'svelte/transition';
+</script>
+
 <script lang="ts">
 	export let feedback = '';
 	export let message = '';
@@ -7,17 +11,21 @@
 <!-- 'let message' is the message/question the user sees and has to interact with/to -->
 
 <div>
-	{#if feedback}
-		<p>
-			{feedback}
-		</p>
-	{/if}
+	{#await message}
+		<p>Loading...</p>
+	{:then}
+		{#key feedback}
+			<p in:blur>
+				{feedback}
+			</p>
+		{/key}
 
-	{#if message}
-		<h1 class="h1">
-			{message}
-		</h1>
-	{/if}
+		{#key message}
+			<h1 class="h1" in:blur>
+				{message}
+			</h1>
+		{/key}
+	{/await}
 
 	<slot />
 </div>
@@ -33,5 +41,9 @@
 
 	h1 {
 		margin-bottom: 1rem;
+
+		@media screen and (min-width: 1024px) {
+			max-width: 70%;
+		}
 	}
 </style>

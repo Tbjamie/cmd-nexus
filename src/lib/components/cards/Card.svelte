@@ -2,6 +2,7 @@
 	import CategoryLabel from '../labels/CategoryLabel.svelte';
 	import TagComponent from '../tag/Tag.svelte';
 	import IconButton from '../buttons/IconButton.svelte';
+	import PlusIcon from '$lib/assets/icons/plus-icon.svg?component';
 </script>
 
 <script lang="ts">
@@ -22,17 +23,17 @@
 
 	// Check labeltype for different styles
 	// theme afhankelijk van de labeltype
-    $effect(() => {
-        if (labelType === 'Beroepstaak') {
-            labelColor = 'green';
-        } else if (labelType === 'Principe') {
-            labelColor = 'blue';
-        } else if (labelType === 'Methode') {
-            labelColor = 'yellow';
-        } else {
-            labelColor = 'purple'; // default
-        }
-    });
+	$effect(() => {
+		if (labelType === 'Beroepstaak') {
+			labelColor = 'green';
+		} else if (labelType === 'Principe') {
+			labelColor = 'blue';
+		} else if (labelType === 'Methode') {
+			labelColor = 'yellow';
+		} else {
+			labelColor = 'purple'; // default
+		}
+	});
 
 	// 1. get de client mouse position
 	function handleMouseMove(id: string, event: MouseEvent) {
@@ -112,22 +113,8 @@
 				{hasHover}
 				theme={labelColor as 'green' | 'blue' | 'yellow'}
 			/>
-			<IconButton theme="secondary" type="button" target="_self" href="" variant="icon">
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="18"
-					height="18"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="white"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="icon icon-plus"
-				>
-					<line x1="12" y1="5" x2="12" y2="19"></line>
-					<line x1="5" y1="12" x2="19" y2="12"></line>
-				</svg>
+			<IconButton theme="secondary">
+				<PlusIcon class="plus-icon" />
 			</IconButton>
 		</div>
 		<div class="card-content">
@@ -159,148 +146,150 @@
 	</div>
 </a>
 
-
 <style>
-    .dot-element {
-        --opacity: 50%;
-        position: absolute;
-        width: 15rem;
-        height: 15rem;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: -1;
-        opacity: 0;
+	.dot-element {
+		--opacity: 50%;
+		position: absolute;
+		width: 15rem;
+		height: 15rem;
+		border-radius: 50%;
+		pointer-events: none;
+		z-index: -1;
+		opacity: 0;
 
-        &.visible {
-            opacity: 1;
-            transform: translate(-50%, -50%);
-            transition: opacity 500ms ease-in-out;
-            animation: pulse 5s infinite ease-in-out;
-            background-color: var(--current-color-card);
+		&.visible {
+			opacity: 1;
+			transform: translate(-50%, -50%);
+			transition: opacity 500ms ease-in-out;
+			animation: pulse 5s infinite ease-in-out;
+			background-color: var(--current-color-card);
 
+			&.visible.blue {
+				background-color: var(--light-blue);
+			}
 
-         &.visible.blue {
-                background-color: var(--light-blue);
-            }
+			&.visible.green {
+				background-color: var(--green);
+			}
 
-         &.visible.green {
-                background-color: var(--green);
-            }
+			&.visible.yellow {
+				background-color: var(--yellow);
+			}
 
-         &.visible.yellow {
-                background-color: var(--yellow);
-            }
-
-		 &.visible.purple {
+			&.visible.purple {
 				background-color: var(--purple-light);
 			}
-        }
-    }
+		}
+	}
 
-    /* Variants van Cards */
-    /* default hover staate */
-    /* 1. normal */
+	:global(.plus-icon) {
+		width: 1.125rem;
+		height: 1.125rem;
+	}
 
-    .card-wrapper.normal {
-        --opacity: 8%;
-        pointer-events: auto;
-        width: 100%;
-        text-decoration: none;
-        overflow: hidden;
-        /* max-width: 35rem; */
-        border-radius: var(--border-radius-large);
-        z-index: 1;
-        height: 100%;
-        position: relative;
-        /* min-height: 250px; */
+	/* Variants van Cards */
+	/* default hover staate */
+	/* 1. normal */
 
-        transition: all 300ms ease-in-out;
+	.card-wrapper.normal {
+		--opacity: 8%;
+		pointer-events: auto;
+		width: 100%;
+		text-decoration: none;
+		overflow: hidden;
+		/* max-width: 35rem; */
+		border-radius: var(--border-radius-large);
+		z-index: 1;
+		height: 100%;
+		position: relative;
+		/* min-height: 250px; */
 
-        .card-container {
-            backdrop-filter: blur(60px);
-            transition: all 300ms ease-in-out;            
-            display: flex;
-            flex-direction: column;
-            gap: 1.4rem;
-            overflow: auto;
+		transition: all 300ms ease-in-out;
+
+		.card-container {
+			backdrop-filter: blur(60px);
+			transition: all 300ms ease-in-out;
+			display: flex;
+			flex-direction: column;
+			gap: 1.4rem;
+			overflow: auto;
 			min-height: 100%;
 
-            padding: 1.4rem 1.6rem;
+			padding: 1.4rem 1.6rem;
 
-            .card-header, .card-footer {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
+			.card-header,
+			.card-footer {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
 
-            .card-content {
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: .75rem;
+			.card-content {
+				display: flex;
+				flex-direction: column;
+				align-items: flex-start;
+				gap: 0.75rem;
 
 				p {
 					min-height: 2.5rem;
 				}
-            }
-        }
+			}
+		}
 
-        .card-footer-tags-wrapper {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
+		.card-footer-tags-wrapper {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5rem;
+		}
 
-        & > * {
-            color: var(--white);
-        }
+		& > * {
+			color: var(--white);
+		}
 
-        &:hover {
-            transform: scale(1.02);
-        }
+		&:hover {
+			transform: scale(1.02);
+		}
 
+		&.visible {
+			opacity: 1;
+			transition: opacity 500ms ease-in-out;
+			animation: pulse 2s infinite ease-in-out;
+		}
+	}
 
-        &.visible {
-            opacity: 1;
-            transition: opacity 500ms ease-in-out;
-            animation: pulse 2s infinite ease-in-out;
-        }
-    }
+	.card-wrapper.normal .card-content p {
+		color: #e2e2e2;
+		text-align: left;
+		font-weight: 300;
+		margin: 0;
+		text-overflow: ellipsis;
 
-    .card-wrapper.normal .card-content :global(p) {
-        color: #E2E2E2;
-        text-align: left;
-        font-weight: 300;
-        margin: 0;
-        text-overflow: ellipsis;
-        
-        /* http://css-tricks.com/almanac/properties/l/line-clamp/ */
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        line-clamp: 2;
-        -webkit-line-clamp: 2;
+		/* http://css-tricks.com/almanac/properties/l/line-clamp/ */
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-clamp: 2;
+		-webkit-line-clamp: 2;
+	}
 
-    }
+	.card-wrapper.normal .card-content h3 {
+		font-weight: 500;
+	}
 
-    .card-wrapper.normal .card-content :global(h3) {
-        font-weight: 500;
-    }
+	.rating {
+		font-weight: 300;
+	}
 
-    .card-wrapper.normal .card-content :global(span) {
-        font-weight: 300;
-    }
-
-@keyframes pulse {
-    0% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-    50% {
-        transform: translate(-50%, -50%) scale(1.5);
-    }
-    100% {
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
+	@keyframes pulse {
+		0% {
+			transform: translate(-50%, -50%) scale(1);
+		}
+		50% {
+			transform: translate(-50%, -50%) scale(1.5);
+		}
+		100% {
+			transform: translate(-50%, -50%) scale(1);
+		}
+	}
 </style>

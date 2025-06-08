@@ -32,10 +32,14 @@
 {#if pathname === '/'}
 	<header class="main-page-spacing {pageView.view === 'overview' ? 'relative' : ''}">
 		{#if pageView.view === 'overview'}
-			<div class="logo-header">
-				<a aria-label="Nexus logo, linking to the homepage" href="/">
+			<div>
+				<a
+					aria-label="Nexus logo, linking to the homepage"
+					onclick={() => (pageView.view = 'nexus')}
+					href="/"
+				>
 					<LogoIcon class="logo-header" />
-					<NexusIcon class="logo-header" />
+					<NexusIcon class="nexus-logo-header" />
 				</a>
 			</div>
 		{/if}
@@ -43,8 +47,13 @@
 	</header>
 {:else}
 	<header class="main-page-spacing relative">
-		<a aria-label="Nexus logo, linking to the homepage" href="/">
+		<a
+			aria-label="Nexus logo, linking to the homepage"
+			href="/"
+			onclick={() => (pageView.view = 'nexus')}
+		>
 			<LogoIcon class="logo-header" />
+			<NexusIcon class="nexus-logo-header" />
 		</a>
 	</header>
 {/if}
@@ -83,6 +92,10 @@
 	:global(.logo-header) {
 		height: 2rem;
 		view-transition-name: logo-star;
+	}
+
+	:global(.nexus-logo-header) {
+		height: 1.25rem;
 	}
 
 	:global(.toggle-button) {

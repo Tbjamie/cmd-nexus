@@ -11,7 +11,10 @@
 <script lang="ts">
 	const item: Item = page.data?.item;
 	const webLinks = item.meer_op_web?.split(/\s+/);
-	const relativePerson = item.meer_bij_personen?.split(/\n+/);
+
+	const relativePerson = item.meer_bij_personen
+		?.split(/\n+/)
+		.filter((person) => person.trim().length > 0);
 
 	onMount(() => {
 		const iconButton = document.querySelector('.icon-button');
@@ -22,10 +25,28 @@
 	});
 </script>
 
+<svelte:head>
+	<title>{item.naam} | CMD Nexus</title>
+	<meta
+		name="description"
+		content="Bekijk details over {item.naam} binnen CMD Nexus. Lees de kern, toepassing en vind relevante links en personen voor dit principe of onderwerp binnen Communication and Multimedia Design aan de Hogeschool van Amsterdam."
+	/>
+	<meta
+		name="keywords"
+		content="CMD, Nexus, platform, studenten, kennis, hulp, CMD Kennis, kennisbank, CMD Kennisbank, HvA, Hogeschool van Amsterdam, Communication and Multimedia Design, digital design, interactie ontwerp, UX, UI, web development, frontend, {item.naam}, {item.korte_beschrijving}, {item.strekking}, {item.toepassing}"
+	/>
+	<meta property="og:title" content="CMD Nexus" />
+	<meta
+		property="og:description"
+		content="Bekijk details over {item.naam} binnen CMD Nexus. Lees de kern, toepassing en vind relevante links en personen voor dit principe of onderwerp binnen Communication and Multimedia Design aan de Hogeschool van Amsterdam."
+	/>
+	<meta property="og:type" content="website" />
+</svelte:head>
+
 <div class="main-page-spacing">
 	{#if item}
 		<IconButton class="icon-button button-size spacing-button" variant="text" theme="tertiary">
-			<ArrowIcon class="arrow-icon" />
+			<ArrowIcon class="arrow-icon-detail" />
 
 			Terug naar overzicht
 		</IconButton>
@@ -147,7 +168,7 @@
 		height: 1rem;
 	}
 
-	:global(.arrow-icon) {
+	:global(.arrow-icon-detail) {
 		width: 1rem;
 		height: 1rem;
 		transform: rotate(-90deg);

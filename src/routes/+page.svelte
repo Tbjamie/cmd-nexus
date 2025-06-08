@@ -1,7 +1,6 @@
 <script lang="ts" module>
 	import gsap from 'gsap';
 	import { onMount } from 'svelte';
-	// import AiStarIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/itemType';
@@ -11,6 +10,7 @@
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
 	import Card from '$lib/components/cards/Card.svelte';
 	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
+	import Slider from '$lib/components/inputs/Slider.svelte';
 </script>
 
 <script lang="ts">
@@ -19,10 +19,17 @@
 	let items: Item[] = $state([]);
 	let formResult: any;
 	let searchResults: any = $state(null);
+	let allResults: any = $state(null);
 	let resultsFound = $state(false);
 	let followUpQuestionData: any;
 	let followUpQuestion: string = $state('');
 	let followUpMessage: string = $state('');
+	type Filter = {
+		title: string | undefined;
+		name: string | undefined;
+		options: (string | undefined)[];
+	};
+	let filters = $state<Filter[]>([]);
 
 	function getRating(moeilijkheid: string) {
 		switch (moeilijkheid) {
@@ -41,11 +48,14 @@
 		formResult = page.form;
 
 		searchResults = formResult?.results;
+		allResults = formResult?.allResults;
 		followUpQuestionData = formResult?.feedbackMessage;
 
 		followUpQuestion = followUpQuestionData ? followUpQuestionData.split('.')[1] : '';
 		followUpMessage = followUpQuestionData ? followUpQuestionData.split('.')[0] : '';
 	});
+
+	$inspect(allResults);
 
 	$effect(() => {
 		resultsFound = searchResults && searchResults.length > 0;
@@ -61,12 +71,104 @@
 	// 	console.log('SEARCHPARAMS', page.url.searchParams.get('search'));
 	// });
 
+	let starAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
+
 	onMount(() => {
 		const heading = document.querySelector('h1');
 		const paragraph = document.querySelector('p');
-		// const aiStarIcon = document.querySelector('.ai-star-icon');
 
 		items = page.data?.items;
+
+		const getUniqueOptions = (key: keyof Item) =>
+			Array.from(
+				new Set(
+					items
+						.flatMap((i) => (Array.isArray(i[key]) ? i[key] : [i[key]]))
+						.filter((value) => typeof value === 'string' || value === undefined)
+				)
+			);
+
+		filters = [
+			{
+				title: 'Soort',
+				name: 'Soort',
+				options: getUniqueOptions('soort').map((option) => {
+					const count = items.filter((item) =>
+						Array.isArray(item.soort) ? item.soort.includes(option) : item.soort === option
+					).length;
+					return option !== undefined ? `${option} (${count})` : undefined;
+				})
+			},
+			{
+				title: 'Moeilijkheid',
+				name: 'Moeilijkheid',
+				options: getUniqueOptions('moeilijkheid')
+					.map((option) => {
+						const count = items.filter((item) =>
+							Array.isArray(item.moeilijkheid)
+								? item.moeilijkheid.includes(option)
+								: item.moeilijkheid === option
+						).length;
+						return option !== undefined ? `${option} (${count})` : undefined;
+					})
+					.filter((option): option is string => option !== undefined)
+					.map((option) => {
+						const symbol = option?.split(' ')[0];
+						return (
+							getRating(symbol) +
+							(option.includes('(') ? ' ' + option.slice(option.indexOf('(')) : '')
+						);
+					})
+			},
+			{
+				title: 'Beroepstaak',
+				name: 'Beroepstaak',
+				options: getUniqueOptions('rel_beroepstaak').map((option) => {
+					const count = items.filter((item) =>
+						Array.isArray(item.rel_beroepstaak)
+							? item.rel_beroepstaak.includes(option as never)
+							: item.rel_beroepstaak === option
+					).length;
+					return option !== undefined ? `${option} (${count})` : undefined;
+				})
+			},
+			{
+				title: 'Competentie',
+				name: 'Competentie',
+				options: getUniqueOptions('rel_competentie').map((option) => {
+					const count = items.filter((item) =>
+						Array.isArray(item.rel_competentie)
+							? item.rel_competentie.includes(option as never)
+							: item.rel_competentie === option
+					).length;
+					return option !== undefined ? `${option} (${count})` : undefined;
+				})
+			},
+			{
+				title: 'Thema',
+				name: 'Thema',
+				options: getUniqueOptions('rel_thema').map((option) => {
+					const count = items.filter((item) =>
+						Array.isArray(item.rel_thema)
+							? item.rel_thema.includes(option as never)
+							: item.rel_thema === option
+					).length;
+					return option !== undefined ? `${option} (${count})` : undefined;
+				})
+			},
+			{
+				title: 'Vakgebied',
+				name: 'Vakgebied',
+				options: getUniqueOptions('rel_vakgebied').map((option) => {
+					const count = items.filter((item) =>
+						Array.isArray(item.rel_vakgebied)
+							? item.rel_vakgebied.includes(option as never)
+							: item.rel_vakgebied === option
+					).length;
+					return option !== undefined ? `${option} (${count})` : undefined;
+				})
+			}
+		];
 
 		$effect(() => {
 			const fuse = new Fuse(items, {
@@ -110,78 +212,85 @@
 				}
 			);
 
-			// main timeline waar alles op draait
+			// main timeline waar de ster animatie op draait
 			const tl = gsap.timeline({ repeat: -1, paused: true });
 
-			// Ster 2 wiggle code
-			// komende 4 code secties
-			for (let i = 0; i < 8; i++) {
+			if (document.querySelector('.star2') && document.querySelector('.star1')) {
+				// Ster 2 wiggle code
+				// komende 4 code secties
+				for (let i = 0; i < 8; i++) {
+					tl.to('.star2', {
+						scale: 1.1,
+						x: -14,
+						y: 36,
+						duration: 0.1,
+						rotation: i % 2 === 0 ? 2 : -2,
+						ease: 'circ.ease'
+					});
+				}
+
+				// start van de right sweep v/d ster
 				tl.to('.star2', {
-					scale: 1.1,
+					scale: 1.2,
 					x: -14,
 					y: 36,
-					duration: 0.1,
-					rotation: i % 2 === 0 ? 2 : -2,
-					ease: 'circ.ease'
-				});
-			}
-
-			// start van de right sweep v/d ster
-			tl.to('.star2', {
-				scale: 1.2,
-				x: -14,
-				y: 36,
-				duration: 0.5,
-				rotation: 10,
-				ease: 'circ.easeIn'
-			})
-				.to(
-					'.star1',
-					{
+					duration: 0.5,
+					rotation: 10,
+					ease: 'circ.easeIn'
+				})
+					.to(
+						'.star1',
+						{
+							scale: 1,
+							duration: 1,
+							rotation: 0,
+							ease: 'circ.ease',
+							filter: 'drop-shadow(1px 2px 20px #6E56FF40)'
+						},
+						'<'
+					) // start van de drop-shadow glow gelijktijdig aan het vorige keyframe op de timeline door: "<"
+					.to('.star2', {
+						scale: 1,
+						x: -15,
+						y: 35,
+						duration: 0.5,
+						ease: 'circ.ease',
+						rotation: 0
+					})
+					.to(
+						'.star1',
+						{
+							scale: 1.1,
+							duration: 0.3,
+							rotation: -1,
+							ease: 'circ.ease',
+							filter: 'drop-shadow(1px 2px 20px #6E56FF)'
+						},
+						'<'
+					)
+					.to('.star1', {
 						scale: 1,
 						duration: 1,
 						rotation: 0,
 						ease: 'circ.ease',
 						filter: 'drop-shadow(1px 2px 20px #6E56FF40)'
-					},
-					'<'
-				) // start van de drop-shadow glow gelijktijdig aan het vorige keyframe op de timeline door: "<"
-				.to('.star2', {
-					scale: 1,
-					x: -15,
-					y: 35,
-					duration: 0.5,
-					ease: 'circ.ease',
-					rotation: 0
-				})
-				.to(
-					'.star1',
-					{
-						scale: 1.1,
-						duration: 0.3,
-						rotation: -1,
-						ease: 'circ.ease',
-						filter: 'drop-shadow(1px 2px 20px #6E56FF)'
-					},
-					'<'
-				)
-				.to('.star1', {
-					scale: 1,
-					duration: 1,
-					rotation: 0,
-					ease: 'circ.ease',
-					filter: 'drop-shadow(1px 2px 20px #6E56FF40)'
-				});
+					});
 
-			$effect(() => {
-				if (prompt) {
-					setTimeout(() => {
+				$effect(() => {
+					if (prompt) {
+						if (starAnimationTimeout) clearTimeout(starAnimationTimeout);
+						starAnimationTimeout = setTimeout(() => {
+							tl.play();
+						}, 500);
+					} else {
+						tl.eventCallback('onRepeat', () => {
+							tl.pause();
+							tl.eventCallback('onRepeat', null);
+						});
 						tl.play();
-					}, 500);
-				} else {
-					tl.restart(true).pause();
-				}
-			});
+					}
+				});
+			}
 		}
 	});
 </script>
@@ -207,8 +316,6 @@
 <div>
 	{#if pageView.view === 'nexus'}
 		<section class="main-page-spacing nexus-section">
-			<!-- <AiStarIcon class="ai-star-icon" /> -->
-
 			<div class="logo-star block">
 				<svg class="star1" viewBox="0 0 46 45" xmlns="http://www.w3.org/2000/svg">
 					<defs>
@@ -237,18 +344,12 @@
 				</svg>
 			</div>
 
-			<!-- <p>Welkom bij CMD Nexus</p>
-			<h1 class="h1">Hoe kan ik je helpen?</h1>
-
-			<div class="search-autocomplete-wrapper">
-				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
-			</div> -->
-
 			<QuestionComponent
 				feedback={followUpMessage ? followUpMessage : 'Welkom bij CMD Nexus'}
 				message={followUpQuestion ? followUpQuestion : 'Hoe kan ik je helpen?'}
 			>
 				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+				<Slider filterItems={['test', 'also test', 'yup another test']} />
 			</QuestionComponent>
 		</section>
 
@@ -259,43 +360,49 @@
 	{/if}
 
 	{#if pageView.view === 'overview'}
-		<!-- Make sure that all items are shown when the button is clicked. If a search result redirect is done then only show those items -->
 		<section class="main-page-spacing relative">
 			{#if resultsFound}
 				<div class="overview-page-wrapper">
-					<FilterBar />
-					<div class="prompt-header-information-wrapper">
-						<section class="prompt-header-search-wrapper">
-							<p class="">gezocht op:</p>
-							<h2>{page.url.searchParams.get('search')}</h2>
-						</section>
-						<span>{searchResults.length} resultaten gevonden</span>
+					<div class="overview-page-header">
+						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
+						<div class="prompt-header-information-wrapper">
+							<section class="prompt-header-search-wrapper">
+								<p>gezocht op:</p>
+								<h2>{page.url.searchParams.get('search')}</h2>
+							</section>
+							<span>{searchResults.length} resultaten gevonden</span>
+						</div>
 					</div>
-					<!-- filter comp -->
-					<div class="grid-page-container">
-						<div class="grid-page">
-							{#each searchResults as item}
-								<Card
-									href="/{item.naam
-										.toLowerCase()
-										.replace(/[\s:]+/g, '-')
-										.replace(/[^\w-]+/g, '')}"
-									variant="normal"
-									tag={item.rel_vakgebied}
-									title={item.naam}
-									labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
-									description={item.korte_beschrijving}
-									rating={getRating(item.moeilijkheid)}
-									mostRelevant={item.soort === 'methode'}
-								/>
-							{/each}
+					<div class="overview-page-content">
+						<FilterBar {filters} />
+						<div class="grid-page-container">
+							<div class="grid-page">
+								{#each searchResults as item}
+									<Card
+										id={item.id as string | undefined}
+										href="/{item.naam
+											? item.naam
+													.toLowerCase()
+													.replace(/[\s:]+/g, '-')
+													.replace(/[^\w-]+/g, '')
+											: ''}"
+										variant="normal"
+										tag={item.rel_vakgebied as string | undefined}
+										title={item.naam}
+										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+										description={item.korte_beschrijving}
+										rating={getRating(item.moeilijkheid)}
+										mostRelevant={item.soort === 'methode'}
+									/>
+								{/each}
+							</div>
 						</div>
 					</div>
 				</div>
 			{:else}
 				<div class="overview-page-wrapper">
 					<div class="overview-page-header">
-						<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
 						<div class="prompt-header-information-wrapper">
 							<section class="prompt-header-search-wrapper">
 								<p>gezocht op:</p>
@@ -305,7 +412,7 @@
 						</div>
 					</div>
 					<div class="overview-page-content">
-						<FilterBar />
+						<FilterBar {filters} />
 						<div class="grid-page-container">
 							<div class="grid-page">
 								{#each items as item}
@@ -424,7 +531,6 @@
 		container-type: inline-size;
 		container-name: grid-page;
 		grid-column: 2 / 3;
-		grid-row: 2 / 3;
 		width: 100%;
 		position: relative;
 
@@ -434,7 +540,7 @@
 	.grid-page {
 		display: grid;
 	}
-	
+
 	@container grid-page (max-width: 800px) {
 		.grid-page {
 			display: flex;

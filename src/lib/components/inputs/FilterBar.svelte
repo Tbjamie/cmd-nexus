@@ -1,155 +1,98 @@
+<!-- 1. Zorg dat de form gesubmit wordt als een label wordt aangeklikt (use:enhance) -->
+<!-- 2. Zorg dat de url aanpast op het moment dat de form gesubmit wordt -->
+<!-- 3. Zorg dat filters aan of uit staan op basis van de url -->
+<!-- 4. Zorg dat filters worden toegepast en de Array van items kleiner wordt -->
+<!-- 5. Zorg dat de feedforward goed werkt en wordt aangepast op basis van de items die er op dat moment zijn (DENK HET EERST COMPLEET UIT) -->
+<!-- 6. Zorg dat op kleine schermen het filter menu een knop wordt met iets wat naar boven slide -->
+
+<script lang="ts" module>
+	import Filter from './Filter.svelte';
+	import { enhance } from '$app/forms';
+	import { goto } from '$app/navigation';
+</script>
+
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
-	import { enhance, applyAction } from '$app/forms';
-
-	// 1. Import Filter component
-	// 2. Maak een mock array
-	// 3. Loop over de mock array en zorg dat er een titel is met meerdere filter
-	// 4. Zorg dat de url update als een filter active is (Form POST > sveltekit GOTO)
-	// 5. Export props zodat de array gereplaced kan worden met echte data
-
-	const mockData = [
-		{
-			title: 'soort',
-			options: [
-				'Principe',
-				'Beroepstaak',
-				'Methode',
-				'Beroeps specifieke term',
-				'Artikel',
-				'Stappenplan',
-				'Definitie',
-				'Visie',
-				'Model'
-			]
-		},
-
-		{
-			title: 'rel_vakgebied',
-			options: ['Design', 'Research', 'Interface design', 'Interactie ontwerp']
-		},
-
-		{
-			title: 'rel_thema',
-			options: ['Designing controls', 'Research', 'Interface design', 'Interactie ontwerp']
-		}
-	];
-
-	let selected: Record<string, string> = {};
-
-	// Form submission handler
-	// function applyFilters(e: SubmitEvent) {
-	// 	e.preventDefault();
-
-	// 	const params = new URLSearchParams();
-
-	// 	for (const key in selected) {
-	// 		if (selected[key]) {
-	// 			params.set(key, selected[key]);
-	// 		}
-	// 	}
-
-	// 	goto(`?${params.toString()}`, { replaceState: true });
-	// }
+	let { filters = [], itemCount = 0 } = $props();
 </script>
 
 <form
-	method="POST"
-	action="?/filter"
-	class="filter-form"
-	use:enhance={() => {
-		// goto(
-		// 	`?search=${inputVal
-		// 		.toLowerCase()
-		// 		.replace(/[\s:]+/g, '-')
-		// 		.replace(/[^\w-]+/g, '')}`
-		// );
-		return async ({ result }) => {
-			invalidateAll();
-			await applyAction(result);
+	use:enhance={(submit) => {
+		return async ({ formData }) => {
+			const params = new URLSearchParams(window.location.search);
+			const filterMap = new Map<string, string[]>();
+
+			for (const [key, value] of formData.entries()) {
+				const lowerKey = key.toLowerCase().replace(/\s+/g, '-');
+				let lowerValue = (value as string)
+					.toLowerCase()
+					.replace(/\s+/g, '-')
+					.replace(/-\(\d+\)$/, '');
+				if (!filterMap.has(lowerKey)) {
+					filterMap.set(lowerKey, []);
+				}
+				filterMap.get(lowerKey)?.push(lowerValue);
+			}
+
+			for (const [key, values] of filterMap.entries()) {
+				params.set(key, values.join(' '));
+			}
+
+			let url = `?${params.toString()}`.replace(/%20/g, '+');
+			goto(url);
 		};
 	}}
+	action=""
+	method="POST"
+	class="filter-bar"
+	onsubmit={() => {
+		console.log('Form submitted');
+	}}
 >
-	{#each mockData as filterGroup}
-		<fieldset class="filter-fieldset">
-			<legend>{filterGroup.title}</legend>
-			{#each filterGroup.options as option}
-				<label>
-					<input
-						type="checkbox"
-						name={filterGroup.title}
-						value={option}
-						bind:group={selected[filterGroup.title]}
-					/>
-					{option}
-				</label>
-			{/each}
+	<p>Filter</p>
+	{#each filters as filter}
+		<fieldset>
+			<legend>{filter.title}</legend>
+			<div class="filter-options-wrapper">
+				{#each filter.options as option}
+					<Filter {itemCount} value={option} name={filter.name}>
+						{option}
+					</Filter>
+				{/each}
+			</div>
 		</fieldset>
 	{/each}
 </form>
 
 <style>
-	.filter-form {
-		display: inline-flex;
-		flex-direction: column;
-		gap: 1em;
-		padding: 1em;
-		border-radius: 2em;
-		grid-area: span 2;
-
-		background-color: #111111;
+	.filter-bar {
+		--opacity: 5%;
+		background: var(--white);
+		border-radius: var(--border-radius-medium);
+		padding: 1.5rem;
+		padding-bottom: 2.5rem;
 		height: max-content;
-	}
-
-	.filter-fieldset {
 		display: flex;
 		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.filter-options-wrapper {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	fieldset {
 		border: none;
+	}
 
-		label {
-			cursor: pointer;
+	legend {
+		margin-bottom: 0.875rem;
+		text-transform: capitalize;
+	}
 
-			transition: 0.1s ease;
-
-			display: flex;
-			gap: 0.5em;
-			padding: 0.4em 1em 0.4em 1em;
-			align-items: center;
-		}
-
-		legend {
-			font-size: 20px;
-			font-weight: 600;
-		}
-
-		input[type='checkbox'] {
-			appearance: none;
-			width: 1.2em;
-			height: 1.2em;
-			border: 2px solid var(--white);
-			border-radius: 4px;
-			background-color: transparent;
-			outline: none;
-			accent-color: var(--purple-light);
-			display: flex;
-			justify-content: center;
-			align-items: center;
-		}
-
-		input[type='checkbox']:checked {
-			background-color: var(--purple-light); /* of een checkmark als je dat wil */
-			border: 2px solid var(--purple-light);
-		}
-
-		input[type='checkbox']:checked::after {
-			content: url('/src/lib/assets/icons/checkmark-icon.svg');
-			width: 1em;
-			height: 1em;
-			/* align-items: center; */
-			/* justify-content: center; */
-			color: var(--black);
-
-			/* margin-bottom: 2px; */
-		}
+	p {
+		font-weight: bold;
+		font-size: 1.25rem;
 	}
 </style>

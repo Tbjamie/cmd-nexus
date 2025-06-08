@@ -8,25 +8,25 @@
 </script>
 
 <div class="result-wrapper">
+	<form
+		action="/"
+		method="POST"
+		class="autocomplete-item"
+		use:enhance={() => {
+			goto(
+				`?search=${inputVal
+					.toLowerCase()
+					.replace(/[\s:]+/g, '-')
+					.replace(/[^\w-]+/g, '')}`
+			);
+		}}
+		onsubmit={() => console.log('Form submitted with value:', inputVal)}
+	>
+		<button type="submit">
+			Zoek "{inputVal}"
+		</button>
+	</form>
 	<ul class="autocomplete-list">
-		<form
-			action="/"
-			method="POST"
-			class="autocomplete-item"
-			use:enhance={() => {
-				goto(
-					`?search=${inputVal
-						.toLowerCase()
-						.replace(/[\s:]+/g, '-')
-						.replace(/[^\w-]+/g, '')}`
-				);
-				return;
-			}}
-		>
-			<button type="submit">
-				Zoek "{inputVal}"
-			</button>
-		</form>
 		{#each relatedItems as item}
 			<li class="autocomplete-item">
 				<a

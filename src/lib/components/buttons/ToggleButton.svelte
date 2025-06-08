@@ -20,15 +20,20 @@
 	}
 </script>
 
-<ul class="nexusSelection {className}">
-	<div class="activity" bind:this={activity}></div>
+<ul class="nexus-selection {className}">
+	<div class="activity {pageView.view}" bind:this={activity}></div>
+	{#key pageView.view}
+		{(() => {
+			viewTransition();
+		})()}
+	{/key}
 	<li>
 		<button
+			style="--vt: nexus"
 			aria-label="magic search button"
 			class:active={pageView.view === 'nexus'}
 			disabled={pageView.view === 'nexus'}
 			onclick={() => {
-				viewTransition();
 				pageView.view = 'nexus';
 			}}
 		>
@@ -37,11 +42,11 @@
 	</li>
 	<li>
 		<button
+			style="--vt: overview"
 			aria-label="overview page button"
 			class:active={pageView.view === 'overview'}
 			disabled={pageView.view === 'overview'}
 			onclick={() => {
-				viewTransition();
 				pageView.view = 'overview';
 			}}
 		>
@@ -67,6 +72,7 @@
 		--opacity: 60%;
 		color: var(--white);
 		gap: 0.5em;
+		view-transition-name: var(--vt);
 	}
 
 	button.active {
@@ -112,6 +118,7 @@
 			height: 100%;
 			left: 0;
 			view-transition-name: activity;
+
 			/* transition: all 400ms cubic-bezier(0.165, 0.84, 0.44, 1); */
 		}
 	}

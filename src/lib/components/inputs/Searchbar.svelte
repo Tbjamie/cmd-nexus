@@ -7,13 +7,13 @@
 </script>
 
 <script lang="ts">
-	let { value = $bindable(''), relatedItems = [] } = $props();
+	let { value = $bindable(''), relatedItems = [], style = $bindable('default') } = $props();
 </script>
 
 <form
 	action="/"
 	method="POST"
-	class="search-wrapper"
+	class="search-wrapper {style}"
 	class:active={value}
 	use:enhance={() => {
 		goto(
@@ -34,7 +34,7 @@
 		id="search-bar"
 		placeholder="Waar ben je naar op zoek"
 	/>
-	<IconButton type="submit">
+	<IconButton type="submit" disabled={!value}>
 		<ArrowIcon class="arrow-icon" />
 	</IconButton>
 
@@ -83,13 +83,13 @@
 	}
 
 	@media screen and (min-width: 768px) {
-		.search-wrapper {
-			/* max-width: 50%; */
-		}
+		/* .search-wrapper {
+			max-width: 50%;
+		} */
 	}
 
 	@media screen and (min-width: 1563px) {
-		.search-wrapper {
+		.search-wrapper.default {
 			width: 40%;
 		}
 	}

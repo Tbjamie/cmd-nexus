@@ -84,8 +84,8 @@ export const actions = {
 			const feedbackMessage = getFollowUpQuestion();
 			console.log(feedbackMessage);
 			return {
-				resultFound: false,
-				feedbackMessage
+				feedbackMessage,
+				allResults: filteredItems
 			};
 		}
 	}
