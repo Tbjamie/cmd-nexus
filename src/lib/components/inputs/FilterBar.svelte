@@ -1,6 +1,8 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 	import { enhance, applyAction } from '$app/forms';
+	import IconButton from '../buttons/IconButton.svelte';
+	import FilterIcon from '$lib/assets/icons/filter-icon.svg?component';
 
 	// 1. Import Filter component
 	// 2. Maak een mock array
@@ -51,9 +53,20 @@
 
 	// 	goto(`?${params.toString()}`, { replaceState: true });
 	// }
+
+	let ShowFilter: 'enabled' | 'disabled' = 'disabled';
+	let FilterMenu: HTMLFormElement;
+
+	function ToggleFilter() {
+		FilterMenu.classList.toggle('is-active');
+	}
 </script>
 
+<IconButton on:click={ToggleFilter} class="filter-icon">
+	<FilterIcon />
+</IconButton>
 <form
+	bind:this={FilterMenu}
 	method="POST"
 	action="?/filter"
 	class="filter-form"
@@ -89,6 +102,10 @@
 </form>
 
 <style>
+	.is-active {
+		display: inline-flex;
+	}
+
 	.filter-form {
 		display: inline-flex;
 		flex-direction: column;
@@ -137,7 +154,7 @@
 		}
 
 		input[type='checkbox']:checked {
-			background-color: var(--purple-light); /* of een checkmark als je dat wil */
+			background-color: var(--purple-light);
 			border: 2px solid var(--purple-light);
 		}
 

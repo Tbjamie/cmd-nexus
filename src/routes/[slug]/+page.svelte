@@ -162,7 +162,7 @@
 		width: fit-content;
 	}
 
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 1024px) {
 		.detail-wrapper > section:nth-of-type(2) > article {
 			display: flex;
 		}
@@ -172,10 +172,11 @@
 		.detail-wrapper {
 			flex-direction: column;
 			margin-top: 2em;
+			gap: 1em;
 		}
 
 		:global(.spacing-button) {
-			margin-top: 3em;
+			margin-top: 2em;
 		}
 
 		section > article {
@@ -183,7 +184,7 @@
 		}
 
 		.detail-wrapper > section:nth-of-type(2) {
-			padding-top: 1em;
+			padding-top: 0;
 		}
 	}
 </style>
