@@ -11,6 +11,7 @@
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
 	import Card from '$lib/components/cards/Card.svelte';
 	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
+	import { tick } from 'svelte';
 </script>
 
 <script lang="ts">
@@ -23,6 +24,7 @@
 	let followUpQuestionData: any;
 	let followUpQuestion: string = $state('');
 	let followUpMessage: string = $state('');
+	let resultCards = $state([]);
 
 	function getRating(moeilijkheid: string) {
 		switch (moeilijkheid) {
@@ -67,6 +69,10 @@
 		// const aiStarIcon = document.querySelector('.ai-star-icon');
 
 		items = page.data?.items;
+
+		 if (resultCards){
+		resultCards[0].classList.add = 'top-result'
+		 }
 
 		$effect(() => {
 			const fuse = new Fuse(items, {
@@ -184,6 +190,50 @@
 			});
 		}
 	});
+
+let observer: MutationObserver;
+let cardGridEl: HTMLElement | null = null;
+
+onMount(() => {
+	cardGridEl = document.querySelector('.grid-page');
+
+	const highlightFirstCard = async () => {
+		await tick();
+		if (!cardGridEl) return;
+		const cards = cardGridEl.querySelectorAll<HTMLElement>('.card-container');
+		cards.forEach((card, i) => {
+			card.style.border = i === 0 ? '10px solid red' : '';
+		});
+	};
+
+	// initial call
+	highlightFirstCard();
+
+	// DOM observer voor dynamic updates
+	observer = new MutationObserver(() => {
+		highlightFirstCard();
+	});
+	if (cardGridEl) {
+		observer.observe(cardGridEl, { childList: true, subtree: true });
+	}
+
+	// cleanup bij unmount
+	return () => observer.disconnect();
+});
+
+$effect(() => {
+	tick().then(() => {
+		const cardGridEl = document.querySelector('.grid-page');
+		if (!cardGridEl) return;
+
+		const cards = cardGridEl.querySelectorAll<HTMLElement>('.card-container');
+
+		cards.forEach((card, i) => {
+			card.style.border = i === 0 ? '10px solid red' : '';
+		});
+	});
+});
+
 </script>
 
 <svelte:head>
@@ -274,8 +324,8 @@
 					<!-- filter comp -->
 					<div class="grid-page-container">
 						<div class="grid-page">
-							{#each searchResults as item}
-								<Card
+							{#each searchResults as item, i}
+								<Card bind:this={resultCards[i]}
 									href="/{item.naam
 										.toLowerCase()
 										.replace(/[\s:]+/g, '-')
