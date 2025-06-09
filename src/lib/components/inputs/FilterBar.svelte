@@ -9,10 +9,78 @@
 	import Filter from './Filter.svelte';
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import type { FilterType } from '$lib/types/filterType';
+	import type { Item } from '$lib/types/itemType';
+	import { onMount } from 'svelte';
 </script>
 
 <script lang="ts">
-	let { filters = [], itemCount = 0 } = $props();
+	let filters: FilterType[] = $state([]);
+	let { items = $bindable([]) } = $props();
+
+	onMount(() => {
+		const getUniqueOptions = (key: keyof Item) =>
+			Array.from(
+				new Set(
+					items
+						.flatMap((i) => (Array.isArray(i[key]) ? i[key] : [i[key]]))
+						.filter((value) => typeof value === 'string' || value === undefined)
+				)
+			);
+
+		const filterKeys = [
+			{ title: 'Soort', name: 'Soort', key: 'soort', labelFn: (v: string) => v },
+			{
+				title: 'Moeilijkheid',
+				name: 'Moeilijkheid',
+				key: 'moeilijkheid',
+				labelFn: (v: string) => getRating(v)
+			},
+			{
+				title: 'Beroepstaak',
+				name: 'Beroepstaak',
+				key: 'rel_beroepstaak',
+				labelFn: (v: string) => v
+			},
+			{
+				title: 'Competentie',
+				name: 'Competentie',
+				key: 'rel_competentie',
+				labelFn: (v: string) => v
+			},
+			{ title: 'Thema', name: 'Thema', key: 'rel_thema', labelFn: (v: string) => v },
+			{ title: 'Vakgebied', name: 'Vakgebied', key: 'rel_vakgebied', labelFn: (v: string) => v }
+		];
+
+		filters = filterKeys.map(({ title, name, key, labelFn }) => ({
+			title,
+			name,
+			options: getUniqueOptions(key as keyof Item)
+				.map((option) => {
+					if (option === undefined) return undefined;
+					const count = items.filter((item) =>
+						Array.isArray(item[key as keyof Item])
+							? (item[key as keyof Item] as unknown[]).includes(option)
+							: item[key as keyof Item] === option
+					).length;
+					return `${labelFn(typeof option === 'string' ? option.split(' ')[0] : option)} (${count})`;
+				})
+				.filter((option): option is string => option !== undefined)
+		}));
+	});
+
+	function getRating(moeilijkheid: string) {
+		switch (moeilijkheid) {
+			case '*':
+				return 'Makkelijk';
+			case '**':
+				return 'Medium';
+			case '***':
+				return 'Moeilijk';
+			default:
+				return moeilijkheid;
+		}
+	}
 </script>
 
 <form
@@ -20,6 +88,14 @@
 		return async ({ formData }) => {
 			const params = new URLSearchParams(window.location.search);
 			const filterMap = new Map<string, string[]>();
+
+			// Preserve ?search parameter if present
+			const searchValue = params.get('search');
+
+			// Remove all filter params except 'search'
+			[...params.keys()].forEach((key) => {
+				if (key !== 'search') params.delete(key);
+			});
 
 			for (const [key, value] of formData.entries()) {
 				const lowerKey = key.toLowerCase().replace(/\s+/g, '-');
@@ -33,11 +109,21 @@
 				filterMap.get(lowerKey)?.push(lowerValue);
 			}
 
+			// Add only filters that have values
 			for (const [key, values] of filterMap.entries()) {
-				params.set(key, values.join(' '));
+				if (values.length > 0) {
+					params.set(key, values.join(' '));
+				}
 			}
 
-			let url = `?${params.toString()}`.replace(/%20/g, '+');
+			// Restore ?search if it was present
+			if (searchValue !== null) {
+				params.set('search', searchValue);
+			}
+
+			let url =
+				window.location.pathname +
+				(params.toString() ? `?${params.toString()}`.replace(/%20/g, '+') : '');
 			goto(url);
 		};
 	}}
@@ -54,7 +140,7 @@
 			<legend>{filter.title}</legend>
 			<div class="filter-options-wrapper">
 				{#each filter.options as option}
-					<Filter {itemCount} value={option} name={filter.name}>
+					<Filter value={option} name={filter.name}>
 						{option}
 					</Filter>
 				{/each}

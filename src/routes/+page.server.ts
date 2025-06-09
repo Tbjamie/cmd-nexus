@@ -3,8 +3,6 @@ import type { Actions } from './$types';
 import Fuse from 'fuse.js';
 import type { Item } from '$lib/types/itemType';
 
-let questionIndex = 0;
-
 async function fetchItems(fetchUrl: string) {
 	try {
 		const response = await fetch(fetchUrl);
@@ -18,7 +16,7 @@ async function fetchItems(fetchUrl: string) {
 	}
 }
 
-export const actions = {
+export const actions: Actions = {
 	default: async ({ request }) => {
 		const data = await request.formData();
 		const searchInput = data.get('search-bar');
@@ -34,6 +32,11 @@ export const actions = {
 			return fail(500, { message: 'No items available for search' });
 		}
 
+		console.log('TEST');
+
+		// Split the search input into words/phrases for partial matching
+		const searchParts = searchInput.split(/\s+/).filter((part) => part.length > 2); // Ignore very short words
+
 		const fuse = new Fuse(items, {
 			keys: [
 				'naam',
@@ -43,56 +46,86 @@ export const actions = {
 				'korte_beschrijving',
 				'toepassing',
 				'meer_bij_personen',
-				'meer_bij_vak'
+				'meer_bij_vak',
+				'rel_thema',
+				'rel_beroepstaak',
+				'rel_methode',
+				'rel_vakgebied',
+				'rel_vak'
 			],
 			includeScore: true,
-			threshold: 0.2
+			threshold: 0.3
 		});
 
-		const searchItem = fuse.search(searchInput);
+		// Direct substring match on 'naam' field for any part of the search
+		const directMatches = items.filter((item) =>
+			searchParts.some(
+				(part) =>
+					typeof item.naam === 'string' && item.naam.toLowerCase().includes(part.toLowerCase())
+			)
+		);
 
-		const filteredItems = searchItem.map((result) => {
-			return result.item;
-		});
+		let filteredItems: Item[] = [];
+		let resultsLength = 0;
 
-		const resultsLength = filteredItems.length;
-		const followUpQuestion = [
-			{
-				type: 'vakgebied',
-				text: `We hebben ${resultsLength} resultaten gevonden. In welk vakgebied valt het onderwerp waar je naar zoekt?`
-			},
-			{
-				type: 'thema',
-				text: `We hebben ${resultsLength} resultaten gevonden. Binnen welk thema valt het onderwerp dat je zoekt?`
-			},
-			{
-				type: 'soort',
-				text: `We hebben ${resultsLength} resultaten gevonden. Kan je specifieker zijn over het soort item waar je naar zoekt?`
+		// If direct matches found, prioritize them
+		if (directMatches.length > 0) {
+			filteredItems = directMatches;
+			resultsLength = filteredItems.length;
+		} else if (searchParts.length > 1) {
+			const phraseResults = fuse.search(searchInput);
+			const phraseMap = new Map<string, Item>();
+			for (const result of phraseResults) {
+				if (result.item.id !== undefined) {
+					phraseMap.set(String(result.item.id), result.item);
+				}
 			}
-		];
+			filteredItems = Array.from(phraseMap.values());
+			resultsLength = filteredItems.length;
 
-		function getFollowUpQuestion() {
-			const question = followUpQuestion[questionIndex].text;
-			questionIndex = (questionIndex + 1) % followUpQuestion.length;
-			return question;
+			// If not enough results, fall back to partial matching
+			if (resultsLength < 3) {
+				const resultsMap = new Map<string, Item>(phraseMap);
+				for (const part of searchParts) {
+					const partResults = fuse.search(part);
+					for (const result of partResults) {
+						if (result.item.id !== undefined) {
+							resultsMap.set(String(result.item.id), result.item);
+						}
+					}
+				}
+				filteredItems = Array.from(resultsMap.values());
+				resultsLength = filteredItems.length;
+			}
+		} else {
+			// Single word search
+			const resultsMap = new Map<string, Item>();
+			for (const part of searchParts) {
+				const partResults = fuse.search(part);
+				for (const result of partResults) {
+					if (result.item.id !== undefined) {
+						resultsMap.set(String(result.item.id), result.item);
+					}
+				}
+			}
+			filteredItems = Array.from(resultsMap.values());
+			resultsLength = filteredItems.length;
 		}
 
-		if (resultsLength <= 5) {
+		console.log(filteredItems);
+		console.log('Total Items:', resultsLength);
+
+		if (resultsLength === 0) {
+			return { noResults: true };
+		}
+
+		if (resultsLength > 0 && resultsLength <= 3) {
 			console.log('Total Items:', resultsLength);
 			return { resultFound: true, results: filteredItems };
 		} else {
-			const feedbackMessage = getFollowUpQuestion();
-			console.log(feedbackMessage);
 			return {
-				feedbackMessage,
 				allResults: filteredItems
 			};
 		}
 	}
-} satisfies Actions;
-
-// GET DATA FROM URL AND FETCH IT > SHOW DATA
-// GET DATA FROM URL AND FETCH IT >  APPLY FILTERS > SHOW DATA
-// GET DATA FROM URL AND FETCH IT > IF DATA.LENGTH > 12 FOLLOW UP QUESTION > APPLY FILTERS > SHOW DATA
-
-// GET DATA FROM BACKEND & FILTER IN THE FRONTEND
+};

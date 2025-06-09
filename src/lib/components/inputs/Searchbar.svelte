@@ -14,7 +14,7 @@
 	action="/"
 	method="POST"
 	class="search-wrapper {style}"
-	class:active={value}
+	class:active={value && document.activeElement === document.getElementById('search-bar')}
 	use:enhance={() => {
 		goto(
 			`?search=${value
@@ -38,7 +38,7 @@
 		<ArrowIcon class="arrow-icon" />
 	</IconButton>
 
-	{#if value}
+	{#if value && document.activeElement === document.getElementById('search-bar')}
 		<Dropdown inputVal={value} {relatedItems} />
 	{/if}
 </form>

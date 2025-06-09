@@ -8,7 +8,7 @@
 <script lang="ts">
 	export let type: 'checkbox' | 'radio' = 'checkbox';
 	export let name = '';
-	export let itemCount: number | null;
+	export let itemCount: number | null = 0;
 	export let value: string | number | boolean = '';
 
 	const checked = derived(page, ($page) => {
@@ -88,7 +88,7 @@
 		font-weight: 300;
 		cursor: pointer;
 		align-items: center;
-		gap: 0.75rem;
+		gap: 0.5rem;
 		text-transform: capitalize;
 	}
 

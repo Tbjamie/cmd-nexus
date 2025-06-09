@@ -15,8 +15,10 @@
 	target={href ? target : null}
 	type={href ? null : type}
 	href={href ? href : null}
+	on:click
 	{disabled}
 	class="icon-button {theme} {variant} {className}"
+	role={href ? 'link' : 'button'}
 >
 	<slot />
 </svelte:element>
@@ -81,6 +83,10 @@
 		@media screen and (min-width: 1563px) {
 			padding: 0.75rem;
 		}
+	}
+
+	.secondary.text {
+		padding: 1rem 2rem;
 	}
 
 	.secondary {

@@ -10,28 +10,20 @@
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
 	import Card from '$lib/components/cards/Card.svelte';
 	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
-	import Slider from '$lib/components/inputs/Slider.svelte';
 </script>
 
 <script lang="ts">
 	let prompt = $state('');
 	let filteredItems: Item[] = $state([]);
 	let items: Item[] = $state([]);
+	let starAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
 	let formResult: any;
 	let searchResults: any = $state(null);
 	let allResults: any = $state(null);
 	let resultsFound = $state(false);
-	let followUpQuestionData: any;
-	let followUpQuestion: string = $state('');
-	let followUpMessage: string = $state('');
-	type Filter = {
-		title: string | undefined;
-		name: string | undefined;
-		options: (string | undefined)[];
-	};
-	let filters = $state<Filter[]>([]);
+	let viewResults = $state([]);
 
-	function getRating(moeilijkheid: string) {
+	export function getRating(moeilijkheid: string) {
 		switch (moeilijkheid) {
 			case '*':
 				return 'Makkelijk';
@@ -49,13 +41,7 @@
 
 		searchResults = formResult?.results;
 		allResults = formResult?.allResults;
-		followUpQuestionData = formResult?.feedbackMessage;
-
-		followUpQuestion = followUpQuestionData ? followUpQuestionData.split('.')[1] : '';
-		followUpMessage = followUpQuestionData ? followUpQuestionData.split('.')[0] : '';
 	});
-
-	$inspect(allResults);
 
 	$effect(() => {
 		resultsFound = searchResults && searchResults.length > 0;
@@ -67,108 +53,11 @@
 		}
 	});
 
-	// $effect(() => {
-	// 	console.log('SEARCHPARAMS', page.url.searchParams.get('search'));
-	// });
-
-	let starAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
-
 	onMount(() => {
 		const heading = document.querySelector('h1');
 		const paragraph = document.querySelector('p');
 
 		items = page.data?.items;
-
-		const getUniqueOptions = (key: keyof Item) =>
-			Array.from(
-				new Set(
-					items
-						.flatMap((i) => (Array.isArray(i[key]) ? i[key] : [i[key]]))
-						.filter((value) => typeof value === 'string' || value === undefined)
-				)
-			);
-
-		filters = [
-			{
-				title: 'Soort',
-				name: 'Soort',
-				options: getUniqueOptions('soort').map((option) => {
-					const count = items.filter((item) =>
-						Array.isArray(item.soort) ? item.soort.includes(option) : item.soort === option
-					).length;
-					return option !== undefined ? `${option} (${count})` : undefined;
-				})
-			},
-			{
-				title: 'Moeilijkheid',
-				name: 'Moeilijkheid',
-				options: getUniqueOptions('moeilijkheid')
-					.map((option) => {
-						const count = items.filter((item) =>
-							Array.isArray(item.moeilijkheid)
-								? item.moeilijkheid.includes(option)
-								: item.moeilijkheid === option
-						).length;
-						return option !== undefined ? `${option} (${count})` : undefined;
-					})
-					.filter((option): option is string => option !== undefined)
-					.map((option) => {
-						const symbol = option?.split(' ')[0];
-						return (
-							getRating(symbol) +
-							(option.includes('(') ? ' ' + option.slice(option.indexOf('(')) : '')
-						);
-					})
-			},
-			{
-				title: 'Beroepstaak',
-				name: 'Beroepstaak',
-				options: getUniqueOptions('rel_beroepstaak').map((option) => {
-					const count = items.filter((item) =>
-						Array.isArray(item.rel_beroepstaak)
-							? item.rel_beroepstaak.includes(option as never)
-							: item.rel_beroepstaak === option
-					).length;
-					return option !== undefined ? `${option} (${count})` : undefined;
-				})
-			},
-			{
-				title: 'Competentie',
-				name: 'Competentie',
-				options: getUniqueOptions('rel_competentie').map((option) => {
-					const count = items.filter((item) =>
-						Array.isArray(item.rel_competentie)
-							? item.rel_competentie.includes(option as never)
-							: item.rel_competentie === option
-					).length;
-					return option !== undefined ? `${option} (${count})` : undefined;
-				})
-			},
-			{
-				title: 'Thema',
-				name: 'Thema',
-				options: getUniqueOptions('rel_thema').map((option) => {
-					const count = items.filter((item) =>
-						Array.isArray(item.rel_thema)
-							? item.rel_thema.includes(option as never)
-							: item.rel_thema === option
-					).length;
-					return option !== undefined ? `${option} (${count})` : undefined;
-				})
-			},
-			{
-				title: 'Vakgebied',
-				name: 'Vakgebied',
-				options: getUniqueOptions('rel_vakgebied').map((option) => {
-					const count = items.filter((item) =>
-						Array.isArray(item.rel_vakgebied)
-							? item.rel_vakgebied.includes(option as never)
-							: item.rel_vakgebied === option
-					).length;
-					return option !== undefined ? `${option} (${count})` : undefined;
-				})
-			}
-		];
 
 		$effect(() => {
 			const fuse = new Fuse(items, {
@@ -344,13 +233,15 @@
 				</svg>
 			</div>
 
-			<QuestionComponent
-				feedback={followUpMessage ? followUpMessage : 'Welkom bij CMD Nexus'}
-				message={followUpQuestion ? followUpQuestion : 'Hoe kan ik je helpen?'}
-			>
-				<Searchbar bind:value={prompt} relatedItems={filteredItems} />
-				<Slider filterItems={['test', 'also test', 'yup another test']} />
-			</QuestionComponent>
+			<QuestionComponent bind:prompt {filteredItems} {allResults} bind:viewResults />
+			{#if page.form?.noResults}
+				<p>
+					Geen resultaten gevonden voor "{page.url.searchParams
+						.get('search')
+						?.replace(/-/g, ' ')
+						.replace(/\b\w/g, (c) => c.toUpperCase())}"
+				</p>
+			{/if}
 		</section>
 
 		<footer>
@@ -361,83 +252,58 @@
 
 	{#if pageView.view === 'overview'}
 		<section class="main-page-spacing relative">
-			{#if resultsFound}
-				<div class="overview-page-wrapper">
-					<div class="overview-page-header">
-						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
-						<div class="prompt-header-information-wrapper">
-							<section class="prompt-header-search-wrapper">
-								<p>gezocht op:</p>
-								<h2>{page.url.searchParams.get('search')}</h2>
-							</section>
-							<span>{searchResults.length} resultaten gevonden</span>
-						</div>
+			<div class="overview-page-wrapper">
+				<div class="overview-page-header">
+					<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
+					<div class="prompt-header-information-wrapper">
+						<section class="prompt-header-search-wrapper">
+							<p>gezocht op:</p>
+							<h2>
+								{resultsFound
+									? page.url.searchParams
+											.get('search')
+											?.replace(/-/g, ' ')
+											.replace(/\b\w/g, (c) => c.toUpperCase())
+									: 'Alle resultaten'}
+							</h2>
+						</section>
+						<span
+							>{resultsFound
+								? searchResults.length
+								: viewResults.length > 0
+									? viewResults.length
+									: items.length}
+							resultaten gevonden</span
+						>
 					</div>
-					<div class="overview-page-content">
-						<FilterBar {filters} />
-						<div class="grid-page-container">
-							<div class="grid-page">
-								{#each searchResults as item}
-									<Card
-										id={item.id as string | undefined}
-										href="/{item.naam
-											? item.naam
-													.toLowerCase()
-													.replace(/[\s:]+/g, '-')
-													.replace(/[^\w-]+/g, '')
-											: ''}"
-										variant="normal"
-										tag={item.rel_vakgebied as string | undefined}
-										title={item.naam}
-										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
-										description={item.korte_beschrijving}
-										rating={getRating(item.moeilijkheid)}
-										mostRelevant={item.soort === 'methode'}
-									/>
-								{/each}
-							</div>
+				</div>
+				<div class="overview-page-content">
+					<FilterBar {items} />
+					<div class="grid-page-container">
+						<div class="grid-page">
+							{#each searchResults ? searchResults : viewResults.length > 0 ? viewResults : items as item}
+								<Card
+									id={item.id as string | undefined}
+									href="/{item.naam
+										? item.naam
+												.toLowerCase()
+												.replace(/[\s:]+/g, '-')
+												.replace(/[^\w-]+/g, '')
+										: ''}"
+									variant="normal"
+									tag={item.rel_vakgebied as string | undefined}
+									title={item.naam}
+									labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+									description={item.korte_beschrijving}
+									rating={getRating(item.moeilijkheid)}
+									mostRelevant={item.soort === 'methode'}
+								/>
+								<!-- If there is more than x items load more based on scroll: JAMIE BOAT TEST -->
+							{/each}
 						</div>
 					</div>
 				</div>
-			{:else}
-				<div class="overview-page-wrapper">
-					<div class="overview-page-header">
-						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
-						<div class="prompt-header-information-wrapper">
-							<section class="prompt-header-search-wrapper">
-								<p>gezocht op:</p>
-								<h2>Alle resultaten</h2>
-							</section>
-							<span>{items.length} resultaten gevonden</span>
-						</div>
-					</div>
-					<div class="overview-page-content">
-						<FilterBar {filters} />
-						<div class="grid-page-container">
-							<div class="grid-page">
-								{#each items as item}
-									<Card
-										id={item.id as string | undefined}
-										href="/{item.naam
-											? item.naam
-													.toLowerCase()
-													.replace(/[\s:]+/g, '-')
-													.replace(/[^\w-]+/g, '')
-											: ''}"
-										variant="normal"
-										tag={item.rel_vakgebied as string | undefined}
-										title={item.naam}
-										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
-										description={item.korte_beschrijving}
-										rating={getRating(item.moeilijkheid)}
-										mostRelevant={item.soort === 'methode'}
-									/>
-								{/each}
-							</div>
-						</div>
-					</div>
-				</div>
-			{/if}
+			</div>
 		</section>
 	{/if}
 </div>

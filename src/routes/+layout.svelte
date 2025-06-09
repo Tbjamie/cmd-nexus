@@ -36,6 +36,7 @@
 				<a
 					aria-label="Nexus logo, linking to the homepage"
 					onclick={() => (pageView.view = 'nexus')}
+					data-sveltekit-reload
 					href="/"
 				>
 					<LogoIcon class="logo-header" />
