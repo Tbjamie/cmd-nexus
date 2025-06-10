@@ -1,6 +1,7 @@
 <script lang="ts" module>
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
+	import CategoryLabel from '../labels/CategoryLabel.svelte';
 </script>
 
 <script lang="ts">
@@ -37,6 +38,12 @@
 				>
 					{item.naam}
 				</a>
+				<CategoryLabel
+					variant="dropdown"
+					theme={item.soort}
+					text={item.soort}
+					hasHover={false}
+				/>
 			</li>
 		{/each}
 	</ul>
@@ -118,6 +125,11 @@
 		-webkit-backdrop-filter: blur(20px);
 		outline: solid 1px rgba(255 255 255 / 0.5);
 		/* border-top: none; */
+
+		/* container */
+		container-type: inline-size;
+		container-name: dropdown-container;
+
 	}
 
 	ul {
@@ -125,6 +137,19 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: baseline;
+	}
+
+	li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+
+	@container dropdown-container (max-width: 400px) {
+		:global(.category-label.dropdown) {
+			display: none;
+		}
 	}
 
 	@media screen and (min-width: 1563px) {

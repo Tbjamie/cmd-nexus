@@ -133,7 +133,6 @@
 <style>
 	.search-wrapper {
 		--opacity: 10%;
-
 		position: relative;
 		display: flex;
 		justify-content: space-between;
