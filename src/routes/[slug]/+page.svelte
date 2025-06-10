@@ -71,10 +71,10 @@
 						<h3>Meer informatie</h3>
 						<div>
 							{#each webLinks as webItem}
-								<IconButton href={webItem} target="_blank" variant="text" theme="primary">
-									<LinkIcon class="icon-size" />
-									{webItem.match(/^https?:\/\/(?:www\.)?([^\.]+)/)?.[1]}
-								</IconButton>
+							<IconButton href={webItem} target="_blank" variant="text" theme="primary">
+								<LinkIcon class="icon-size" />
+								{webItem.match(/^https?:\/\/(?:www\.)?([^\/?#]+)/)?.[1].split('.').slice(-2, -1)[0]}
+							</IconButton>
 							{/each}
 						</div>
 					{/if}
