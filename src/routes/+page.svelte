@@ -205,7 +205,7 @@
 </svelte:head>
 
 {#key pageView.view}
-	<div in:fly={{ y: 50, duration: 1400, delay: 100, easing: cubicOut }}>
+	<div in:fly={{ y: 50, duration: 500, delay: 100, easing: cubicOut }}>
 		{#if pageView.view === 'nexus'}
 			<section class="main-page-spacing nexus-section">
 				<div class="logo-star block">
