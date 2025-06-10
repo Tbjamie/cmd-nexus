@@ -6,9 +6,10 @@
 	export let hasHover = false;
 	export let theme: 'green' | 'blue' | 'yellow' = 'blue';
 	export let text = '';
+	export let variant: 'default' | 'dropdown' = 'default';
 </script>
 
-<article>
+<article class="category-label {variant}">
 	<div>
 		<PrincipleIcon class="category-icon {hasHover ? 'active' : ''} {theme}" />
 	</div>
@@ -20,7 +21,7 @@
 </article>
 
 <style>
-	article {
+	.category-label {
 		display: flex;
 		align-items: center;
 		/* justify-content: center; */
@@ -55,6 +56,21 @@
 
 		&.active.yellow {
 			color: var(--yellow);
+		}
+	}
+
+	.category-label.dropdown {
+		> div {
+			background: transparent;
+			backdrop-filter: none;
+			border-radius: 0;
+			padding: 0;
+		}
+
+		p {
+			text-wrap: nowrap;
+			font-size: 0.875rem;
+			font-weight: 300;
 		}
 	}
 </style>
