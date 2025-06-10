@@ -294,24 +294,6 @@
 		}
 	}
 
-	/* .top-result::before {
-		content: '';
-		position: absolute;
-		inset: 0;
-		padding: 2px;
-		border-radius: var(--border-radius-large);
-		background: linear-gradient(145deg, #0d00ff, #2298d2);
-		mask:
-			linear-gradient(#fff 0 0) content-box,
-			linear-gradient(#fff 0 0);
-		-webkit-mask:
-			linear-gradient(#fff 0 0) content-box,
-			linear-gradient(#fff 0 0);
-		-webkit-mask-composite: xor;
-		mask-composite: exclude;
-		z-index: -1;
-	} */
-
 	.card-wrapper.normal:first-of-type:after {
 		content: '';
 		position: absolute;
@@ -324,11 +306,6 @@
 		/* clip-path: inset(0% 100% 0% 0%); */
 		transition: 400ms cubic-bezier(0.9, 0, 0.1, 1);
 	}
-
-	/* .top-result:hover::after,
-	.top-result:focus-visible::after {
-		clip-path: inset(0% 0% 0% 0%);
-	} */
 
 	@keyframes pulse {
 		0% {
