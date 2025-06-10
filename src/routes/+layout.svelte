@@ -3,10 +3,11 @@
 
 	import ToggleButton from '$lib/components/buttons/ToggleButton.svelte';
 	import LogoIcon from '$lib/assets/icons/ai-star-icon.svg?component';
-	import NexusIcon from '$lib/assets/icons/logo-nexus-icon.svg?component';
+	import UserIcon from '$lib/assets/icons/user-icon.svg?component';
 	import { page } from '$app/state';
 	import { pageView } from '$lib/stores/pageView.svelte';
 	import { onNavigate } from '$app/navigation';
+	import IconButton from '$lib/components/buttons/IconButton.svelte';
 </script>
 
 <script lang="ts">
@@ -31,6 +32,7 @@
 
 {#if pathname === '/'}
 	<header class="main-page-spacing {pageView.view === 'overview' ? 'relative' : ''}">
+		<ToggleButton class="toggle-button" />
 		{#if pageView.view === 'overview'}
 			<div>
 				<a
@@ -39,14 +41,16 @@
 					data-sveltekit-reload
 					href="/"
 				>
-					<LogoIcon class="logo-header" />
-					<NexusIcon class="nexus-logo-header" />
+					<LogoIcon class="logo-header" />		
 				</a>
 			</div>
 		{/if}
-		<ToggleButton class="toggle-button" />
+		<IconButton href="/account" theme="secondary" class="account-link" variant="text">
+			<UserIcon class="user-icon" />
+			Account
+		</IconButton>
 	</header>
-{:else}
+	{:else}
 	<header class="main-page-spacing relative">
 		<a
 			aria-label="Nexus logo, linking to the homepage"
@@ -54,8 +58,11 @@
 			onclick={() => (pageView.view = 'nexus')}
 		>
 			<LogoIcon class="logo-header" />
-			<NexusIcon class="nexus-logo-header" />
 		</a>
+		<IconButton href="/account" theme="secondary" class="account-link" variant="text">
+			<UserIcon class="user-icon" />
+			Account
+		</IconButton>
 	</header>
 {/if}
 
@@ -65,8 +72,9 @@
 
 <style>
 	header {
-		display: flex;
-		justify-content: start;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		justify-content: center;
 		align-items: center;
 
 		position: absolute;
@@ -82,8 +90,12 @@
 	a {
 		color: var(--white);
 		display: flex;
+		justify-content: center;
+		grid-column-start: 2;
 		align-items: center;
 		gap: 1rem;
+		justify-self: center;
+		width: max-content;
 	}
 
 	a:hover {
@@ -99,7 +111,13 @@
 		height: 1.25rem;
 	}
 
-	:global(.toggle-button) {
-		margin-left: auto;
+	:global(.account-link) {
+		grid-column-start: 3;
+		justify-self: flex-end;
+	}
+
+	:global(.user-icon) {
+		width: 1rem;
+		height: 1rem;
 	}
 </style>

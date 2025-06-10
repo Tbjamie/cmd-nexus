@@ -15,14 +15,6 @@
 	const relativePerson = item.meer_bij_personen
 		?.split(/\n+/)
 		.filter((person) => person.trim().length > 0);
-
-	onMount(() => {
-		const iconButton = document.querySelector('.icon-button');
-
-		iconButton?.addEventListener('click', () => {
-			window.history.back();
-		});
-	});
 </script>
 
 <svelte:head>
@@ -45,9 +37,8 @@
 
 <div class="main-page-spacing">
 	{#if item}
-		<IconButton class="icon-button button-size spacing-button" variant="text" theme="tertiary">
+		<IconButton class="icon-button button-size spacing-button" variant="text" theme="tertiary" on:click={() => window.history.back()}>
 			<ArrowIcon class="arrow-icon-detail" />
-
 			Terug naar overzicht
 		</IconButton>
 
