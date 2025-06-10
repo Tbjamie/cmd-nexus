@@ -294,39 +294,38 @@
 				</div>
 			{:else}
 				<div class="overview-page-wrapper">
-					<div class="overview-page-header">
+					<div class="searchbar-container">					
 						<Searchbar bind:value={prompt} relatedItems={filteredItems} />
-						<div class="prompt-header-information-wrapper">
-							<section class="prompt-header-search-wrapper">
-								<p>gezocht op:</p>
-								<h2>Alle resultaten</h2>
-							</section>
-							<span>{items.length} resultaten gevonden</span>
-						</div>
 					</div>
-					<div class="overview-page-content">
+					<div class="filter-form-container">
 						<FilterBar />
-						<div class="grid-page-container">
-							<div class="grid-page">
-								{#each items as item}
-									<Card
-										id={item.id as string | undefined}
-										href="/{item.naam
-											? item.naam
-													.toLowerCase()
-													.replace(/[\s:]+/g, '-')
-													.replace(/[^\w-]+/g, '')
-											: ''}"
-										variant="normal"
-										tag={item.rel_vakgebied as string | undefined}
-										title={item.naam}
-										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
-										description={item.korte_beschrijving}
-										rating={getRating(item.moeilijkheid)}
-										mostRelevant={item.soort === 'methode'}
-									/>
-								{/each}
-							</div>
+					</div>
+					<div class="prompt-header-information-wrapper">
+						<section class="prompt-header-search-wrapper">
+							<p>gezocht op:</p>
+							<h2>Alle resultaten</h2>
+						</section>
+						<span>{items.length} resultaten gevonden</span>
+					</div>
+					<div class="grid-page-container">
+						<div class="grid-page">
+							{#each items as item}
+								<Card
+									id={item.id as string | undefined}
+									href="/{item.naam
+										? item.naam
+												.toLowerCase()
+												.replace(/[\s:]+/g, '-')
+												.replace(/[^\w-]+/g, '')
+										: ''}"
+									variant="normal"
+									tag={item.rel_vakgebied as string | undefined}
+									title={item.naam}
+									labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
+									description={item.korte_beschrijving}
+									rating={getRating(item.moeilijkheid)}
+								/>
+							{/each}
 						</div>
 					</div>
 				</div>
@@ -349,8 +348,46 @@
 
 	/* OVERVIEW */
 	.overview-page-wrapper {
+		display: grid;
+		align-items: center;
 		width: 100%;
 		height: 100%;
+
+		grid-template-columns: 2fr 5fr;
+		column-gap: .5rem;
+	}
+
+	.filter-form-container { 
+		grid-row: 2; 
+		grid-column: 1;
+		width: 100%;
+
+		align-self: baseline;
+		padding: 0;
+		z-index: 0;
+		padding: 1.4rem 0;
+
+		position: sticky;
+		top: 7rem;
+	}
+
+	.filter-form-container,
+	.searchbar-container {
+		padding-left: 0;
+	}
+
+	.searchbar-container,
+	.filter-form-container,
+	.prompt-header-information-wrapper {
+		position: sticky;
+	}
+
+	.searchbar-container,
+	.prompt-header-information-wrapper {
+		top: 0;
+		z-index: 10;
+		background-color: var(--black);
+		padding: 2rem 0 2rem 0;
 	}
 
 	.prompt-header-information-wrapper {
@@ -373,29 +410,6 @@
 	:global(.search-wrapper) {
 		grid-column: 1 / 2;
 		grid-row: 1 / 2;
-	}
-
-	.overview-page-header {
-		width: 100%;
-		height: 100%;
-		padding: 2rem 0;
-
-		display: grid;
-		grid-template-columns: minmax(300px, 360px) 1fr;
-		column-gap: 1rem;
-
-		position: sticky;
-		background-color: var(--black);
-		top: 0;
-		left: 0;
-		z-index: 10;
-	}
-
-	.overview-page-content {
-		display: grid;
-		grid-template-columns: minmax(300px, 360px) 1fr;
-		grid-template-rows: 1fr;
-		column-gap: 1rem;
 	}
 
 	.prompt-header-search-wrapper {
@@ -455,21 +469,55 @@
 
 	@media screen and (max-width: 1000px) {
 		.overview-page-wrapper {
-			grid-template-rows: 60px 80px 1fr;
+			display: grid;
+			align-items: center;
+			grid-template-columns: 3fr 1fr;
+			grid-template-rows: 120px 80px 1fr;
 		}
 
-		:global(.search-wrapper) {
-			grid-column: 1 / 3;
-			grid-row: 1 / 2;
+		.searchbar-container,
+		.filter-form-container {
+			background-color: var(--black);
+			padding: 2rem 1.4rem;
+			top: 0;
+		}
+
+		.searchbar-container {
+			grid-column: 1 / 2;
+			grid-row: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.filter-form-container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+
+			grid-column: 2 / 3;
+			grid-row: 1;
+
+			z-index: 10;
 		}
 
 		.prompt-header-information-wrapper {
+			position: relative;
+			z-index: 0;
+			padding: 0 2.4rem;
+
 			grid-row: 2 / 3;
 			grid-column: 1 / 3;
-			padding: 0 1.4rem;
+		}
+
+		:global(.filter-form) {
+			grid-area: unset;
+			grid-column: 2 / 3;
+			grid-row: 1;
 		}
 
 		.grid-page-container {
+			margin-top: 1rem;
 			grid-column: 1 / 3;
 			grid-row: 3 / 4;
 		}
@@ -522,18 +570,18 @@
 		width: 100%;
 	}
 
-	section::after {
+	/* section::after {
 		content: '';
 		position: absolute;
 		top: -50%;
 		width: 100%;
-		/* background: radial-gradient(ellipse at center, var(--purple-light), var(--purple-dark)); */
+		background: radial-gradient(ellipse at center, var(--purple-light), var(--purple-dark));
 		border-radius: 9999px;
 		aspect-ratio: 1 / 1;
 		opacity: 0.4;
 		filter: blur(100px);
 		z-index: -1;
-	}
+	} */
 
 	:global(.ai-star-icon) {
 		width: 3.5rem;

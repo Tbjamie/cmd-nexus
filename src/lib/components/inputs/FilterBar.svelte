@@ -36,6 +36,12 @@
 	];
 
 	let selected: Record<string, string> = {};
+	// let { active = $bindable(false) } // Removed invalid destructuring assignment
+
+	let {
+		active = $bindable(true)
+		}
+	= $props();
 
 	// Form submission handler
 	// function applyFilters(e: SubmitEvent) {
@@ -56,7 +62,7 @@
 <form
 	method="POST"
 	action="?/filter"
-	class="filter-form"
+	class="filter-form {active}"
 	use:enhance={() => {
 		// goto(
 		// 	`?search=${inputVal
@@ -94,11 +100,16 @@
 		flex-direction: column;
 		gap: 1em;
 		padding: 1em;
-		border-radius: 2em;
-		grid-area: span 2;
+		border-radius: 15px;
 
 		background-color: #111111;
 		height: max-content;
+		width: 100%;
+	}
+
+	.filter-form.true {
+		max-height: 64px;
+		overflow: hidden;
 	}
 
 	.filter-fieldset {

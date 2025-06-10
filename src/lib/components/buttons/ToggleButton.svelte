@@ -54,15 +54,14 @@
 	button {
 		border: none;
 		background-color: transparent;
+		aspect-ratio: 1;
 
 		cursor: pointer;
 		list-style: none;
-		height: 100%;
-		width: 100%;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		padding: 0.5rem 1.2rem 0.5rem 1.2rem;
+		padding: .45rem .8rem;
 
 		--opacity: 60%;
 		color: var(--white);
@@ -79,7 +78,7 @@
 	}
 
 	ul {
-		display: flex;
+		display: inline-flex;
 		width: 100%;
 		max-width: fit-content;
 		position: relative;
@@ -106,7 +105,7 @@
 
 		& div {
 			position: absolute;
-			background-color: #c8bfff;
+			background-color: var(--white);
 			border-radius: 9999px;
 			width: 50%;
 			height: 100%;
@@ -118,7 +117,7 @@
 
 	:global(.layout-icon) {
 		/* padding: 1em; */
-		width: 2rem;
-		height: 2rem;
+		width: 1.5rem;
+		height: 1.5rem;
 	}
 </style>

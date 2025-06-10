@@ -4,6 +4,7 @@
 	import ToggleButton from '$lib/components/buttons/ToggleButton.svelte';
 	import LogoIcon from '$lib/assets/icons/ai-star-icon.svg?component';
 	import NexusIcon from '$lib/assets/icons/logo-nexus-icon.svg?component';
+	import NexusSmallIcon from '$lib/assets/icons/logo-small-icon.svg?component';
 	import { page } from '$app/state';
 	import { pageView } from '$lib/stores/pageView.svelte';
 	import { onNavigate } from '$app/navigation';
@@ -31,15 +32,15 @@
 
 {#if pathname === '/'}
 	<header class="main-page-spacing {pageView.view === 'overview' ? 'relative' : ''}">
+		<ToggleButton class="toggle-button" />
 		{#if pageView.view === 'overview'}
 			<div class="logo-header">
 				<a aria-label="Nexus logo, linking to the homepage" href="/">
-					<LogoIcon class="logo-header" />
-					<NexusIcon class="logo-header" />
+					<NexusSmallIcon class="logo-header" />
 				</a>
 			</div>
 		{/if}
-		<ToggleButton class="toggle-button" />
+		<div class="account-wrapper"></div>
 	</header>
 {:else}
 	<header class="main-page-spacing relative">
@@ -56,16 +57,14 @@
 <style>
 	header {
 		display: flex;
-		justify-content: start;
+		justify-content: space-between;
+		flex-direction: row;
 		align-items: center;
 
 		position: absolute;
 		padding: 3rem 4rem;
 		width: 100vw;
 		z-index: 3;
-		
-		display: flex;
-		justify-content: flex-end;
 	}
 
 	.relative {
@@ -88,7 +87,11 @@
 		view-transition-name: logo-star;
 	}
 
-	:global(.toggle-button) {
-		margin-left: auto;
+	.account-wrapper {
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		border: 1px solid var(--white);
+		aspect-ratio: 1 / 1;
 	}
 </style>

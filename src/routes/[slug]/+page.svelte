@@ -150,7 +150,7 @@
 	:global(.arrow-icon) {
 		width: 1rem;
 		height: 1rem;
-		transform: rotate(-90deg);
+		/* transform: rotate(-90deg); */
 	}
 
 	:global(.bookmark-icon) {
