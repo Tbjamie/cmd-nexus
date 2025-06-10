@@ -65,6 +65,11 @@
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
 		}
+
+		@media screen and (max-width: 1024px) {
+			/* max-width: 750px; */
+			/* flex-basis: 750px; */
+		}
 	}
 
 	input {

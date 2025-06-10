@@ -87,6 +87,10 @@
 
 	.secondary.text {
 		padding: 1rem 2rem;
+
+		@media screen and (max-width: 768px) {
+			padding: 0.55em;
+		}
 	}
 
 	.secondary {
@@ -124,6 +128,10 @@
 
 		@media screen and (min-width: 1563px) {
 			padding: 0.75rem;
+		}
+
+		@media screen and (max-width: 768px) {
+			padding: 0.5em 1em;
 		}
 	}
 

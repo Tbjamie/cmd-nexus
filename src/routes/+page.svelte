@@ -10,11 +10,14 @@
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
 	import Card from '$lib/components/cards/Card.svelte';
 	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
+	import FilterIcon from '$lib/assets/icons/filter-icon.svg?component';
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 </script>
 
 <script lang="ts">
+	import IconButton from '$lib/components/buttons/IconButton.svelte';
+
 	let prompt = $state('');
 	let filteredItems: Item[] = $state([]);
 	let items: Item[] = $state([]);
@@ -258,6 +261,9 @@
 				<div class="overview-page-wrapper">
 					<div class="overview-page-header">
 						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
+						<IconButton class="filter-icon">
+							<FilterIcon />
+						</IconButton>
 						<div class="prompt-header-information-wrapper">
 							<section class="prompt-header-search-wrapper">
 								<p>gezocht op:</p>
@@ -313,6 +319,16 @@
 {/key}
 
 <style>
+	:global(.search-wrapper.overview) {
+		padding: 1rem;
+		flex: 0 0 calc(90% - 2.4rem);
+	}
+
+	:global(.icon-button.filter-icon) {
+		display: none;
+		rotate: -90deg;
+	}
+
 	:global(.filterbar-spacing) {
 		grid-row: 2;
 	}
@@ -337,7 +353,7 @@
 		justify-content: space-between;
 		align-items: center;
 		gap: 1.5rem;
-		padding-left: 2.4rem;
+		/* padding-left: 2.4rem; */
 
 		span {
 			display: flex;
@@ -355,7 +371,7 @@
 	.overview-page-header {
 		width: 100%;
 		height: 100%;
-		padding: 2rem 0;
+		padding: 2rem 0rem;
 
 		display: grid;
 		grid-template-columns: minmax(300px, 360px) 1fr;
@@ -366,6 +382,20 @@
 		top: 0;
 		left: 0;
 		z-index: 10;
+
+		@media screen and (max-width: 1000px) {
+			padding: 2rem 1rem;
+
+			display: flex;
+			flex-wrap: wrap;
+			gap: 2em;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		@media screen and (max-width: 768px) {
+			padding: 1em 0;
+		}
 	}
 
 	.overview-page-content {
@@ -411,7 +441,7 @@
 		display: grid;
 	}
 
-	@container grid-page (max-width: 800px) {
+	@container grid-page (max-width: 768px) {
 		.grid-page {
 			display: flex;
 			flex-direction: column;
@@ -422,7 +452,7 @@
 		}
 	}
 
-	@container grid-page (min-width: 801px) {
+	@container grid-page (min-width: 769px) {
 		.grid-page {
 			grid-template-columns: repeat(2, minmax(200px, 1fr));
 			gap: 1.5rem;
@@ -430,6 +460,14 @@
 	}
 
 	@media screen and (max-width: 1000px) {
+		:global(.icon-button.filter-icon) {
+			visibility: visible;
+			display: flex;
+			flex: 0 0 calc(10% - 2.4rem);
+			max-width: 3rem;
+			max-height: 3rem;
+		}
+
 		.overview-page-wrapper {
 			grid-template-rows: 60px 80px 1fr;
 		}
@@ -440,14 +478,24 @@
 		}
 
 		.prompt-header-information-wrapper {
+			width: 100%;
 			grid-row: 2 / 3;
 			grid-column: 1 / 3;
-			padding: 0 1.4rem;
+			/* padding: 0 1.4rem; */
 		}
 
 		.grid-page-container {
 			grid-column: 1 / 3;
 			grid-row: 3 / 4;
+		}
+	}
+
+	@media screen and (max-width: 443px) {
+		:global(.icon-button.filter-icon) {
+		}
+
+		.overview-page-header {
+			gap: 1em;
 		}
 	}
 

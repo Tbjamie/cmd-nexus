@@ -92,7 +92,7 @@
 		/* height: 2rem; */
 		overflow: hidden;
 
-		/* gap: 1rem; */
+		/* gap: 0.5rem; */
 		outline: 1px solid #ffffff30;
 
 		background-color: #2e2e2e70;
@@ -127,5 +127,11 @@
 		/* padding: 1em; */
 		width: 2rem;
 		height: 2rem;
+	}
+
+	@media screen and (max-width: 768px) {
+		button {
+			padding: 0.2em 1em 0.2em 1em;
+		}
 	}
 </style>

@@ -129,7 +129,7 @@
 	}}
 	action=""
 	method="POST"
-	class="filter-bar"
+	class="filter-bar is-active"
 	onsubmit={() => {
 		console.log('Form submitted');
 	}}
@@ -150,6 +150,13 @@
 </form>
 
 <style>
+	@media screen and (max-width: 1024px) {
+		.is-active {
+			position: absolute;
+			transform: translateY(-150%);
+		}
+	}
+
 	.filter-bar {
 		--opacity: 5%;
 		background: var(--white);

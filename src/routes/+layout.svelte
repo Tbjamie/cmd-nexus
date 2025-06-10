@@ -41,7 +41,7 @@
 					data-sveltekit-reload
 					href="/"
 				>
-					<LogoIcon class="logo-header" />		
+					<LogoIcon class="logo-header" />
 				</a>
 			</div>
 		{/if}
@@ -50,7 +50,7 @@
 			Account
 		</IconButton>
 	</header>
-	{:else}
+{:else}
 	<header class="main-page-spacing relative">
 		<a
 			aria-label="Nexus logo, linking to the homepage"
@@ -119,5 +119,11 @@
 	:global(.user-icon) {
 		width: 1rem;
 		height: 1rem;
+	}
+
+	@media screen and (max-width: 1024px) {
+		header {
+			padding: 1em;
+		}
 	}
 </style>
