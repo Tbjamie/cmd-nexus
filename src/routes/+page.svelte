@@ -10,6 +10,8 @@
 	import QuestionComponent from '$lib/components/inputs/QuestionComponent.svelte';
 	import Card from '$lib/components/cards/Card.svelte';
 	import FilterBar from '$lib/components/inputs/FilterBar.svelte';
+	import { fade, fly } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 </script>
 
 <script lang="ts">
@@ -202,10 +204,13 @@
 	<meta property="og:type" content="website" />
 </svelte:head>
 
-<div>
+{#key pageView.view}
+<div in:fly={{y: 50, duration: 1400, delay: 100, easing: cubicOut }}>
+<!-- <div in:fly={{ y: 100, duration: 400 }} out:fly={{ y: 100, duration: 400 }}> -->
+
 	{#if pageView.view === 'nexus'}
 		<section class="main-page-spacing nexus-section">
-			<div class="logo-star block">
+			<div class="logo-star block">	
 				<svg class="star1" viewBox="0 0 46 45" xmlns="http://www.w3.org/2000/svg">
 					<defs>
 						<linearGradient id="grad1" x1="0%" x2="100%" y1="0%" y2="0%">
@@ -307,7 +312,7 @@
 		</section>
 	{/if}
 </div>
-
+{/key}
 <style>
 	:global(.filterbar-spacing) {
 		grid-row: 2;
