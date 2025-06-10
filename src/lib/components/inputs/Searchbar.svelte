@@ -8,70 +8,91 @@
 </script>
 
 <script lang="ts">
-	let { value = $bindable(''), relatedItems = []} = $props();
-	let inputEl: HTMLInputElement;
+	let { value = $bindable(''), relatedItems = [] } = $props()
+	let inputEl: HTMLInputElement
+	let currentPromptIndex = 0
 	let promptsArray = [
 		'Waar ben je naar op zoek?',
 		'Zoek naar een principe, methode of beroepstaak',
 		'Wat wil je vandaag gaan leren?',
 		'Wat is jouw volgende stap in je ontwikkeling?'
-	];
-
-	let currentPromptIndex = 0 as number;
+	]
+	let isTyping = false
+	let activeTimeout: number | null = null
 
 	onMount(() => {
-		// haal de placeholder prompt op uit de props
-		inputEl = document.querySelector('input') as HTMLInputElement;
+		inputEl = document.querySelector('input') as HTMLInputElement
+		const overViewEl = document.querySelector('.overview-page-wrapper') as HTMLDivElement
 
-		// see which section is active
-		const overviewSection = document.querySelector('.overview-page-wrapper') as HTMLElement;
-		if (!overviewSection) {
-			startNextPrompt();
+		inputEl.addEventListener('input', () => {
+			if (inputEl.value) {
+				isTyping = true
+				clearActiveTimeout()
+				inputEl.placeholder = ''
+			} else {
+				if (!isTyping) return
+				isTyping = false
+
+				if (!overViewEl) {
+					inputEl.placeholder = promptsArray[currentPromptIndex] || 'Waar ben je naar op zoek?'
+					startNextPrompt()
+				} else {
+					inputEl.placeholder = 'Waar ben je naar op zoek?'
+				}
+			}
+		})
+
+		if (!inputEl.value && !overViewEl) {
+			startNextPrompt()
 		}
 	})
 
-	// functie om de placeholder prompt te veranderen
 	function startNextPrompt() {
+		if (inputEl.value) return
+
 		if (currentPromptIndex >= promptsArray.length) {
 			currentPromptIndex = 0
 		}
 
-		const nextPrompt = promptsArray[currentPromptIndex];
-		currentPromptIndex++;
-
-		const promptLetters = getPromptLetters(nextPrompt);
-		typePrompt(promptLetters);
+		const nextPrompt = promptsArray[currentPromptIndex]
+		currentPromptIndex++
+		typePrompt(nextPrompt.split(''))
 	}
 
-
-	// function to get each letter of the prompt
-	function getPromptLetters(prompt: string): string[] {
-		return prompt.split('');
-	}
-
-	function typePrompt(promptLetters: string[]) {
-		let index = 0;
-		inputEl.placeholder = '';
+	function typePrompt(letters: string[]) {
+		let indexTimeOut = 0
+		inputEl.placeholder = ''
 
 		function typeNext() {
-			if (index < promptLetters.length) {
-				inputEl.placeholder += promptLetters[index];
-				index++;
-				setTimeout(typeNext, 100);
+			if (inputEl.value) return
+
+			if (indexTimeOut < letters.length) {
+				inputEl.placeholder += letters[indexTimeOut]
+				indexTimeOut++
+				activeTimeout = setTimeout(typeNext, 100)
 			} else {
-				setTimeout(() => erasePrompt(), 2000);
+				activeTimeout = setTimeout(erasePrompt, 2000)
 			}
 		}
 
-		typeNext();
+		typeNext()
 	}
 
 	function erasePrompt() {
+		if (inputEl.value) return
+
 		if (inputEl.placeholder.length > 0) {
-			inputEl.placeholder = inputEl.placeholder.slice(0, -1);
-			setTimeout(erasePrompt, 10);
+			inputEl.placeholder = inputEl.placeholder.slice(0, -1)
+			activeTimeout = setTimeout(erasePrompt, 10)
 		} else {
-			startNextPrompt();
+			startNextPrompt()
+		}
+	}
+
+	function clearActiveTimeout() {
+		if (activeTimeout) {
+			clearTimeout(activeTimeout)
+			activeTimeout = null
 		}
 	}
 </script>
