@@ -10,7 +10,7 @@
 <script lang="ts">
 	let { value = $bindable(''), relatedItems = [] } = $props();
 	let inputEl: HTMLInputElement;
-	let currentPromptIndex = $state(0);
+	let currentPromptIndex = 0;
 	let promptsArray = [
 		'Waar ben je naar op zoek?',
 		'Zoek naar een principe, methode of beroepstaak',
