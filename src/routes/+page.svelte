@@ -1,6 +1,7 @@
 <script lang="ts" module>
 	import gsap from 'gsap';
 	import { onMount } from 'svelte';
+	import type { Component } from 'svelte';
 	import Searchbar from '$lib/components/inputs/Searchbar.svelte';
 	import { page } from '$app/state';
 	import type { Item } from '$lib/types/itemType';
@@ -19,6 +20,8 @@
 	import IconButton from '$lib/components/buttons/IconButton.svelte';
 
 	let prompt = $state('');
+	let screenWidth = $state(0);
+	let filterOpen = $state(false);
 	let filteredItems: Item[] = $state([]);
 	let items: Item[] = $state([]);
 	let starAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -41,6 +44,14 @@
 		}
 	}
 
+	function filterToggle() {
+		filterOpen = !filterOpen;
+	}
+
+	$effect(() => {
+		screenWidth >= 1000 ? (filterOpen = false) : (filterOpen = false);
+	});
+
 	$effect(() => {
 		formResult = page.form;
 
@@ -61,6 +72,10 @@
 	onMount(() => {
 		const heading = document.querySelector('h1');
 		const paragraph = document.querySelector('p');
+
+		window.addEventListener('resize', () => {
+			screenWidth = window.innerWidth;
+		});
 
 		items = page.data?.items;
 
@@ -261,7 +276,7 @@
 				<div class="overview-page-wrapper">
 					<div class="overview-page-header">
 						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
-						<IconButton class="filter-icon">
+						<IconButton on:click={filterToggle} class="filter-icon">
 							<FilterIcon />
 						</IconButton>
 						<div class="prompt-header-information-wrapper">
@@ -287,7 +302,7 @@
 						</div>
 					</div>
 					<div class="overview-page-content">
-						<FilterBar {items} />
+						<FilterBar className={filterOpen ? 'is-active' : ''} {items} />
 						<div class="grid-page-container">
 							<div class="grid-page">
 								{#each searchResults ? searchResults : viewResults.length > 0 ? viewResults : items as item}
@@ -491,9 +506,6 @@
 	}
 
 	@media screen and (max-width: 443px) {
-		:global(.icon-button.filter-icon) {
-		}
-
 		.overview-page-header {
 			gap: 1em;
 		}

@@ -16,7 +16,7 @@
 
 <script lang="ts">
 	let filters: FilterType[] = $state([]);
-	let { items = $bindable([]) } = $props();
+	let { items = $bindable([]), className = $bindable('') } = $props();
 
 	onMount(() => {
 		const getUniqueOptions = (key: keyof Item) =>
@@ -129,7 +129,7 @@
 	}}
 	action=""
 	method="POST"
-	class="filter-bar is-active"
+	class="filter-bar {className}"
 	onsubmit={() => {
 		console.log('Form submitted');
 	}}
@@ -150,13 +150,6 @@
 </form>
 
 <style>
-	@media screen and (max-width: 1024px) {
-		.is-active {
-			position: absolute;
-			transform: translateY(-150%);
-		}
-	}
-
 	.filter-bar {
 		--opacity: 5%;
 		background: var(--white);
@@ -167,6 +160,23 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
+		transform: translateY(100%);
+		position: absolute;
+		left: 0;
+
+		@media screen and (min-width: 1000px) {
+			position: relative;
+			left: auto;
+			transform: translateY(0);
+		}
+	}
+
+	.filter-bar.is-active {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		transform: translateY(0);
+		left: 0;
 	}
 
 	.filter-options-wrapper {
