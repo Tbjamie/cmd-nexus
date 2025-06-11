@@ -113,14 +113,14 @@
 
 	.bookmark-tooltip {
 		position: absolute;
-		bottom: -100%;
+		bottom: -125%;
 		left: 0;
 		background-color: var(--purple-light);
 		color: var(--black);
 		padding: 0.5rem 1rem;
 		border-radius: var(--border-radius-medium);
 		font-size: 0.875rem;
-		width: 100%;
+		width: fit-content;
 		z-index: 100;
 	}
 

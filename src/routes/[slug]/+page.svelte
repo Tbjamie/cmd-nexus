@@ -57,34 +57,39 @@
 			<section class="detail-section {labelColor}">
 				<div class="inner-content">
 					<div class="detail-button-wrapper">
-					<IconButton class="icon-button button-size spacing-button" variant="text" theme="secondary" on:click={() => window.history.back()}>
-						<ArrowIcon class="arrow-icon-detail" />
-						Terug naar overzicht
-					</IconButton>
-					
-					<IconButton
-						theme="secondary"
-						on:click={(e) => {
-							e.preventDefault();
-							let bookmarks;
-							try {
-								bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
-								if (!Array.isArray(bookmarks)) bookmarks = [];
-							} catch {
-								bookmarks = [];
-							}
-							if (!bookmarks.includes(item.id)) {
-								bookmarks.push(item.id);
-								localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
-								showBookmarkTooltip.value = true;
-								setTimeout(() => {
-									showBookmarkTooltip.value = false;
-								}, 2000);
-							}
-						}}
-					>
-						<PlusIcon class="plus-icon" />
-					</IconButton>
+						<IconButton
+							class="icon-button button-size spacing-button"
+							variant="text"
+							theme="secondary"
+							on:click={() => window.history.back()}
+						>
+							<ArrowIcon class="arrow-icon-detail" />
+							Terug naar overzicht
+						</IconButton>
+
+						<IconButton
+							theme="secondary"
+							on:click={(e) => {
+								e.preventDefault();
+								let bookmarks;
+								try {
+									bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+									if (!Array.isArray(bookmarks)) bookmarks = [];
+								} catch {
+									bookmarks = [];
+								}
+								if (!bookmarks.includes(item.id)) {
+									bookmarks.push(item.id);
+									localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+									showBookmarkTooltip.value = true;
+									setTimeout(() => {
+										showBookmarkTooltip.value = false;
+									}, 2000);
+								}
+							}}
+						>
+							<PlusIcon class="plus-icon" />
+						</IconButton>
 					</div>
 					<article>
 						<div class="header-wrapper">
@@ -93,7 +98,6 @@
 						</div>
 						<p>{item.korte_beschrijving}</p>
 					</article>
-
 
 					<!-- content text -->
 					<div class="inner-content-container">
@@ -120,8 +124,8 @@
 						<h3>Extra informatie kaart</h3>
 						<div class="content-wrapper-general">
 							{#if item.soort}
-								<CategoryLabel text="{ item.soort }" />
-							{/if}							
+								<CategoryLabel text={item.soort} />
+							{/if}
 							{#if item.rel_cmd_expertise && Array.isArray(item.rel_cmd_expertise)}
 								{#each item.rel_cmd_expertise as expertise}
 									<CategoryLabel text={expertise} />
@@ -130,7 +134,7 @@
 								<CategoryLabel text={item.rel_cmd_expertise} />
 							{/if}
 							{#if item.schrijver_of_bron}
-								<CategoryLabel text="{ item.schrijver_of_bron }" />
+								<CategoryLabel text={item.schrijver_of_bron} />
 							{/if}
 						</div>
 					</article>
@@ -139,10 +143,13 @@
 							<h3>Meer informatie</h3>
 							<div class="content-wrapper">
 								{#each webLinks as webItem}
-								<IconButton href={webItem} target="_blank" variant="text" theme="primary">
-									<LinkIcon class="icon-size" />
-									{webItem.match(/^https?:\/\/(?:www\.)?([^\/?#]+)/)?.[1].split('.').slice(-2, -1)[0]}
-								</IconButton>
+									<IconButton href={webItem} target="_blank" variant="text" theme="primary">
+										<LinkIcon class="icon-size" />
+										{webItem
+											.match(/^https?:\/\/(?:www\.)?([^\/?#]+)/)?.[1]
+											.split('.')
+											.slice(-2, -1)[0]}
+									</IconButton>
 								{/each}
 							</div>
 						{/if}
@@ -168,7 +175,7 @@
 
 <style>
 	p {
-		color: #D9D9D9;
+		color: #d9d9d9;
 		font-size: 1rem;
 	}
 
@@ -188,11 +195,11 @@
 
 	.detail-wrapper > section {
 		position: relative;
-			
+
 		.inner-content {
 			border-radius: var(--border-radius-large);
 			backdrop-filter: blur(150px);
-			background: rgba(217, 217, 217, 0.06);		
+			background: rgba(217, 217, 217, 0.06);
 			overflow: hidden;
 			width: 100%;
 			height: 100%;
@@ -201,9 +208,9 @@
 
 			display: flex;
 			flex-direction: column;
-			gap: 2rem;			
+			gap: 2rem;
 		}
-		
+
 		&::after {
 			content: '';
 			width: 80%;
@@ -215,13 +222,19 @@
 			z-index: -2;
 		}
 
-		&.blue::after { background-color: var(--light-blue); }
-		&.green::after { background-color: var(--green); }
-		&.yellow::after { background-color: var(--yellow); }
-		&.purple::after { background-color: var(--purple-light); }
-
+		&.blue::after {
+			background-color: var(--light-blue);
+		}
+		&.green::after {
+			background-color: var(--green);
+		}
+		&.yellow::after {
+			background-color: var(--yellow);
+		}
+		&.purple::after {
+			background-color: var(--purple-light);
+		}
 	}
-
 
 	.detail-wrapper .detail-section {
 		display: flex;
@@ -250,7 +263,7 @@
 			h2 {
 				font-weight: 400;
 				font-size: 1.4rem;
-				color: #F6F6F6;
+				color: #f6f6f6;
 			}
 		}
 		.detail-button-wrapper {
@@ -259,13 +272,12 @@
 			align-items: center;
 
 			:global(.icon-button) {
-				padding: .6rem 1.4rem;
+				padding: 0.6rem 1.4rem;
 			}
 
 			:global(.icon-button.icon) {
-				padding: .4rem;
+				padding: 0.4rem;
 			}
-
 		}
 	}
 
@@ -286,7 +298,6 @@
 		gap: 2rem;
 	}
 
-
 	.general-section .inner-content article {
 		display: flex;
 		flex-direction: column;
@@ -295,13 +306,13 @@
 		.content-wrapper-general {
 			display: flex;
 			flex-direction: column;
-			gap: .6rem;
+			gap: 0.6rem;
 		}
 
 		.content-wrapper {
 			display: flex;
 			flex-wrap: wrap;
-			gap: .6rem;
+			gap: 0.6rem;
 		}
 	}
 
@@ -312,12 +323,12 @@
 	}
 
 	:global(.icon-button) {
-		padding: .6rem 1.4rem;
+		padding: 0.6rem 1.4rem;
 	}
 
 	:global(.icon-button.secondary.text),
 	:global(.icon-button.primary.text) {
-		padding: .6rem 1.4rem;
+		padding: 0.6rem 1.4rem;
 		white-space: nowrap;
 		font-size: 0.875rem;
 	}
@@ -345,7 +356,6 @@
 		.detail-wrapper {
 			flex-direction: column;
 
-					
 			.general-section .inner-content {
 				flex-direction: row;
 				justify-content: space-between;

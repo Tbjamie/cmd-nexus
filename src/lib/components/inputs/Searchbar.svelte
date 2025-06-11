@@ -17,11 +17,10 @@
 		'Wat wil je vandaag gaan leren?',
 		'Wat is jouw volgende stap in je ontwikkeling?'
 	];
-	let isTyping = false;
-	let activeTimeout: number | null = null;
+	let isTyping = $state(false);
+	let activeTimeout: number | null = $state(null);
 
 	onMount(() => {
-		inputEl = document.querySelector('input') as HTMLInputElement;
 		const overViewEl = document.querySelector('.overview-page-wrapper') as HTMLDivElement;
 
 		inputEl.addEventListener('input', () => {
@@ -114,13 +113,14 @@
 >
 	<input
 		bind:value
+		bind:this={inputEl}
 		type="text"
 		autocomplete="off"
 		spellcheck="false"
 		name="search-bar"
 		id="search-bar"
 	/>
-	<IconButton type="submit">
+	<IconButton disabled={value ? false : true} type="submit">
 		<ArrowIcon class="arrow-icon" />
 	</IconButton>
 
