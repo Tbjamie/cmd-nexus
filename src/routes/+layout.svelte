@@ -8,6 +8,8 @@
 	import { pageView } from '$lib/stores/pageView.svelte';
 	import { onNavigate } from '$app/navigation';
 	import IconButton from '$lib/components/buttons/IconButton.svelte';
+	import { fly } from 'svelte/transition';
+	import { showBookmarkTooltip } from '$lib/stores/bookmarkTooltip.svelte';
 </script>
 
 <script lang="ts">
@@ -37,25 +39,36 @@
 			<div>
 				<a
 					aria-label="Nexus logo, linking to the homepage"
-					onclick={() => (pageView.view = 'nexus')}
+					onclick={() => {
+						pageView.view = 'nexus';
+						localStorage.setItem('pageView', 'nexus');
+					}}
 					data-sveltekit-reload
 					href="/"
 				>
-					<LogoIcon class="logo-header" />		
+					<LogoIcon class="logo-header" />
 				</a>
 			</div>
 		{/if}
 		<IconButton href="/account" theme="secondary" class="account-link" variant="text">
 			<UserIcon class="user-icon" />
 			Account
+			{#key showBookmarkTooltip}
+				{#if showBookmarkTooltip.value}
+					<div class="bookmark-tooltip" transition:fly={{ y: 10 }}>Bookmark added</div>
+				{/if}
+			{/key}
 		</IconButton>
 	</header>
-	{:else}
+{:else}
 	<header class="main-page-spacing relative">
 		<a
 			aria-label="Nexus logo, linking to the homepage"
 			href="/"
-			onclick={() => (pageView.view = 'nexus')}
+			onclick={() => {
+				pageView.view = 'nexus';
+				localStorage.setItem('pageView', 'nexus');
+			}}
 		>
 			<LogoIcon class="logo-header" />
 		</a>
@@ -80,7 +93,7 @@
 		position: absolute;
 		padding: 3rem 4rem;
 		width: 100vw;
-		z-index: 3;
+		z-index: 9999;
 	}
 
 	.relative {
@@ -96,6 +109,30 @@
 		gap: 1rem;
 		justify-self: center;
 		width: max-content;
+	}
+
+	.bookmark-tooltip {
+		position: absolute;
+		bottom: -100%;
+		left: 0;
+		background-color: var(--purple-light);
+		color: var(--black);
+		padding: 0.5rem 1rem;
+		border-radius: var(--border-radius-medium);
+		font-size: 0.875rem;
+		width: 100%;
+		z-index: 100;
+	}
+
+	.bookmark-tooltip::after {
+		content: ' ';
+		position: absolute;
+		bottom: 100%;
+		left: 50%;
+		margin-left: -5px;
+		border-width: 5px;
+		border-style: solid;
+		border-color: transparent transparent var(--purple-light) transparent;
 	}
 
 	a:hover {

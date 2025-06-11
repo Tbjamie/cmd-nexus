@@ -3,6 +3,7 @@
 	import TagComponent from '../tag/Tag.svelte';
 	import IconButton from '../buttons/IconButton.svelte';
 	import PlusIcon from '$lib/assets/icons/plus-icon.svg?component';
+	import { showBookmarkTooltip } from '$lib/stores/bookmarkTooltip.svelte';
 </script>
 
 <script lang="ts">
@@ -95,7 +96,7 @@
 
 <a
 	{href}
-	class="card-wrapper-{id} card-wrapper {variant}"
+	class="card-wrapper-{id} card-wrapper {mostRelevant ? 'relevant' : ''} {variant}"
 	onmouseover={() => (hasHover = true)}
 	onfocus={() => (hasHover = true)}
 	onmouseleave={() => {
@@ -113,7 +114,27 @@
 				{hasHover}
 				theme={labelColor as 'green' | 'blue' | 'yellow'}
 			/>
-			<IconButton theme="secondary">
+			<IconButton
+				theme="secondary"
+				on:click={(e) => {
+					e.preventDefault();
+					let bookmarks;
+					try {
+						bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+						if (!Array.isArray(bookmarks)) bookmarks = [];
+					} catch {
+						bookmarks = [];
+					}
+					if (!bookmarks.includes(id)) {
+						bookmarks.push(id);
+						localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+						showBookmarkTooltip.value = true;
+						setTimeout(() => {
+							showBookmarkTooltip.value = false;
+						}, 2000);
+					}
+				}}
+			>
 				<PlusIcon class="plus-icon" />
 			</IconButton>
 		</div>
@@ -281,7 +302,7 @@
 		font-weight: 300;
 	}
 
-	.card-wrapper.normal:first-of-type {
+	.relevant.card-wrapper.normal:first-of-type {
 		--opacity: 100%;
 		position: relative;
 		background: transparent;
@@ -294,7 +315,7 @@
 		}
 	}
 
-	.card-wrapper.normal:first-of-type:after {
+	.relevant.card-wrapper.normal:first-of-type:after {
 		content: '';
 		position: absolute;
 		width: 100%;

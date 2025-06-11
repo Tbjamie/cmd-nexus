@@ -5,6 +5,7 @@
 	export let theme: 'primary' | 'secondary' | 'tertiary' = 'primary';
 	export let variant: 'icon' | 'text' = 'icon';
 	export let disabled = false;
+	export let ariaLabel: string | null = null;
 	export { className as class };
 
 	let className = '';
@@ -12,6 +13,7 @@
 
 <svelte:element
 	this={href ? 'a' : 'button'}
+	aria-label={ariaLabel ? ariaLabel : null}
 	target={href ? target : null}
 	type={href ? null : type}
 	href={href ? href : null}
@@ -85,6 +87,7 @@
 		}
 	}
 
+	.primary.text,
 	.secondary.text {
 		padding: 1rem 2rem;
 	}

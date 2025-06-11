@@ -257,7 +257,7 @@
 			<section class="main-page-spacing relative">
 				<div class="overview-page-wrapper">
 					<div class="overview-page-header">
-						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
+						<Searchbar bind:value={prompt} relatedItems={filteredItems} />
 						<div class="prompt-header-information-wrapper">
 							<section class="prompt-header-search-wrapper">
 								<p>gezocht op:</p>
@@ -294,14 +294,14 @@
 													.replace(/[^\w-]+/g, '')
 											: ''}"
 										variant="normal"
+										mostRelevant={true}
 										tag={item.rel_vakgebied as string | undefined}
 										title={item.naam}
 										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
 										description={item.korte_beschrijving}
 										rating={getRating(item.moeilijkheid)}
-										mostRelevant={item.soort === 'methode'}
 									/>
-									<!-- If there is more than x items load more based on scroll: JAMIE BOAT TEST -->
+									<!-- TODO: If there is more than x items load more based on scroll: JAMIE BOAT TEST -->
 								{/each}
 							</div>
 						</div>

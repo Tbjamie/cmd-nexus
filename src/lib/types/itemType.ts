@@ -19,4 +19,5 @@ export interface Item {
 	rel_vakgebied?: [];
 	rel_methode?: [];
 	rel_competentie?: [];
+	rel_vak: [];
 }

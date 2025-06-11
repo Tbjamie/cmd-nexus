@@ -32,8 +32,6 @@ export const actions: Actions = {
 			return fail(500, { message: 'No items available for search' });
 		}
 
-		console.log('TEST');
-
 		// Split the search input into words/phrases for partial matching
 		const searchParts = searchInput.split(/\s+/).filter((part) => part.length > 2); // Ignore very short words
 
@@ -111,9 +109,6 @@ export const actions: Actions = {
 			filteredItems = Array.from(resultsMap.values());
 			resultsLength = filteredItems.length;
 		}
-
-		console.log(filteredItems);
-		console.log('Total Items:', resultsLength);
 
 		if (resultsLength === 0) {
 			return { noResults: true };

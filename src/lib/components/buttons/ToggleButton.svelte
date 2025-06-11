@@ -35,6 +35,7 @@
 			disabled={pageView.view === 'nexus'}
 			onclick={() => {
 				pageView.view = 'nexus';
+				localStorage.setItem('pageView', 'nexus');
 			}}
 		>
 			<AiStarIcon class="layout-icon star" />
@@ -48,6 +49,7 @@
 			disabled={pageView.view === 'overview'}
 			onclick={() => {
 				pageView.view = 'overview';
+				localStorage.setItem('pageView', 'overview');
 			}}
 		>
 			<LayoutIcon class="layout-icon" />

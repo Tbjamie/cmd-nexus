@@ -7,7 +7,7 @@
 
 .h1 {
 	font-family: 'Geist', sans-serif;
-	font-size: 3rem;
+	font-size: clamp(1.5rem, 3.529vw + 0.794rem, 3rem);
 	line-height: normal;
 	font-weight: 900;
 }

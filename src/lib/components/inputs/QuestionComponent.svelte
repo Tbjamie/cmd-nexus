@@ -20,12 +20,6 @@
 	let followUpQuestion: QuestionType[] = $state([]);
 	let selectedOption = $state('');
 
-	$inspect(selectedOption);
-
-	$inspect('All results', allResults);
-	$inspect('Prompt', prompt);
-	$inspect('Filtered Items', filteredItems);
-
 	$effect(() => {
 		if (allResults && allResults.length > 0) {
 			const questions = [
@@ -210,7 +204,6 @@
 
 	h1 {
 		margin-bottom: 1rem;
-		font-size: clamp(1.5rem, 3.529vw + 0.794rem, 3rem);
 
 		@media screen and (min-width: 1024px) {
 			max-width: 75%;
