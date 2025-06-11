@@ -37,7 +37,12 @@
 
 <div class="main-page-spacing">
 	{#if item}
-		<IconButton class="icon-button button-size spacing-button" variant="text" theme="tertiary" on:click={() => window.history.back()}>
+		<IconButton
+			class="icon-button button-size spacing-button"
+			variant="text"
+			theme="tertiary"
+			on:click={() => window.history.back()}
+		>
 			<ArrowIcon class="arrow-icon-detail" />
 			Terug naar overzicht
 		</IconButton>
@@ -71,10 +76,13 @@
 						<h3>Meer informatie</h3>
 						<div>
 							{#each webLinks as webItem}
-							<IconButton href={webItem} target="_blank" variant="text" theme="primary">
-								<LinkIcon class="icon-size" />
-								{webItem.match(/^https?:\/\/(?:www\.)?([^\/?#]+)/)?.[1].split('.').slice(-2, -1)[0]}
-							</IconButton>
+								<IconButton href={webItem} target="_blank" variant="text" theme="primary">
+									<LinkIcon class="icon-size" />
+									{webItem
+										.match(/^https?:\/\/(?:www\.)?([^\/?#]+)/)?.[1]
+										.split('.')
+										.slice(-2, -1)[0]}
+								</IconButton>
 							{/each}
 						</div>
 					{/if}
@@ -174,7 +182,7 @@
 		width: fit-content;
 	}
 
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 1024) {
 		.detail-wrapper > section:nth-of-type(2) > article {
 			display: flex;
 		}

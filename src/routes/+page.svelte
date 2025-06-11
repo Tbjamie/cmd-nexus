@@ -429,7 +429,7 @@
 		}
 	}
 
-	@media screen and (max-width: 1000px) {
+	@media screen and (max-width: 1024) {
 		.overview-page-wrapper {
 			grid-template-rows: 60px 80px 1fr;
 		}

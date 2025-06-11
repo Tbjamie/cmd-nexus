@@ -169,7 +169,7 @@
 		gap: 1rem;
 		margin-top: 2rem;
 
-		@media screen and (min-width: 1000px) {
+		@media screen and (min-width: 1024px) {
 			grid-template-columns: repeat(2, 1fr);
 		}
 
