@@ -281,7 +281,7 @@
 													.replace(/[^\w-]+/g, '')
 											: ''}"
 										variant="normal"
-										mostRelevant={false}
+										mostRelevant={searchResults ? true : viewResults.length > 0 ? true : false}
 										tag={item.rel_vakgebied as string | undefined}
 										title={item.naam}
 										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
