@@ -13,7 +13,9 @@
 		href = $bindable(''),
 		variant = $bindable(''),
 		title = $bindable(''),
+		subtitel = $bindable(''),
 		description = $bindable(''),
+		author = $bindable(''),
 		rating = $bindable(''),
 		labelType = $bindable(''),
 		labelColor = $bindable(''),
@@ -140,9 +142,12 @@
 		</div>
 		<div class="card-content">
 			{#if title}
+			<div class="card-content-header">
 				<h3 class="h3">
 					{title}
 				</h3>
+				<h4>{ subtitel }</h4>		
+			</div>
 			{/if}
 
 			{#if description}
@@ -161,7 +166,7 @@
 				{/if}
 			</div>
 			{#if rating}
-				<span class="rating">{rating}</span>
+				<span class="rating">{author}</span>
 			{/if}
 		</div>
 	</div>
@@ -218,12 +223,11 @@
 		width: 100%;
 		text-decoration: none;
 		overflow: hidden;
-		/* max-width: 35rem; */
+		background: rgba(217, 217, 217, 0.06);
 		border-radius: var(--border-radius-large);
 		z-index: 1;
 		height: 100%;
 		position: relative;
-		/* min-height: 250px; */
 
 		transition: all 300ms ease-in-out;
 
@@ -236,7 +240,7 @@
 			overflow: auto;
 			min-height: 100%;
 
-			padding: 1.4rem 1.6rem;
+			padding: 1.8rem 2rem;
 
 			.card-header,
 			.card-footer {
@@ -249,10 +253,31 @@
 				display: flex;
 				flex-direction: column;
 				align-items: flex-start;
-				gap: 0.75rem;
+				gap: 1rem;
+
+				.card-content-header {
+					display: flex;
+					flex-direction: column;
+					gap: 0.10rem;
+
+					h3 {
+						color: var(--white);
+						font-weight: 700;
+						font-size: 1.5rem;
+						margin: 0;
+					}
+
+					h4 {
+						font-weight: 400;
+						font-size: 1rem;
+						color: #F6F6F6;
+					}
+				}
 
 				p {
 					min-height: 2.5rem;
+					font-size: 0.875rem;
+					color: #b5b5b5;
 				}
 			}
 		}
@@ -264,7 +289,9 @@
 		}
 
 		& > * {
-			color: var(--white);
+			color: #D9D9D9;
+			font-weight: 300;
+			font-size: .875rem;
 		}
 
 		&:hover {

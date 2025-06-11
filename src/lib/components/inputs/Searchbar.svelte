@@ -10,7 +10,7 @@
 <script lang="ts">
 	let { value = $bindable(''), relatedItems = [] } = $props();
 	let inputEl: HTMLInputElement;
-	let currentPromptIndex = $state(0);
+	let currentPromptIndex = 0;
 	let promptsArray = [
 		'Waar ben je naar op zoek?',
 		'Zoek naar een principe, methode of beroepstaak',
@@ -34,7 +34,7 @@
 				isTyping = false;
 
 				if (!overViewEl) {
-					inputEl.placeholder = promptsArray[currentPromptIndex] || 'Waar ben je naar op zoek?';
+					inputEl.placeholder = promptsArray[currentPromptIndex] || '';
 					startNextPrompt();
 				} else {
 					inputEl.placeholder = 'Waar ben je naar op zoek?';
@@ -119,7 +119,6 @@
 		spellcheck="false"
 		name="search-bar"
 		id="search-bar"
-		placeholder={promptsArray[currentPromptIndex] || 'Waar ben je naar op zoek?'}
 	/>
 	<IconButton type="submit">
 		<ArrowIcon class="arrow-icon" />
