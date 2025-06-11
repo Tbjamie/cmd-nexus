@@ -157,7 +157,7 @@
 		padding: 1.5rem;
 		padding-bottom: 2.5rem;
 		height: max-content;
-		display: flex;
+		display: none;
 		flex-direction: column;
 		gap: 2rem;
 		transform: translateY(100%);
@@ -165,6 +165,8 @@
 		left: 0;
 
 		@media screen and (min-width: 1000px) {
+			display: flex;
+
 			position: relative;
 			left: auto;
 			transform: translateY(0);
@@ -172,11 +174,16 @@
 	}
 
 	.filter-bar.is-active {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
+		display: inline-flex;
+		position: fixed;
+		height: 100dvh;
+		top: 0;
+		overflow-y: scroll;
+		width: 75%;
 		transform: translateY(0);
 		left: 0;
+		background-color: black;
+		z-index: 10;
 	}
 
 	.filter-options-wrapper {
