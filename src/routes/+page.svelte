@@ -25,19 +25,6 @@
 	let resultsFound = $state(false);
 	let viewResults = $state([]);
 
-	export function getRating(moeilijkheid: string) {
-		switch (moeilijkheid) {
-			case '*':
-				return 'Makkelijk';
-			case '**':
-				return 'Medium';
-			case '***':
-				return 'Moeilijk';
-			default:
-				return moeilijkheid;
-		}
-	}
-
 	$effect(() => {
 		formResult = page.form;
 
@@ -294,12 +281,11 @@
 													.replace(/[^\w-]+/g, '')
 											: ''}"
 										variant="normal"
-										mostRelevant={true}
+										mostRelevant={false}
 										tag={item.rel_vakgebied as string | undefined}
 										title={item.naam}
 										labelType={item.soort as 'methode' | 'principe' | 'beroepstaak'}
 										description={item.korte_beschrijving}
-										rating={getRating(item.moeilijkheid)}
 									/>
 									<!-- TODO: If there is more than x items load more based on scroll: JAMIE BOAT TEST -->
 								{/each}
