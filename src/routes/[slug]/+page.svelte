@@ -364,10 +364,6 @@
 			margin-top: 3em;
 		}
 
-		section > article {
-			margin-bottom: 1em;
-		}
-
 		.detail-wrapper > section:nth-of-type(2) {
 			padding-top: 1em;
 		}
