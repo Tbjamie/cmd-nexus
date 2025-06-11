@@ -5,7 +5,9 @@
 	import type { Item } from '$lib/types/itemType';
 	import LinkIcon from '$lib/assets/icons/open-link.svg?component';
 	import ArrowIcon from '$lib/assets/icons/arrow-icon.svg?component';
-	import { onMount } from 'svelte';
+	import PlusIcon from '$lib/assets/icons/plus-icon.svg?component';
+	import { showBookmarkTooltip } from '$lib/stores/bookmarkTooltip.svelte';
+	import TagComponent from '$lib/components/tag/Tag.svelte';
 </script>
 
 <script lang="ts">
@@ -15,6 +17,20 @@
 	const relativePerson = item.meer_bij_personen
 		?.split(/\n+/)
 		.filter((person) => person.trim().length > 0);
+
+	let labelColor: string = 'purple';
+
+	$: {
+		if (item.soort === 'Beroepstaak') {
+			labelColor = 'green';
+		} else if (item.soort === 'Principe') {
+			labelColor = 'blue';
+		} else if (item.soort === 'Methode') {
+			labelColor = 'yellow';
+		} else {
+			labelColor = 'purple'; // default
+		}
+	}
 </script>
 
 <svelte:head>
@@ -37,67 +53,112 @@
 
 <div class="main-page-spacing">
 	{#if item}
-		<IconButton
-			class="icon-button button-size spacing-button"
-			variant="text"
-			theme="tertiary"
-			on:click={() => window.history.back()}
-		>
-			<ArrowIcon class="arrow-icon-detail" />
-			Terug naar overzicht
-		</IconButton>
-
 		<div class="detail-wrapper">
-			<section>
-				<article>
-					<h1>{item.naam}</h1>
-					<p>{item.korte_beschrijving}</p>
-					<CategoryLabel text="principe" theme="green" hasHover={true} />
-				</article>
+			<section class="detail-section {labelColor}">
+				<div class="inner-content">
+					<div class="detail-button-wrapper">
+					<IconButton class="icon-button button-size spacing-button" variant="text" theme="secondary" on:click={() => window.history.back()}>
+						<ArrowIcon class="arrow-icon-detail" />
+						Terug naar overzicht
+					</IconButton>
+					
+					<IconButton
+						theme="secondary"
+						on:click={(e) => {
+							e.preventDefault();
+							let bookmarks;
+							try {
+								bookmarks = JSON.parse(localStorage.getItem('bookmarks') || '[]');
+								if (!Array.isArray(bookmarks)) bookmarks = [];
+							} catch {
+								bookmarks = [];
+							}
+							if (!bookmarks.includes(item.id)) {
+								bookmarks.push(item.id);
+								localStorage.setItem('bookmarks', JSON.stringify(bookmarks));
+								showBookmarkTooltip.value = true;
+								setTimeout(() => {
+									showBookmarkTooltip.value = false;
+								}, 2000);
+							}
+						}}
+					>
+						<PlusIcon class="plus-icon" />
+					</IconButton>
+					</div>
+					<article>
+						<div class="header-wrapper">
+							<h1>{item.naam}</h1>
+							<h2>{item.ondertitel}</h2>
+						</div>
+						<p>{item.korte_beschrijving}</p>
+					</article>
 
-				<article>
-					{#if item.strekking}
-						<h3>De kern</h3>
-						<p>{item.strekking}</p>
-					{/if}
-				</article>
 
-				<article>
-					{#if item.toepassing}
-						<h3>Toepassing</h3>
-						<p>{item.toepassing}</p>
-					{/if}
-				</article>
+					<!-- content text -->
+					<div class="inner-content-container">
+						<article>
+							{#if item.strekking}
+								<h3>De kern</h3>
+								<p>{item.strekking}</p>
+							{/if}
+						</article>
+
+						<article>
+							{#if item.toepassing}
+								<h3>Toepassing</h3>
+								<p>{item.toepassing}</p>
+							{/if}
+						</article>
+					</div>
+				</div>
 			</section>
 
-			<section>
-				<article>
-					{#if webLinks}
-						<h3>Meer informatie</h3>
-						<div>
-							{#each webLinks as webItem}
+			<section class="general-section {labelColor}">
+				<div class="inner-content">
+					<article>
+						<h3>Extra informatie kaart</h3>
+						<div class="content-wrapper-general">
+							{#if item.soort}
+								<CategoryLabel text="{ item.soort }" />
+							{/if}							
+							{#if item.rel_cmd_expertise && Array.isArray(item.rel_cmd_expertise)}
+								{#each item.rel_cmd_expertise as expertise}
+									<CategoryLabel text={expertise} />
+								{/each}
+							{:else if item.rel_cmd_expertise}
+								<CategoryLabel text={item.rel_cmd_expertise} />
+							{/if}
+							{#if item.schrijver_of_bron}
+								<CategoryLabel text="{ item.schrijver_of_bron }" />
+							{/if}
+						</div>
+					</article>
+					<article>
+						{#if webLinks}
+							<h3>Meer informatie</h3>
+							<div class="content-wrapper">
+								{#each webLinks as webItem}
 								<IconButton href={webItem} target="_blank" variant="text" theme="primary">
 									<LinkIcon class="icon-size" />
-									{webItem
-										.match(/^https?:\/\/(?:www\.)?([^\/?#]+)/)?.[1]
-										.split('.')
-										.slice(-2, -1)[0]}
+									{webItem.match(/^https?:\/\/(?:www\.)?([^\/?#]+)/)?.[1].split('.').slice(-2, -1)[0]}
 								</IconButton>
-							{/each}
-						</div>
-					{/if}
-				</article>
+								{/each}
+							</div>
+						{/if}
+					</article>
 
-				<article>
-					{#if relativePerson}
-						<h3>Ondersteuning binnen CMD</h3>
-						<div>
-							{#each relativePerson as person}
-								<IconButton disabled variant="text" theme="secondary">{person}</IconButton>
-							{/each}
-						</div>
-					{/if}
-				</article>
+					<article>
+						{#if relativePerson}
+							<h3>Ondersteuning binnen CMD</h3>
+							<div class="content-wrapper">
+								{#each relativePerson as person}
+									<TagComponent theme="secondary">{person}</TagComponent>
+								{/each}
+							</div>
+						{/if}
+					</article>
+				</div>
 			</section>
 		</div>
 	{:else}
@@ -106,65 +167,163 @@
 </div>
 
 <style>
-	h1 {
-		font-size: 38px;
-		/* margin-top: 2em; */
-	}
-
-	h3 {
-		font-size: 20px;
-		font-weight: 600;
+	p {
+		color: #D9D9D9;
+		font-size: 1rem;
 	}
 
 	.detail-wrapper {
-		margin: 4em auto;
 		/* width: 80vw; */
 		max-width: 1600px;
+		max-height: 80dvh;
 		/* border-radius: 4rem; */
 
 		display: flex;
 		justify-content: space-between;
 
-		gap: 5rem;
+		gap: 2rem;
 		height: max-content;
 		box-sizing: border-box;
 	}
 
-	.detail-wrapper > section:nth-of-type(2) {
-		padding-top: 4em;
+	.detail-wrapper > section {
+		position: relative;
+			
+		.inner-content {
+			border-radius: var(--border-radius-large);
+			backdrop-filter: blur(150px);
+			background: rgba(217, 217, 217, 0.06);		
+			overflow: hidden;
+			width: 100%;
+			height: 100%;
+			padding: 3rem;
+			overflow-y: auto;
+
+			display: flex;
+			flex-direction: column;
+			gap: 2rem;			
+		}
+		
+		&::after {
+			content: '';
+			width: 80%;
+			height: 100px;
+			position: absolute;
+			bottom: 5px;
+			left: 50%;
+			transform: translateX(-50%);
+			z-index: -2;
+		}
+
+		&.blue::after { background-color: var(--light-blue); }
+		&.green::after { background-color: var(--green); }
+		&.yellow::after { background-color: var(--yellow); }
+		&.purple::after { background-color: var(--purple-light); }
+
 	}
 
-	.detail-wrapper section {
+
+	.detail-wrapper .detail-section {
 		display: flex;
 		flex-direction: column;
+		gap: 3rem;
+		border-radius: var(--border-radius-large);
 
-		width: 100%;
-		justify-content: start;
-		gap: 1em;
+		article {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.header-wrapper {
+			display: flex;
+			flex-direction: column;
+			gap: 0.15rem;
+
+			h1 {
+				color: var(--white);
+				font-weight: 700;
+				font-size: 2.4rem;
+				margin: 0;
+			}
+
+			h2 {
+				font-weight: 400;
+				font-size: 1.4rem;
+				color: #F6F6F6;
+			}
+		}
+		.detail-button-wrapper {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+
+			:global(.icon-button) {
+				padding: .6rem 1.4rem;
+			}
+
+			:global(.icon-button.icon) {
+				padding: .4rem;
+			}
+
+		}
 	}
 
-	section > article {
+	.detail-section {
+		flex: 4;
+	}
+
+	.general-section {
+		flex: 2;
+	}
+
+	.detail-section .inner-content .inner-content-container {
+		container-name: text-container;
+		container-type: inline-size;
+
 		display: flex;
 		flex-direction: column;
-		gap: 1em;
-		margin-bottom: 4em;
+		gap: 2rem;
 	}
 
-	article > div {
+
+	.general-section .inner-content article {
 		display: flex;
-		flex-wrap: wrap;
-		flex-direction: row;
-		gap: 1em;
-	}
-	/* 
-	.detail-wrapper > section:nth-of-type(2) > article {
-		display: grid;
-		grid-template-columns: 1fr 4fr;
-	} */
+		flex-direction: column;
+		gap: 1rem;
 
+		.content-wrapper-general {
+			display: flex;
+			flex-direction: column;
+			gap: .6rem;
+		}
+
+		.content-wrapper {
+			display: flex;
+			flex-wrap: wrap;
+			gap: .6rem;
+		}
+	}
+
+	/* GLOBALS */
 	:global(.icon-size) {
 		width: 1rem;
 		height: 1rem;
+	}
+
+	:global(.icon-button) {
+		padding: .6rem 1.4rem;
+	}
+
+	:global(.icon-button.secondary.text),
+	:global(.icon-button.primary.text) {
+		padding: .6rem 1.4rem;
+		white-space: nowrap;
+		font-size: 0.875rem;
+	}
+
+	:global(.icon-button.primary.text) {
+		background-color: var(--white);
 	}
 
 	:global(.arrow-icon-detail) {
@@ -182,9 +341,16 @@
 		width: fit-content;
 	}
 
-	@media screen and (max-width: 1024) {
-		.detail-wrapper > section:nth-of-type(2) > article {
-			display: flex;
+	@media screen and (max-width: 1000px) {
+		.detail-wrapper {
+			flex-direction: column;
+
+					
+			.general-section .inner-content {
+				flex-direction: row;
+				justify-content: space-between;
+				flex-wrap: wrap;
+			}
 		}
 	}
 
@@ -196,10 +362,6 @@
 
 		:global(.spacing-button) {
 			margin-top: 3em;
-		}
-
-		section > article {
-			margin-bottom: 1em;
 		}
 
 		.detail-wrapper > section:nth-of-type(2) {

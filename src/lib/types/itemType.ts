@@ -1,4 +1,5 @@
 export interface Item {
+	schrijver_of_bron: any;
 	id?: number;
 	meer_bij_vak?: string;
 	korte_beschrijving?: string;
