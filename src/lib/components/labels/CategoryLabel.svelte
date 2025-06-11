@@ -36,7 +36,7 @@
 			background: rgba(252, 252, 252, 0.15);
 			backdrop-filter: blur(10px);
 			border-radius: 8px;
-			padding: 0.5rem;
+			padding: 0.3rem;
 		}
 	}
 
