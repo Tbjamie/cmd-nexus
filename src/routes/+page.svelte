@@ -363,6 +363,8 @@
 			visibility: visible;
 			display: flex;
 			flex: 0 0 calc(10% - 2.4rem);
+			width: 2.5rem;
+			height: 2.5rem;
 			max-width: 3rem;
 			max-height: 3rem;
 		}
