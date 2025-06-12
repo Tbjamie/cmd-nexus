@@ -26,6 +26,10 @@ npm run build
 ```
 Om de website te builden wordt deze commando gebruikt, dit creëert een statische export waar alle componenten, features en layouts in elkaar worden gevoegd.
 
+```node
+npm run preview
+```
+Preview build zodat je kan zien hoe de website er uit zou zien als hij gedeployed zou worden
 ## Stack
 
 - [SvelteKit/Node](https://svelte.dev/)
