@@ -44,6 +44,10 @@ Preview build zodat je kan zien hoe de website er uit zou zien als hij gedeploye
 - "lenis": "^1.3.1"
 
 ## Structure
+
+
+![afbeelding](https://github.com/user-attachments/assets/791902f6-7161-4826-b2d1-a9f903935576)
+
 Componenten en icons kunnen gevonden worden in 'src/lib/[NAAM]'
 
 Pagina's en layouts zijn te vinden in de 'src/routes/[NAAM]'
