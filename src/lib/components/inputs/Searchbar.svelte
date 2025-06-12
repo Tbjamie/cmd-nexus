@@ -9,7 +9,7 @@
 </script>
 
 <script lang="ts">
-	let { value = $bindable(''), relatedItems = [] } = $props();
+	let { value = $bindable(''), relatedItems = [], style = $bindable('default') } = $props();
 	let inputEl: HTMLInputElement;
 	let currentPromptIndex = 0;
 	let promptsArray = [
@@ -100,7 +100,7 @@
 <form
 	action="/"
 	method="POST"
-	class="search-wrapper"
+	class="search-wrapper {style}"
 	class:active={value}
 	use:enhance={() => {
 		goto(

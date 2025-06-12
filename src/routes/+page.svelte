@@ -163,7 +163,7 @@
 			<section class="main-page-spacing relative">
 				<div class="overview-page-wrapper">
 					<div class="overview-page-header">
-						<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+						<Searchbar style="overview" bind:value={prompt} relatedItems={filteredItems} />
 						<IconButton on:click={filterToggle} class="filter-icon">
 							<FilterIcon class="filter-icon-button" />
 						</IconButton>
@@ -233,9 +233,6 @@
 
 	:global(.filterbar-spacing) {
 		grid-row: 2;
-	}
-	.logo-star {
-		view-transition-name: logo-star;
 	}
 
 	@view-transition {
