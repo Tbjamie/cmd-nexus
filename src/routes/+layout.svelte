@@ -93,7 +93,7 @@
 		position: absolute;
 		padding: 3rem 4rem;
 		width: 100vw;
-		z-index: 9999;
+		z-index: 100;
 	}
 
 	.relative {

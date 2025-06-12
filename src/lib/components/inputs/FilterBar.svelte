@@ -16,7 +16,7 @@
 
 <script lang="ts">
 	let filters: FilterType[] = $state([]);
-	let { items = $bindable([]) } = $props();
+	let { items = $bindable([]), className = $bindable('') } = $props();
 
 	onMount(() => {
 		const getUniqueOptions = (key: keyof Item) =>
@@ -129,7 +129,7 @@
 	}}
 	action=""
 	method="POST"
-	class="filter-bar"
+	class="filter-bar {className}"
 	onsubmit={() => {
 		console.log('Form submitted');
 	}}
@@ -160,6 +160,47 @@
 		display: flex;
 		flex-direction: column;
 		gap: 2rem;
+		transform: translateX(-100%);
+		position: absolute;
+		left: 0;
+		transition: transform 300ms;
+
+		@media screen and (min-width: 1024px) {
+			position: relative;
+			left: auto;
+			transform: translateX(0);
+		}
+	}
+
+	.filter-bar:focus-within {
+		@media screen and (max-width: 1024px) {
+			transform: translateY(0);
+			position: fixed;
+			height: 100dvh;
+			top: 0;
+			overflow-y: scroll;
+			width: 75%;
+			transform: translateX(0);
+			left: 0;
+			--opacity: 95%;
+			background-color: var(--black);
+			z-index: 10;
+			border-radius: 0 1rem 1rem 0;
+		}
+	}
+
+	.filter-bar.is-active {
+		position: fixed;
+		height: 100dvh;
+		top: 0;
+		overflow-y: scroll;
+		width: 75%;
+		transform: translateX(0);
+		left: 0;
+		--opacity: 95%;
+		background-color: var(--black);
+		z-index: 200;
+		border-radius: 0 1rem 1rem 0;
 	}
 
 	.filter-options-wrapper {

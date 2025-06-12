@@ -142,12 +142,12 @@
 		</div>
 		<div class="card-content">
 			{#if title}
-			<div class="card-content-header">
-				<h3 class="h3">
-					{title}
-				</h3>
-				<h4>{ subtitel }</h4>		
-			</div>
+				<div class="card-content-header">
+					<h3 class="h3">
+						{title}
+					</h3>
+					<h4>{subtitel}</h4>
+				</div>
 			{/if}
 
 			{#if description}
@@ -158,9 +158,6 @@
 		</div>
 		<div class="card-footer">
 			<div class="card-footer-tags-wrapper">
-				{#if mostRelevant == true}
-					<TagComponent theme="secondary">Gevonden kaart</TagComponent>
-				{/if}
 				{#if tag}
 					<TagComponent>{tag}</TagComponent>
 				{/if}
@@ -258,7 +255,7 @@
 				.card-content-header {
 					display: flex;
 					flex-direction: column;
-					gap: 0.10rem;
+					gap: 0.1rem;
 
 					h3 {
 						color: var(--white);
@@ -270,7 +267,7 @@
 					h4 {
 						font-weight: 400;
 						font-size: 1rem;
-						color: #F6F6F6;
+						color: #f6f6f6;
 					}
 				}
 
@@ -289,9 +286,9 @@
 		}
 
 		& > * {
-			color: #D9D9D9;
+			color: #d9d9d9;
 			font-weight: 300;
-			font-size: .875rem;
+			font-size: 0.875rem;
 		}
 
 		&:hover {

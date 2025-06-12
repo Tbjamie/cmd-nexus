@@ -13,10 +13,14 @@
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 	import AnimatingStar from '$lib/components/AnimatingStar.svelte';
+	import IconButton from '$lib/components/buttons/IconButton.svelte';
+	import FilterIcon from '$lib/assets/icons/filter-icon.svg?component';
 </script>
 
 <script lang="ts">
 	let prompt = $state('');
+	let screenWidth = $state(0);
+	let filterOpen = $state(false);
 	let filteredItems: Item[] = $state([]);
 	let items: Item[] = $state([]);
 	let starAnimationTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -26,6 +30,14 @@
 	let resultsFound = $state(false);
 	let viewResults = $state([]);
 	let submit = $state(false);
+
+	function filterToggle() {
+		filterOpen = !filterOpen;
+	}
+
+	$effect(() => {
+		screenWidth >= 1024 ? (filterOpen = false) : (filterOpen = false);
+	});
 
 	$effect(() => {
 		formResult = page.form;
@@ -47,6 +59,10 @@
 	onMount(() => {
 		const heading = document.querySelector('h1');
 		const paragraph = document.querySelector('p');
+
+		document.addEventListener('resize', () => {
+			screenWidth = window.innerWidth;
+		});
 
 		document.addEventListener('submit', () => {
 			submit = true;
@@ -148,6 +164,9 @@
 				<div class="overview-page-wrapper">
 					<div class="overview-page-header">
 						<Searchbar bind:value={prompt} relatedItems={filteredItems} />
+						<IconButton on:click={filterToggle} class="filter-icon">
+							<FilterIcon class="filter-icon-button" />
+						</IconButton>
 						<div class="prompt-header-information-wrapper">
 							<section class="prompt-header-search-wrapper">
 								<p>gezocht op:</p>
@@ -171,7 +190,7 @@
 						</div>
 					</div>
 					<div class="overview-page-content">
-						<FilterBar {items} />
+						<FilterBar className={filterOpen ? 'is-active' : ''} {items} />
 						<div class="grid-page-container">
 							<div class="grid-page">
 								{#each searchResults ? searchResults : viewResults.length > 0 ? viewResults : items as item}
@@ -202,8 +221,21 @@
 {/key}
 
 <style>
+	:global(.search-wrapper.overview) {
+		padding: 1rem;
+		flex: 0 0 calc(90% - 2.4rem);
+	}
+
+	:global(.icon-button.filter-icon) {
+		display: none;
+		rotate: -90deg;
+	}
+
 	:global(.filterbar-spacing) {
 		grid-row: 2;
+	}
+	.logo-star {
+		view-transition-name: logo-star;
 	}
 
 	@view-transition {
@@ -223,7 +255,7 @@
 		justify-content: space-between;
 		align-items: center;
 		gap: 1.5rem;
-		padding-left: 2.4rem;
+		/* padding-left: 2.4rem; */
 
 		span {
 			display: flex;
@@ -241,7 +273,7 @@
 	.overview-page-header {
 		width: 100%;
 		height: 100%;
-		padding: 2rem 0;
+		padding: 2rem 0rem;
 
 		display: grid;
 		grid-template-columns: minmax(300px, 360px) 1fr;
@@ -252,6 +284,20 @@
 		top: 0;
 		left: 0;
 		z-index: 10;
+
+		@media screen and (max-width: 1024px) {
+			padding: 2rem 1rem;
+
+			display: flex;
+			flex-wrap: wrap;
+			gap: 2em;
+			align-items: center;
+			justify-content: space-between;
+		}
+
+		@media screen and (max-width: 768px) {
+			padding: 1em 0;
+		}
 	}
 
 	.overview-page-content {
@@ -297,7 +343,7 @@
 		display: grid;
 	}
 
-	@container grid-page (max-width: 800px) {
+	@container grid-page (max-width: 768px) {
 		.grid-page {
 			display: flex;
 			flex-direction: column;
@@ -308,14 +354,22 @@
 		}
 	}
 
-	@container grid-page (min-width: 801px) {
+	@container grid-page (min-width: 769px) {
 		.grid-page {
 			grid-template-columns: repeat(2, minmax(200px, 1fr));
 			gap: 1.5rem;
 		}
 	}
 
-	@media screen and (max-width: 1024) {
+	@media screen and (max-width: 1024px) {
+		:global(.icon-button.filter-icon) {
+			visibility: visible;
+			display: flex;
+			flex: 0 0 calc(10% - 2.4rem);
+			max-width: 3rem;
+			max-height: 3rem;
+		}
+
 		.overview-page-wrapper {
 			grid-template-rows: 60px 80px 1fr;
 		}
@@ -326,14 +380,21 @@
 		}
 
 		.prompt-header-information-wrapper {
+			width: 100%;
 			grid-row: 2 / 3;
 			grid-column: 1 / 3;
-			padding: 0 1.4rem;
+			/* padding: 0 1.4rem; */
 		}
 
 		.grid-page-container {
 			grid-column: 1 / 3;
 			grid-row: 3 / 4;
+		}
+	}
+
+	@media screen and (max-width: 443px) {
+		.overview-page-header {
+			gap: 1em;
 		}
 	}
 

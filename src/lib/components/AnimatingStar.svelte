@@ -184,14 +184,14 @@
 <style>
 	.logo-star {
 		view-transition-name: logo-star;
+		transform: scale(1.25);
 	}
 
 	.block {
 		height: 4rem;
 		width: 4rem;
 		position: relative;
-		scale: 1;
-		margin-bottom: 1rem;
+		margin-bottom: 2rem;
 
 		& .star1 {
 			width: 45px;

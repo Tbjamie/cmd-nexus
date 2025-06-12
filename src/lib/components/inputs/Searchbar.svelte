@@ -5,6 +5,7 @@
 	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import { pageView } from '$lib/stores/pageView.svelte';
 </script>
 
 <script lang="ts">
@@ -47,7 +48,7 @@
 	});
 
 	function startNextPrompt() {
-		if (inputEl.value) return;
+		if (inputEl.value || pageView.view === 'overview') return;
 
 		if (currentPromptIndex >= promptsArray.length) {
 			currentPromptIndex = 0;
@@ -63,7 +64,7 @@
 		inputEl.placeholder = '';
 
 		function typeNext() {
-			if (inputEl.value) return;
+			if ((inputEl && inputEl.value) || pageView.view === 'overview') return;
 
 			if (indexTimeOut < letters.length) {
 				inputEl.placeholder += letters[indexTimeOut];
@@ -78,7 +79,7 @@
 	}
 
 	function erasePrompt() {
-		if (inputEl.value) return;
+		if ((inputEl && inputEl.value) || pageView.view === 'overview') return;
 
 		if (inputEl.placeholder.length > 0) {
 			inputEl.placeholder = inputEl.placeholder.slice(0, -1);
